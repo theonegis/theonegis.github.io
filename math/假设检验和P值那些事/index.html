@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>假设检验和P值那些事 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="假设检验和P值那些事 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/math/%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C%E5%92%8CP%E5%80%BC%E9%82%A3%E4%BA%9B%E4%BA%8B/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2019-01-04T08:17:52.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/math/">数学</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>January</span>
+            <span>4,</span>
+            <span>2019</span>
+        </div>
+        
+
+        <h2 class="title">假设检验和P值那些事</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="假设检验和P值那些事"><a href="#假设检验和P值那些事" class="headerlink" title="假设检验和P值那些事"></a>假设检验和P值那些事</h1><p>记得大学时候学习概率论与数理统计的时候，学习过假设检验，但我不记得课本上有提到过P值。后来翻阅了一些资料，大概弄明白了它们之间的关系，本文旨在以浅显易懂的语言描述严密的数学知识。</p>
+<h2 id="假设检验"><a href="#假设检验" class="headerlink" title="假设检验"></a>假设检验</h2><p>在《Head First Statistics》一书中，作者给假设检验的定义是“Hypothesis tests give you a way of using samples to test whether or not statistical claims are likely to be true”。其实定义不重要，重要的是我们需要知道假设检验能做什么：以概率统计的视角判别一个统计假说是否成立。</p>
+<p>下面举一个烂大街的例子：我有一枚专门用于玩抛硬币猜正反面的游戏的硬币，我需要判断这枚硬币是否是正常的（抛硬币游戏中出现正反面的概率相等）。所以我做了一个假说：该枚硬币是正常的，即抛硬币游戏中出现正面的概率为0.5。</p>
+<p>那我现在需要做实验去验证我说的对不对。我抛了20次，正面朝上11次，背面朝上9次（设正面朝上记为1，反面朝上记为0）。基于这个实验结果，我应该做怎样的判断呢？</p>
+<p>根据假设检验的一般步骤：</p>
+<ol>
+<li><p>建立假设</p>
+</li>
+<li><p>寻找检验统计量</p>
+</li>
+<li><p>确定显著性水平和拒绝域</p>
+</li>
+<li><p>做出判断</p>
+</li>
+</ol>
+<p>第一步中我们的原假设$H_0$（null hypothesis）为该枚硬币是正常的，备择假设$H_1$（alternate hypothesis）为该硬币不正常。</p>
+<p>注：当原假设正确，而由于样本的随机性使得样本观测值落在拒绝域（critical region或rejection region）而拒绝原假设产生的错误称为第一类错误；当原假设错误，而样本观测值落在接受域而接受原假设产生的错误称为第二类错误。</p>
+<p>第二步中根据中心极限定理可知随机变量$\bar{X}$服从正态分布。这里我们的检验统计量选择$t=\frac{\bar{X}-\mu_0}{S/\sqrt{n}}$（这里的$t$服从自由度为$n-1$的$t$分布），所以我们使用$t$分布来估计投掷的均值（这里$\bar{X}$为样本均值，$\mu_0$为原假设中的均值（期望），$S$为样本标准差，$n$为样本个数）。</p>
+<p>$$t=\frac{\bar{X}-\mu_0}{S/\sqrt{n}} = \frac{0.55 - 0.5}{0.5104178 / \sqrt{20}} = 0.4380858$$</p>
+<p>注：$t$分布用于根据小样本来估计呈正态分布且方差未知的总体的均值，称为$t$检验。如果总体方差已知（例如在样本数量足够多时），则应该用正态分布来估计总体均值，称为$U$检验。</p>
+<p>第三步中显著性水平$\alpha$（significance level，拒绝原假设时概率阈值）我们一般采用0.05（当然，你也可以使用0.1或者其它）。这个0.05的意思是观测值落在拒绝域的概率为0.05，概率为0.05说明这是小概率事件，而在一次测试中发生了小概率事件，所以我们有足够的理由拒绝原假设。</p>
+<p>接下来我们应该计算拒绝域了。对于$t$分布求0.025和0.975的分位数分别为-2.093024和2.093024（即$t$的上下界，左右两边各是0.025，合起来就是0.05的拒绝域），我们可以反推出$\bar{X}$的上下界为0.3111171和0.7888829（这个区间就是接受域）。</p>
+<p>注：对于拒绝域来说，有单边和双边情况，我们这里显然是双边的情况。</p>
+<p>第四步做出判断，我们实验的结果的均值是0.4380858，我们在0.05的显著性水平下得到的接受域是$(0.3111171, 0.7888829)$，实验结果落在接受域，所以我们不能拒绝原假设$H_0$。这里的不能拒绝指的是我们没有足够的理由推翻原假设，但是这并不代表原假设一定正确。</p>
+<h2 id="P值"><a href="#P值" class="headerlink" title="P值"></a>P值</h2><p>上面讲了检验假设的一般过程，好像跟P值没什么关系？但是P值其实和检验假设息息相关的。上面的求解过程是通过判断样本观测值是否落在拒绝域而做出判断的，其实我们还可以通过计算P值直接进行判断。</p>
+<p>那么什么是$P$值呢？《Head First Statistics》给出的定义是“A p-value is the probability of getting the results in the sample, or something more extreme, in the direction of the critical region.”。我的理解就是P值是在原假设成立的情况下，出现比当前样本观测值更极端（包括当前样本观测值）情况的概率。</p>
+<p>其实这样说还是挺抽象的，我们通过计算来进行说明。</p>
+<p>我们把检验假设步骤中的第三步修改为：确定显著性水平和计算P值</p>
+<p>在我们的实验中$t=\frac{\bar{X}-\mu_0}{S/\sqrt{n}} = \frac{0.55 - 0.5}{0.5104178 / \sqrt{20}} = 0.4380858$</p>
+<p>然后我们通过查表可以得到0.4380858对应的上侧分位数为 0.3331321（和-0.4380858对应的下侧分位数相同），因为我们的实验中是双边情况，所以$P = 0.4380858\times2 = 0.6662642 \gt 0.05$</p>
+<p>在确定了显著性水平$\alpha$的情况下（$\alpha=0.05$），如果计算出的$P\le0.05$，说明观察值不合理，也就是样本均值离假设均值太远了，因此拒绝原假如果计算计算出的$P\gt0.05$，则我们不能拒绝原假设。</p>
+<p>注：设连续型随机变量$X$的分布函数为$F(x)$，密度函数为$f(x)$，对于任意$\alpha (0\lt\alpha\lt1)$，假如$x_\alpha$满足条件</p>
+<p>$$F(x_\alpha) = \int_{-\infty}^{x_\alpha} f(x) dx = \alpha$$</p>
+<p>则$x_\alpha$称为$X$分布的$\alpha$分位数，或称为$\alpha$下侧分位数。假如$x^{\prime}_\alpha$满足</p>
+<p>$$1 - F(x^{\prime}<em>\alpha) = \int</em>{-\infty}^{x_\alpha} f(x) dx = \alpha$$</p>
+<p>则$x^{\prime}_\alpha$称为$X$分布的$\alpha$分位数。</p>
+<p>通俗地理解分位数就是对应某个概率面积的横坐标，如果是左侧面积（概率）叫下侧分位数，如果是右侧面积（概率）叫上侧分位数。</p>
+<h2 id="R中的实践"><a href="#R中的实践" class="headerlink" title="R中的实践"></a>R中的实践</h2><p>好的，下面我们来看如何在R中重复上面的实验：</p>
+<p>产生一个随机的模拟序列（二项分布，生成0和1）</p>
+<p><code>flips &lt;- rbinom(20, 1, 0.4)</code></p>
+<p>结果如下：<code>1 0 1 0 1 1 1 0 1 0 1 0 0 0 0 1 1 0 1 1</code></p>
+<p>使用R内置的$t$检验函数如下：</p>
+<p><code>t.test (flips, mu=0.5)</code></p>
+<p>输出结果如下：</p>
+<pre><code>    One Sample t-test
+
+data:  flips
+t = 0.43809, df = 19, p-value = 0.6663
+alternative hypothesis: true mean is not equal to 0.5
+95 percent confidence interval:
+ 0.3111171 0.7888829
+sample estimates:
+mean of x 
+     0.55 
+</code></pre>
+<p>如果需要我们手动计算上面这些值，我们是否可以计算出来呢？计算的过程就是上面讲解假设减压和P值的过程。</p>
+<p>首先$t$值的计算很简单，使用公式$t=\frac{\bar{X}-\mu_0}{S/\sqrt{n}}$即可，代码如下，结果为0.4380858</p>
+<p><code>(mean(flips) - 0.5) / (sd(flips) / sqrt(length(flips)))</code></p>
+<p>$df$指代的是自由度$n-1=20-1=19$</p>
+<p>接下来我们计算P值，通过计算-0.4380858的下侧分位数再乘以2可得，代码如下，结果为0.6662642</p>
+<p><code>pt(-0.4380858, 19) * 2</code></p>
+<p>在来看我们的置信区间，其实这里就是我们所要求的接受域</p>
+<p>左侧计算代码：<code>qt(0.025, 19) * (sd(flips) / sqrt(20)) + 0.55</code> 结果为：0.3111171</p>
+<p>右侧计算代码：<code>qt(0.975, 19) * (sd(flips) / sqrt(20)) + 0.55</code> 结果为：0.7888829</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>[1] 茆诗松. 概率论与数理统计 (第二版)[M]. 2000.</p>
+<p>[2] Griffiths D. Head first statistics[M]. Oreilly Vlg Gmbh &amp; Co, 2009.</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/假设检验/" class="tag">#假设检验</a><a href="/tags/P值/" class="tag">#P值</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/math/%E7%9B%B8%E5%85%B3%E7%B3%BB%E6%95%B0r%E5%92%8C%E5%86%B3%E5%AE%9A%E7%B3%BB%E6%95%B0R2%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">相关系数r和决定系数R2的那些事</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/math/%E4%BD%BF%E7%94%A8Python%E8%AE%A1%E7%AE%97%E6%96%B9%E5%B7%AE%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9B%B8%E5%85%B3%E7%B3%BB%E6%95%B0/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">使用Python计算方差协方差相关系数</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>手把手教你用QGIS制作地图 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="手把手教你用QGIS制作地图 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/%E6%89%8B%E6%8A%8A%E6%89%8B%E6%95%99%E4%BD%A0%E7%94%A8QGIS%E5%88%B6%E4%BD%9C%E5%9C%B0%E5%9B%BE/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2020-04-07T13:15:44.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>April</span>
+            <span>7,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">手把手教你用QGIS制作地图</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>写作时间：2020年7月4日晚</p>
+<hr>
+<h1 id="手把手教你使用QGIS制作地图"><a href="#手把手教你使用QGIS制作地图" class="headerlink" title="手把手教你使用QGIS制作地图"></a>手把手教你使用QGIS制作地图</h1><p>QGIS是一款开源免费的地理信息系统软件，虽然比不上商业的ArcGIS软件，但是QGIS免费而且跨平台，值得学习！</p>
+<p>今天我们聊聊如何使用QGIS进行地图制作并输出。对任意一幅地图的制作下面介绍的步骤并不是都要用得到，我会分知识点进行介绍，学习一些常用地图制作技巧。</p>
+<p>下面我们一步一步进行吧！（我是在macOS平台下进行操作的，Windows平台界面可能稍有差异）</p>
+<h2 id="加载矢量数据"><a href="#加载矢量数据" class="headerlink" title="加载矢量数据"></a>加载矢量数据</h2><p>打开QGIS，从文件管理面板Browser加载所要的数据，如下图所示（以陕西省为例）。</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%888.56.03.png" alt="屏幕快照2020-04-07下午8.56.03"></p>
+<h2 id="加载背景底图"><a href="#加载背景底图" class="headerlink" title="加载背景底图"></a>加载背景底图</h2><p>底图的加载我们可以有很多选择，比如使用OpenStreetMap或者谷歌地图。当然，我们也可以选择不使用底图。</p>
+<p>下面给出加载底图的步骤：</p>
+<p>在文件管理面板Browser的XYZ Tiles节点上右键，选择New Connection…，然后在弹出的对话框中输出Name和URL。下图给出了OpenStreetMap的添加界面。</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%888.56.24.png" alt="屏幕快照2020-04-07下午8.56.24"></p>
+<p>添加完Connection以后，直接点击添加的地图服务节点将底图添加到我们的工程。</p>
+<p>鼠标在图层Layers面板中拖动数据层的顺序，将刚添加的底图移动到最下方的位置。如下图所示。</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%888.56.41.png" alt="屏幕快照2020-04-07下午8.56.41"></p>
+<p>此外，这里附上谷歌地图服务的地址，方便有需要的朋友使用：</p>
+<p><strong>Google Maps</strong>: <a target="_blank" rel="noopener" href="https://mt1.google.com/vt/lyrs=r&amp;x=%7Bx%7D&amp;y=%7By%7D&amp;z=%7Bz%7D">https://mt1.google.com/vt/lyrs=r&amp;x={x}&amp;y={y}&amp;z={z}</a></p>
+<p><strong>Google Satellite:</strong> <a target="_blank" rel="noopener" href="http://www.google.cn/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=%7Bx%7D&amp;y=%7By%7D&amp;z=%7Bz%7D">http://www.google.cn/maps/vt?lyrs=s@189&amp;gl=cn&amp;x={x}&amp;y={y}&amp;z={z}</a></p>
+<p><strong>Google Satellite Hybrid:</strong> <a target="_blank" rel="noopener" href="https://mt1.google.com/vt/lyrs=y&amp;x=%7Bx%7D&amp;y=%7By%7D&amp;z=%7Bz%7D">https://mt1.google.com/vt/lyrs=y&amp;x={x}&amp;y={y}&amp;z={z}</a></p>
+<p><strong>Google Terrain:</strong> <a target="_blank" rel="noopener" href="https://mt1.google.com/vt/lyrs=p&amp;x=%7Bx%7D&amp;y=%7By%7D&amp;z=%7Bz%7D">https://mt1.google.com/vt/lyrs=p&amp;x={x}&amp;y={y}&amp;z={z}</a></p>
+<p><strong>Google Roads:</strong> <a target="_blank" rel="noopener" href="https://mt1.google.com/vt/lyrs=h&amp;x=%7Bx%7D&amp;y=%7By%7D&amp;z=%7Bz%7D">https://mt1.google.com/vt/lyrs=h&amp;x={x}&amp;y={y}&amp;z={z}</a></p>
+<p>拿走不谢！</p>
+<h2 id="美化矢量数据"><a href="#美化矢量数据" class="headerlink" title="美化矢量数据"></a>美化矢量数据</h2><p>在Layers面板中选中数据层，右键选择Properties…，在弹出的对话框中选择左侧列表中的Symbology，然后设置矢量数据的填充（Fill），边线（Stroke）等。</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%889.43.53.png" alt="屏幕快照2020-04-07下午9.43.53"></p>
+<h2 id="添加晕线"><a href="#添加晕线" class="headerlink" title="添加晕线"></a>添加晕线</h2><p>地图制作中有时候需要给行政边界添加晕线，制作方法很简单。思路是这样的：首先，给原始行政区做缓冲区，然后添加缓冲区到原始行政区图层下面，设置缓冲区的边线的颜色粗细。</p>
+<p>注意：我在使用QGIS的过程中，通过菜单栏Vector-&gt;Geoprocessing Tools-&gt;Buffer…工具进行缓冲区制作的时候，发现制作的缓冲区地理坐标不对（和原始的行政区地理间隔很大），我也不找到出错的原因。</p>
+<p>我通过菜单栏Processing-&gt;Toolbox打开QGIS工具箱，使用GDAL提供的Buffer工具，则不会出现错误，如下图（QGIS中集成了GDAL，GRASS等开源GIS工具，所以经常在处理一个任务的时候，我们有多个工具可以选择）。</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%889.00.53.png" alt="屏幕快照2020-04-07下午9.00.53"></p>
+<p>做完缓冲区之后，我们需要对缓冲区进行美化（你自己认为漂亮即可），效果如下图！</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%889.02.43.png" alt="屏幕快照2020-04-07下午9.02.43"></p>
+<h2 id="切换到排版视图"><a href="#切换到排版视图" class="headerlink" title="切换到排版视图"></a>切换到排版视图</h2><p>在ArcGIS中我们一般在进行地图输出的时候一般会切换到布局视图（好像是叫Layotu View，如果我没记错的话）进行地图整饰和出图。</p>
+<p>在QGIS中也是类似的，我们需要点击工具栏的New Print Layout（我的在保存Save Project按钮旁边，我的节目自己调整过，所以可能和标准界面不一样）。这时候会出现一个新的Tab面板（对应ArcGIS的布局视图），我们在该选项卡面板中进行操作，如下图所示。</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%889.59.15.png" alt="屏幕快照2020-04-07下午9.59.15"></p>
+<p>在布局视图面板的左侧有一系列工具，我们首先点击Add Map按钮，在空白画布上拖动一个地图范围，这样我们刚才制作的地图就会显示在该画布上面。</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%889.04.17.png" alt="屏幕快照2020-04-07下午9.04.17"></p>
+<h2 id="添加经纬度格网"><a href="#添加经纬度格网" class="headerlink" title="添加经纬度格网"></a>添加经纬度格网</h2><p>下面我们添加经纬度格网，在该视图的右边Items选项卡中选择我们的地图对象，然后在Item Properties选项卡中，选择Grids节点进行展开，点击➕按钮添加一个Grid对象，然后点击Modify Grid按钮编辑格网的属性。</p>
+<p>我们可以设置格网显示的坐标系，格网显示的间隔，格网显示的样式等等。根据自己的需求自由发挥吧！</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%889.04.38.png" alt="屏幕快照2020-04-07下午9.04.38"></p>
+<h2 id="添加其他修饰元素"><a href="#添加其他修饰元素" class="headerlink" title="添加其他修饰元素"></a>添加其他修饰元素</h2><p>此外，我们还可以点击面板右边的按钮添加比例尺、图例、图名、指北针等等修饰元素。这里不做详细介绍，自己慢慢探索吧！添加完以后，如下图。</p>
+<p><img src="/images/geos/making-a-map/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-04-07%E4%B8%8B%E5%8D%889.14.00.png" alt="屏幕快照2020-04-07下午9.14.00"></p>
+<h2 id="地图输出"><a href="#地图输出" class="headerlink" title="地图输出"></a>地图输出</h2><p>最后我们要将地图输出为PDF或者图片格式进行保存，在工具栏提供了相应的按钮进行操作。</p>
+<p>我这里想说的是在QGIS地图制作过程中如果添加了地图服务（Web-Service-Based Map），则有可能在输出保存的时候，底图的显示不太对（会有缩放），我们的矢量地图不存在问题。</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/QGIS/" class="tag">#QGIS</a><a href="/tags/地图制作/" class="tag">#地图制作</a><a href="/tags/地图输出/" class="tag">#地图输出</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/tools/UNIX%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%88%A0%E9%99%A4%E8%80%81%E6%97%A7Maven%E4%BE%9D%E8%B5%96%E5%8C%85%E7%9A%84%E6%96%B9%E6%B3%95/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">UNIX系统下删除老旧Maven依赖包的方法</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/math/%E4%BB%8E%E5%82%85%E7%AB%8B%E5%8F%B6%E7%BA%A7%E6%95%B0%E5%88%B0%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E5%8C%96/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">从傅立叶级数到傅立叶变化</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

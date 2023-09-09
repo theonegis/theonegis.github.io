@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Sentinel数据处理工具包SNAP Python开发环境搭建 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Sentinel数据处理工具包SNAP Python开发环境搭建 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/Sentinel%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%B7%A5%E5%85%B7%E5%8C%85SNAP-Python%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2020-04-12T02:50:44.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>April</span>
+            <span>12,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">Sentinel数据处理工具包SNAP Python开发环境搭建</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>写作时间：2020年12月4日周末</p>
+<hr>
+<h1 id="Sentinel数据处理工具包SNAP-Python开发环境搭建"><a href="#Sentinel数据处理工具包SNAP-Python开发环境搭建" class="headerlink" title="Sentinel数据处理工具包SNAP Python开发环境搭建"></a>Sentinel数据处理工具包SNAP Python开发环境搭建</h1><p>这篇博文主要探索安装SNAP工具包并且使用Python接口进行开发过程中搭建开发环境所踩的坑。不得不说欧空局SANP官方提供的资料太少，而且不全面。当然有问题你可以去Forum提问，可是回不回答就是另外一回事了！</p>
+<p>下面言归正传说说如何搭建SNAP Python开发环境用于处理Sentinel卫星数据吧！（这篇文章主要谈开发环境搭建，具体数据处理可以关注后续博文。）</p>
+<p>安装思路是：首先从<a target="_blank" rel="noopener" href="https://step.esa.int/main/download/snap-download/">SNAP</a>官网安装提供的二进制包（截至目前最新版本是7.0.0），然后再进行相应的配置即可。对于二进制包的安装没什么可说的，可是环境的配置到处是坑，按照官网的<a target="_blank" rel="noopener" href="https://senbox.atlassian.net/wiki/spaces/SNAP/pages/24051781/Using+SNAP+in+your+Python+programs">教程</a>根本不可能走通的。</p>
+<p>下面主要谈一下具体如何处理这些问题。</p>
+<h2 id="安装问题"><a href="#安装问题" class="headerlink" title="安装问题"></a>安装问题</h2><p>官网提供了两种形式的Python环境配置（参见<a target="_blank" rel="noopener" href="https://senbox.atlassian.net/wiki/spaces/SNAP/pages/50855941/Configure+Python+to+use+the+SNAP-Python+snappy+interface">Configure Python to use the SNAP-Python (snappy) interface</a>）：第一，在安装二进制包过程中可以选择Python安装目录，SANP安装包自动帮你设置；第二，安装好以后，自己手动进行设置。</p>
+<p>我刚开始是选择第二种方式进行的，第二种方式需要手动编译安装Python接口，但是我从来没有编译成功过。（错误提示：<code>AttributeError: ‘list’ object has no attribute ‘join’</code>，然而根本不知道该怎么解决，<a target="_blank" rel="noopener" href="https://forum.step.esa.int/t/opening-img-disk-image-file-in-python/18388/10">论坛</a>中也有人遇到这样的错误）</p>
+<p>所以我就删掉了装好的SNAP包，重新安装。在安装过程中选择自己提前安装好的Python路径。我是使用Conda提前安装了一个3.6版本的Python环境（<code>conda create -n snap python=3.6</code>）。在安装SNAP过程中根据安装向导进行设置即可。</p>
+<p>注意：SNAP安装过程中安装向导提示要求Python是2.7，3.3或者3.4版本（官方教程中说是支持2.7，3.3或者3.6版本，不知道哪个是对的）。</p>
+<p>安装即算完成了。然后根据官方的教程进行测试，首先切换目录到SNAP Python接口snappy所在目录，macOS下在<code>~/.snap/snap-python</code>，不同操作系统在用户目录下的<code>.snap</code>文件夹中找即可。然后在控制台调用我们刚才安装SNAP过程中设置的Python命令。如果我们是使用Conda安装的Python，直接<code>conda activate snap</code>即可。</p>
+<pre><code class="Shell">cd &lt;cd &lt;snappy-dir&gt;
+&lt;python-exe&gt;
+</code></pre>
+<p>在<code>snap-python</code>目录，我们可以使用如下代码进行测试Python开发接口是否正常工作。</p>
+<pre><code class="Python">from snappy import ProductIO
+p = ProductIO.readProduct(&#39;snappy/testdata/MER_FRS_L1B_SUBSET.dim&#39;)
+list(p.getBandNames())
+</code></pre>
+<p>然而，测试过程中你会发现有很多问题，而官方教程中根本没提供解决方案。下面细细说一下我遇到的问题以及解决方案。</p>
+<h2 id="缺包问题"><a href="#缺包问题" class="headerlink" title="缺包问题"></a>缺包问题</h2><p>运行以后的错误提示如下：<code>ImportError: No module named jpyutil</code>，这显然是Python找不到包的缘故。那没有的话，我们安装一个即可（需要安装JPY包，一个用于Java和Python语言直接相互调用的桥接库）。</p>
+<p>安装过程中，我直接使用<code>pip install jpy</code>进行安装，结果又有新的错误。</p>
+<p>后来，我发现<a target="_blank" rel="noopener" href="https://github.com/bcdev/jpy/releases">JPY</a>的GitHub网站上提供了编译好的二进制安装包，根据自己的的平台和Python版本选择合适的WHL二进制文件下载，下载以后直接使用<code>pip install &lt;jpy.whl&gt;</code>命令安装即可（<code>jpy.whl</code>换成你自己下载好的文件路径）。</p>
+<h2 id="JDK版本问题"><a href="#JDK版本问题" class="headerlink" title="JDK版本问题"></a>JDK版本问题</h2><p>缺包问题解决以后，继续进行测试，结果提示找不到JDK的动态链接库，根据错误提示，我发现snappy查找的Python版本跟我系统设置的<code>JAVA_HOME</code>路径中的JDK不一致。可能程序中使用了自己定义好JDK版本(1.8.0_112)，而没有选择使用环境变量中提供的版本。</p>
+<p>所以我根据错误提示我下载了1.8.0_112版本的JDK二进制包进行安装，JDK的问题就算解决了。</p>
+<p>Java JDK官方网站提供的一般是最新的版本，要下载老旧的JDK可以通过网站<a target="_blank" rel="noopener" href="https://www.oracle.com/java/technologies/oracle-java-archive-downloads.html">Oracle Java Archive</a>选择自己的操作系统平台进行二进制包的下载安装，不要忘了提前申请一个Oracle的账号。</p>
+<h2 id="环境变量问题"><a href="#环境变量问题" class="headerlink" title="环境变量问题"></a>环境变量问题</h2><p>JDK版本问题解决以后，继续进行测试。结果又提示找不到<code>SANP_HOME</code>路径，我们在环境变量中设置<code>SANP_HOME</code>变量指向到SNAP的安装目录即可。Windows下可以通过<code>This PC</code>属性进行设置，Linux可以在<code>~/.bashrc</code>文件中进行设置，macOS在<code>~/.bash_profile</code>进行设置。我的设置如下：</p>
+<pre><code class="Shell">export SNAP_HOME=/Applications/snap
+</code></pre>
+<p>最后，我们再继续进行测试，终于看到输出结果了：</p>
+<pre><code>[&#39;radiance_1&#39;, &#39;radiance_2&#39;, &#39;radiance_3&#39;, &#39;radiance_4&#39;, &#39;radiance_5&#39;, &#39;radiance_6&#39;, &#39;radiance_7&#39;, &#39;radiance_8&#39;, &#39;radiance_9&#39;, &#39;radiance_10&#39;, &#39;radiance_11&#39;, &#39;radiance_12&#39;, &#39;radiance_13&#39;, &#39;radiance_14&#39;, &#39;radiance_15&#39;, &#39;l1_flags&#39;, &#39;detector_index&#39;]
+</code></pre>
+<p>关于snappy接口的具体使用，欢迎关注我的后续文章！</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Python/" class="tag">#Python</a><a href="/tags/SNAP/" class="tag">#SNAP</a><a href="/tags/Sentinel影像/" class="tag">#Sentinel影像</a><a href="/tags/snappy/" class="tag">#snappy</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/SNAP-Java-API%E5%A4%84%E7%90%86Sentinel-1%E6%95%B0%E6%8D%AE/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">SNAP Java API处理Sentinel-1数据</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/ESA-SNAP%E5%B7%A5%E5%85%B7%E5%8C%85Java%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">ESA SNAP工具包Java接口的使用</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

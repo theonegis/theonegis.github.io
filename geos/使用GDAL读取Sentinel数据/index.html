@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>使用GDAL读取Sentinel数据 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="使用GDAL读取Sentinel数据 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/%E4%BD%BF%E7%94%A8GDAL%E8%AF%BB%E5%8F%96Sentinel%E6%95%B0%E6%8D%AE/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-08-28T10:30:56.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>August</span>
+            <span>28,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">使用GDAL读取Sentinel数据</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="使用GDAL读取Sentinel数据"><a href="#使用GDAL读取Sentinel数据" class="headerlink" title="使用GDAL读取Sentinel数据"></a>使用GDAL读取Sentinel数据</h1><p>GDAL 2.1已经原生支持对于Sentinel数据的读取，我这里使用Sentinel-2光学卫星数据给出使用GDAL工具对其进行读取的方法。</p>
+<p>这里我们要大概知道Sentinel数据的组织。下载下来的Sentinel数据是一个ZIP压缩包，里面包含了JPEG2000格式的影像数据以及一些XML格式的元数据文件。</p>
+<p>GDAL将Sentinel数据看做一个数据集（概念上类似HDF格式的数据集），里面包含了很多子数据文件。所以，对于Sentinel数据的读取就和对于HDF数据的读取是相同的啦。</p>
+<p>对于HDF或者NetCDF格式数据的读取参考我的博文：<a href="https://theonegis.github.io/geos/%E5%8F%96HDF%E6%88%96%E8%80%85NetCDF%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%A0%85%E6%A0%BC%E6%95%B0%E6%8D%AE/">读取HDF或者NetCDF格式的栅格数据</a></p>
+<h2 id="使用GDAL命令行读取Sentinel数据的元数据信息"><a href="#使用GDAL命令行读取Sentinel数据的元数据信息" class="headerlink" title="使用GDAL命令行读取Sentinel数据的元数据信息"></a>使用GDAL命令行读取Sentinel数据的元数据信息</h2><p>直接使用<code>gdalinfo [文件名]</code>可以查看Sentinel文件的元信息，如下图所示：</p>
+<p><img src="/images/geos/gdal-sentinel-1.png" alt="使用GDAL命令行读取Sentinel数据"></p>
+<p>从上面的图中我们可以看到所有的<code>Subdatasets</code>的文件全名，这样我们可以继续使用<code>gdalinfo [子数据集全路径]</code>的方式查看具体的子数据集的元数据信息</p>
+<p>下图显示的数据子集中包含四个波段的数据（红，绿，蓝，近红外）</p>
+<p><img src="/images/geos/gdal-sentinel-2.png" alt="使用GDAL命令行读取Sentinel数据的元数据信息"></p>
+<h2 id="使用GDAL命令行工具将Sentinel数据转为GeoTIFF格式"><a href="#使用GDAL命令行工具将Sentinel数据转为GeoTIFF格式" class="headerlink" title="使用GDAL命令行工具将Sentinel数据转为GeoTIFF格式"></a>使用GDAL命令行工具将Sentinel数据转为GeoTIFF格式</h2><p>转换是针对具体的子数据集而言的，所以使用<code>gdal_translate [sentinel subdataset full name] [output filename]</code>命令进行</p>
+<p>下面的例子将包含红绿蓝近红外波段的数据子集转为GeoTIFF影像</p>
+<p><code>gdal_translate SENTINEL2_L1C:/vsizip/S2A_MSIL1C_20180504T173911_N0206_R098_T13TGF_20180504T212111.zip/S2A_MSIL1C_20180504T173911_N0206_R098_T13TGF_20180504T212111.SAFE/MTD_MSIL1C.xml:10m:EPSG_32613 B2-3-4-8.tif</code></p>
+<h2 id="使用Python脚本读取Sentinel数据"><a href="#使用Python脚本读取Sentinel数据" class="headerlink" title="使用Python脚本读取Sentinel数据"></a>使用Python脚本读取Sentinel数据</h2><pre><code class="Python">from osgeo import gdal
+
+import os
+os.environ[&#39;CPL_ZIP_ENCODING&#39;] = &#39;UTF-8&#39;
+
+filename = (&#39;/Users/tanzhenyu/Desktop/&#39;
+            &#39;S2A_MSIL1C_20180504T173911_N0206_R098_T13TGF_20180504T212111.zip&#39;)
+# 打开栅格数据集
+root_ds = gdal.Open(filename)
+# 返回结果是一个list，list中的每个元素是一个tuple，每个tuple中包含了对数据集的路径，元数据等的描述信息
+# tuple中的第一个元素描述的是数据子集的全路径
+ds_list = root_ds.GetSubDatasets()
+
+visual_ds = gdal.Open(ds_list[0][0])  # 取出第12个数据子集（MODIS反射率产品的第一个波段）
+visual_arr = visual_ds.ReadAsArray()  # 将数据集中的数据转为ndarray
+del visual_arr
+
+# 获得栅格数据的一些重要信息
+print(f&#39;打开数据为：&#123;ds_list[0][1]&#125;&#39;)
+print(f&#39;投影信息：&#123;visual_ds.GetProjection()&#125;&#39;)
+print(f&#39;栅格波段数：&#123;visual_ds.RasterCount&#125;&#39;)
+print(f&#39;栅格列数（宽度）：&#123;visual_ds.RasterXSize&#125;&#39;)
+print(f&#39;栅格行数（高度）：&#123;visual_ds.RasterYSize&#125;&#39;)
+</code></pre>
+<p>程序输出如下：</p>
+<pre><code>打开数据为：Bands B2, B3, B4, B8 with 10m resolution, UTM 13N
+投影信息：PROJCS[&quot;WGS 84 / UTM zone 13N&quot;,GEOGCS[&quot;WGS 84&quot;,DATUM[&quot;WGS_1984&quot;,SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],PRIMEM[&quot;Greenwich&quot;,0,AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],UNIT[&quot;degree&quot;,0.0174532925199433,AUTHORITY[&quot;EPSG&quot;,&quot;9122&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]],PROJECTION[&quot;Transverse_Mercator&quot;],PARAMETER[&quot;latitude_of_origin&quot;,0],PARAMETER[&quot;central_meridian&quot;,-105],PARAMETER[&quot;scale_factor&quot;,0.9996],PARAMETER[&quot;false_easting&quot;,500000],PARAMETER[&quot;false_northing&quot;,0],UNIT[&quot;metre&quot;,1,AUTHORITY[&quot;EPSG&quot;,&quot;9001&quot;]],AXIS[&quot;Easting&quot;,EAST],AXIS[&quot;Northing&quot;,NORTH],AUTHORITY[&quot;EPSG&quot;,&quot;32613&quot;]]
+栅格波段数：4
+栅格列数（宽度）：10980
+栅格行数（高度）：10980
+</code></pre>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Sentinel/" class="tag">#Sentinel</a><a href="/tags/Python/" class="tag">#Python</a><a href="/tags/GDAL/" class="tag">#GDAL</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/leetcode/Min-Cost-Climbing-Stairs/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">Min Cost Climbing Stairs</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/plot/Matplotlib%E4%B8%AD%E7%9A%84%E4%B8%A4%E7%A7%8D%E7%BB%98%E5%9B%BEAPI%E8%AF%B4%E6%98%8E/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">Matplotlib中的两种绘图API说明</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

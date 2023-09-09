@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Matplotlib中的两种绘图API说明 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Matplotlib中的两种绘图API说明 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/plot/Matplotlib%E4%B8%AD%E7%9A%84%E4%B8%A4%E7%A7%8D%E7%BB%98%E5%9B%BEAPI%E8%AF%B4%E6%98%8E/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-07-26T03:54:26.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/plot/">图表</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>July</span>
+            <span>26,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">Matplotlib中的两种绘图API说明</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Matplotlib中的两种绘图API说明"><a href="#Matplotlib中的两种绘图API说明" class="headerlink" title="Matplotlib中的两种绘图API说明"></a>Matplotlib中的两种绘图API说明</h1><p>在Matplotlib库中提供了两种风格的API供开发者使用：一种是Pyplot编程接口（state-based），一种是面向对象对象的编程接口（object-based）。</p>
+<p>Pyplot封装了底层的绘图函数提供了一种绘图环境，使得我们可以直接像在MATLAB那样绘制图形。当我们使用<code>import matplotlib.pyplot as plt</code>语句导入<code>pyplot</code>模块，并使用<code>plt.plot()</code>绘制图形的时候，默认的<code>Figure</code>以及<code>Axes</code>等对象会自动创建以支持图形的绘制。Pyplot一来使得对MATLAB绘图熟悉的童鞋更加容易上手，二来屏蔽了一些底层通用的绘图对象的创建细节，使用更加简洁。</p>
+<p>在使用面向对象的编程接口时候，我们需要自己创建画布（FigureCanvas），自己创建图对象（Figure），自己创建Axes（一个Figure可以包含一个或者多个Axes，一个Axes可以理解为一个子图，使用一次<code>plot()</code>绘图函数便会创建一个Axes），所有对象一起才能完成一次完整的绘图。使用面向对象编程接口有利于我们对于图形绘制的完整控制，但是相对于Pyplot接口可能需要书写更多的代码。</p>
+<p>在Matplotlib官方文档中，虽然说推荐大家使用面向对象接口进行绘图，但是其中提供的例子大部分都是基于Pyplot接口的。下面我们以一个简单例子（绘制一条直线）体验一下使用两种编程接口编程的异同。</p>
+<h2 id="PyPlot接口"><a href="#PyPlot接口" class="headerlink" title="PyPlot接口"></a>PyPlot接口</h2><pre><code class="Python">import matplotlib.pyplot as plt
+plt.plot([1,2,3,4])
+plt.title(&#39;Title&#39;)
+plt.grid(True)
+plt.xlabel(&#39;X Axis&#39;)
+plt.ylabel(&#39;Y Axis&#39;)
+plt.show()
+</code></pre>
+<p>输出结果如下：</p>
+<p><img src="/images/tools/Simple-Matplotlib-Example.png" alt="Matplotlib绘制直线"></p>
+<h2 id="面向对象接口"><a href="#面向对象接口" class="headerlink" title="面向对象接口"></a>面向对象接口</h2><pre><code class="Python">from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+
+fig = Figure()
+FigureCanvas(fig)
+ax = fig.add_subplot(111)  # add_subplot()方法中的111表示的是1×1格网，第1个子图
+ax.plot([1, 2, 3, 4])
+ax.set_title(&#39;Title&#39;)
+ax.grid(True)
+ax.set_xlabel(&#39;X Axis&#39;)
+ax.set_ylabel(&#39;Y Axis&#39;)
+fig.savefig(&#39;test.png&#39;, dpi=120)
+</code></pre>
+<p>同样的例子，我们使用面向对象接口用了更多代码，但是其绘制过程也更加明了。另外，提一点，使用面向对象接口不能使用交互式的<code>show()</code>方法对图像直接进行显示。</p>
+<p>面向对象的接口需要我们对绘图的backends也有所了解，提供对应的FigureCanvas，这是很不方便的，不利于代码的跨平台移植。所以，我在编程过程中，进程使用两个接口折中的一种方案：</p>
+<pre><code class="Python">import matplotlib.pyplot as plt
+
+ax = plt.subplot(111)
+ax.plot([1, 2, 3, 4])
+ax.set_title(&#39;Title&#39;)
+ax.grid(True)
+ax.set_xlabel(&#39;X Axis&#39;)
+ax.set_ylabel(&#39;Y Axis&#39;)
+plt.show()
+</code></pre>
+<p>我推荐大家平时也多多使用这种方案，自己创建<code>Axes</code>对象，然后使用面向对象接口做图形绘制。</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Matplotlib/" class="tag">#Matplotlib</a><a href="/tags/绘图/" class="tag">#绘图</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/%E4%BD%BF%E7%94%A8GDAL%E8%AF%BB%E5%8F%96Sentinel%E6%95%B0%E6%8D%AE/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">使用GDAL读取Sentinel数据</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/dl/PyTorch%E8%B8%A9%E5%9D%91%E8%AE%B0/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">PyTorch踩坑记</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

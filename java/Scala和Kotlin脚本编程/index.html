@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Scala和Kotlin脚本编程 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Scala和Kotlin脚本编程 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/java/Scala%E5%92%8CKotlin%E8%84%9A%E6%9C%AC%E7%BC%96%E7%A8%8B/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2020-05-05T10:37:15.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/java/">Java</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>May</span>
+            <span>5,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">Scala和Kotlin脚本编程</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>作者：阿振</p>
+<p>写作时间：2020-05-05 五一假期末</p>
+<hr>
+<h1 id="Scala和Kotlin脚本编程"><a href="#Scala和Kotlin脚本编程" class="headerlink" title="Scala和Kotlin脚本编程"></a>Scala和Kotlin脚本编程</h1><p>Scala和Kotlin作为运行在JVM上的编程语言，解决了Java的很多痛点。今天我们来聊聊如何将Scala和Kotlin作为脚本语言使用（Java不支持以脚本形式运行哦）。</p>
+<h2 id="Kotlin脚本编程"><a href="#Kotlin脚本编程" class="headerlink" title="Kotlin脚本编程"></a>Kotlin脚本编程</h2><p>Kotlin脚本的扩展名为<code>kts</code>，运行命令为<code>kotlinc -script &lt;脚本文件名.kts&gt;</code></p>
+<h3 id="HelloWorld示例"><a href="#HelloWorld示例" class="headerlink" title="HelloWorld示例"></a>HelloWorld示例</h3><p>下面我们来看一个HelloWorld示例：</p>
+<p>新建名称为<code>Main.kts</code>的Kotlin脚本文件，内容如下：</p>
+<pre><code class="Kotlin">println(&quot;你好 $&#123;if (args.isNotEmpty()) args[0] else &quot;&quot;&#125;!&quot;)
+</code></pre>
+<p>可以看到脚本程序不需要主函数，Kotlin脚本以<code>args</code>参数接收用户输入（args是一个<code>Array&lt;String&gt;</code>类型的数组）</p>
+<p>在命令行执行：<code>kotlinc -script Main.kts 高寒</code></p>
+<p>得到脚本运行结果为：<code>你好 高寒!</code></p>
+<h3 id="调用外部命令"><a href="#调用外部命令" class="headerlink" title="调用外部命令"></a>调用外部命令</h3><p>如果我们想在Kotlin脚本中调用外部的命令或者程序需要怎么做呢？</p>
+<p>使用Java API中提供的<code>Runtime.getRuntime().exec()</code>函数或者<code>ProcessBuilder</code>类创建一个<code>Process</code>对象调用外部命令。</p>
+<p>下面以调用系统<code>ls</code>命令作为示例程序进行演示说明。</p>
+<pre><code class="Kotlin">import java.lang.Runtime
+
+val process: Process = Runtime.getRuntime().exec(&quot;ls /Users/TheOneGIS/Desktop&quot;)
+process.waitFor()
+
+process.inputStream.reader().use &#123;
+    println(it.readText())
+&#125;
+</code></pre>
+<p>或者</p>
+<pre><code class="Kotlin">import java.lang.ProcessBuilder
+
+val process: Process = ProcessBuilder(&quot;ls&quot;, &quot;/Users/TheOneGIS/Desktop&quot;).start()
+process.waitFor()
+
+process.inputStream.reader().use &#123;
+    println(it.readText())
+&#125;
+</code></pre>
+<p>在命令行中执行<code> kotlinc -script Main.kts</code>，输出结果如下：</p>
+<pre><code class="Kotlin">11
+data
+raw
+[这里有一个空行]
+</code></pre>
+<p>注意：</p>
+<ol>
+<li><code>Runtime.getRuntime().exec()</code>函数中直接输入命令名称加参数组成的字符串</li>
+<li><code>ProcessBuilder</code>使用多个参数进行命令名称和参数进行类的初始化</li>
+<li>命令中的路径名称不能使用<code>~</code>特殊字符，否则会出错。建议使用全路径。</li>
+<li><code>Process.waitFor()</code>等待调用的外部程序执行完毕再接着执行脚本后续代码。</li>
+<li>从输出结果的InputStream中得到文本输出，可以看到最终的文本输出每一行之后都会增加一个换行符。</li>
+</ol>
+<h2 id="Scala脚本编程"><a href="#Scala脚本编程" class="headerlink" title="Scala脚本编程"></a>Scala脚本编程</h2><p>Scala脚本的扩展名仍为<code>scala</code>，运行命令为<code>scala &lt;脚本文件名.scala&gt;</code>，和普通的Scala类一样。</p>
+<h3 id="HelloWorld示例-1"><a href="#HelloWorld示例-1" class="headerlink" title="HelloWorld示例"></a>HelloWorld示例</h3><p>新建名称为<code>Main.scala</code>的Scala脚本文件，内容如下：</p>
+<pre><code class="Scala">println(s&quot;你好 $&#123;if (args.nonEmpty) args(0) else &quot;&quot;&#125;!&quot;)
+</code></pre>
+<p>可以看到和Kotlin脚本程序一样不需要主函数，Scala脚本同样以<code>args</code>参数接收用户输入（args是一个<code>Array[String]</code>类型的数组）</p>
+<p>在命令行执行：<code>scala Main.scala 高寒</code></p>
+<p>得到脚本运行结果为：<code>你好 高寒!</code></p>
+<h3 id="调用外部命令-1"><a href="#调用外部命令-1" class="headerlink" title="调用外部命令"></a>调用外部命令</h3><p>在Scala中可以调用Java方法，我们可以直接使用上面类似Kotlin的方式，但是Scala中为我们提供了更加便捷的方法来调用外部命令或程序，下面我们来看一下吧！</p>
+<ol>
+<li>使用<code>Process</code>的<code>!</code>方法，得到执行结果的状态码，一般0表示成功</li>
+<li>使用<code>Process</code>的<code>!!</code>方法，得到执行结果的文本输出</li>
+<li>使用<code>Process</code>的<code>lazyLines</code>方法，将得到保存在<code>LazyList[String]</code>结构的输出中（延迟执行）</li>
+</ol>
+<p>注意：这里的<code>Process</code>类是Scala类库中提供的，前面在Kotlin中使用的<code>Process</code>类是Java类库中提供的。</p>
+<p>我们先来看第一种方式：</p>
+<pre><code class="Scala">import sys.process._
+Process(&quot;ls /Users/TheOneGIS/Desktop&quot;).!
+</code></pre>
+<p>在命令行中运行<code>scala Main.scala</code>，得到执行结果：</p>
+<pre><code class="Scala">11
+data
+raw
+</code></pre>
+<p><code>Process</code>的<code>!</code>方法是有返回值的，这里我们直接舍弃了，并不关心<code>ls</code>的返回值，我们只关心<code>ls</code>命令的输出结果。</p>
+<p>再看第二种方式：</p>
+<pre><code class="Scala">import sys.process._
+val results = Process(&quot;ls /Users/TheOneGIS/Desktop&quot;).!!
+println(results)
+</code></pre>
+<p>在命令行中运行<code>scala Main.scala</code>，得到执行结果：</p>
+<pre><code class="Scala">11
+data
+raw
+[这里有一个空行]
+</code></pre>
+<p>可以看到<code>results</code>字符串是给<code>ls</code>命令的每个输出字符后面都加了换行符。</p>
+<p>再看第三种方式：</p>
+<pre><code class="Scala">import sys.process._
+val results = Process(&quot;ls /Users/TheOneGIS/Desktop&quot;).lazyLines
+results.foreach(println)
+</code></pre>
+<p>输出结果和第一种方式一样，不过当需要获取最后输出并且需要对输出进行操作的时候我最喜欢使用第三种方式，不需要对输出进行进一步处理的时候我喜欢使用第一种方式。</p>
+<h2 id="Scala和Kotlin脚本编程的异同"><a href="#Scala和Kotlin脚本编程的异同" class="headerlink" title="Scala和Kotlin脚本编程的异同"></a>Scala和Kotlin脚本编程的异同</h2><ol>
+<li>Scala脚本的扩展名和执行方式和普通Scala类一样；Kotlin脚本的扩展名为<code>kts</code>，执行的时候需要加<code>-script</code>参数</li>
+<li>Scala提供了对于外部命令调用的快捷方法；Kotlin主要依靠Java类库进行外部命令调用</li>
+<li>在IntelliJ IDEA中可以直接运行Kotlin脚本，但是不支持直接运行Scala脚本</li>
+<li>IntelliJ IDEA提供了对<a target="_blank" rel="noopener" href="https://ammonite.io/">Ammonite</a>项目的支持，可以运行Ammonite Scala脚本</li>
+</ol>
+<p>注：Ammonite项目扩展了Scala的脚本功能，添加了很多额外的特性，甚至提供了一个基于Scala的Shell（类似于Bash Shell）。用Ammonite写的Scala脚本扩展名为<code>sc</code>，使用<code>amm</code>命令进行执行。感兴趣的童鞋可以去围观该项目。</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Scala/" class="tag">#Scala</a><a href="/tags/Kotlin/" class="tag">#Kotlin</a><a href="/tags/Script/" class="tag">#Script</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/QGIS%E9%9D%A2%E6%95%B0%E6%8D%AE%E8%9E%8D%E5%90%88%E4%BB%A5%E5%90%8E%E6%9C%89%E5%B0%8F%E7%9A%84%E7%BA%BF%E6%AE%B5%E6%88%96%E8%80%85%E6%B4%9E%E5%AD%98%E5%9C%A8%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">QGIS面数据融合以后有小的线段或者洞存在如何解决</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/SNAP-Java-API%E5%A4%84%E7%90%86Sentinel-1%E6%95%B0%E6%8D%AE/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">SNAP Java API处理Sentinel-1数据</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

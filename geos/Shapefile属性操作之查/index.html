@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Shapefile属性操作之查 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Shapefile属性操作之查 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/Shapefile%E5%B1%9E%E6%80%A7%E6%93%8D%E4%BD%9C%E4%B9%8B%E6%9F%A5/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2020-06-13T15:14:28.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>June</span>
+            <span>13,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">Shapefile属性操作之查</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>作者：阿振</p>
+<p>写作时间：2020-06-13 夜</p>
+<hr>
+<h1 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h1><p>在前面几篇博文中，我们分别介绍了矢量空间数据的属性数据的增（CREATE）删（DELETE）改（UPDATE）操作，这篇博文我们来聊聊属性数据的查询（Retrieve）操作。</p>
+<h1 id="案例介绍"><a href="#案例介绍" class="headerlink" title="案例介绍"></a>案例介绍</h1><p>我们还是使用之前的分省Shapefile数据，主要包含每个省的一些统计信息。下面以两个案例进行介绍：</p>
+<ol>
+<li>从给定数据中查询中学数量（HighSchool字段）大于1万所的省份</li>
+<li>从给定数据中查询中学数量最多的省份</li>
+</ol>
+<p>下面简单说一下使用GDAL进行属性数据查询的两种思路：</p>
+<ol>
+<li>因为矢量数据的属性一般都是以关系表进行保存的，所以我们可以使用关系数据库查询语言SQL进行数据查询。GDAL支持部分SQL查询功能。</li>
+<li>我们可以遍历图层Layer中包含的所有Feature要素，然后读取要素的属性数据进行筛选过滤得到我们想要的结果。</li>
+</ol>
+<h1 id="SQL查询方式"><a href="#SQL查询方式" class="headerlink" title="SQL查询方式"></a>SQL查询方式</h1><h2 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h2><p>Talk is cheap. Show me the code.</p>
+<p>首先，我们来看看使用SQL进行查询的代码。</p>
+<pre><code class="Python">from osgeo import ogr
+ogr.UseExceptions()
+
+ds: ogr.DataSource = ogr.Open(&#39;../data/Provinces.shp&#39;)
+# 注意Layer的名称不能包含中文
+layer: ogr.Layer = ds.GetLayer()
+# 选择出中学数量大于1万所的省份
+query: str = f&#39;SELECT NAME, HighSchool FROM &#123;layer.GetName()&#125; WHERE HighSchool &gt; 10000&#39;
+selected: ogr.Layer = ds.ExecuteSQL(query)
+# 这里的Feature中只包含两个属性NAME和HighSchool
+for feature in selected:
+    print(feature.GetField(&#39;NAME&#39;))
+
+# 选择出中学数量最多的省份
+# 我尝试使用MAX函数和嵌套的SELECT语句进行实现，但是执行报错，应该是OGR不支持嵌套的SQL查询
+query: str = f&#39;SELECT NAME, HighSchool FROM &#123;layer.GetName()&#125; ORDER BY HighSchool DESC&#39;
+selected: ogr.Layer = ds.ExecuteSQL(query)
+print(selected.GetFeature(0).GetField(&#39;NAME&#39;))
+print(selected.GetFeature(0).GetField(&#39;HighSchool&#39;))
+
+del ds
+</code></pre>
+<h2 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h2><ol>
+<li>首先我们使用<code>ogr.Open()</code>函数读取数据，使用<code>GetLayer()</code>方法获取图层</li>
+<li>然后构造SQL查询语句，图层名称对应的是SQL语句中的表名。注意如果图层名称为中文，查询会失败。</li>
+<li>然后使用<code>ExecuteSQL()</code>方法执行查询，得到的查询结果仍然是一个<code>ogr.Layer</code>图层类，但是图层中的要素属性只包含我们查询语句中指定的字段</li>
+<li>对于第二个案例，我们本来可以使用一个嵌套的SELECT查询语句以及MAX聚合函数得到最大的中学数量，但是使用嵌套的SQL查询执行会失败。所以我在第二个案例中使用了ORDER BY子句进行排序，然后查询结果的第一个要素就是我们寻找的最大值。</li>
+</ol>
+<h1 id="遍历Feature要素方式"><a href="#遍历Feature要素方式" class="headerlink" title="遍历Feature要素方式"></a>遍历Feature要素方式</h1><h2 id="代码展示-1"><a href="#代码展示-1" class="headerlink" title="代码展示"></a>代码展示</h2><p>我们再来看使用遍历Feature要素的方法。</p>
+<pre><code class="Python">from osgeo import ogr
+ogr.UseExceptions()
+
+ds: ogr.DataSource = ogr.Open(&#39;../data/Provinces.shp&#39;)
+# 注意Layer的名称不能包含中文
+layer: ogr.Layer = ds.GetLayer()
+# 使用filter函数对要素属性进行过滤
+selected = list(filter(lambda f: f.GetField(&#39;HighSchool&#39;) &gt; 10000, layer))
+for feature in selected:
+    print(feature.GetField(&#39;NAME&#39;))
+
+# 使用sorted方法对要素进行自定义排序，这里使用逆序
+selected = sorted(layer, key=lambda f: f.GetField(&#39;HighSchool&#39;), reverse=True)
+print(selected[0].GetField(&#39;NAME&#39;))
+print(selected[0].GetField(&#39;HighSchool&#39;))
+
+del ds
+</code></pre>
+<h2 id="方法总结-1"><a href="#方法总结-1" class="headerlink" title="方法总结"></a>方法总结</h2><ol>
+<li>使用遍历Feature要素的方法进行查询是我们在获取了图层包含的所有Feature要素集合以后，使用Python内置的函数对该集合进行过滤，排序等操作得到我们想要的查询结果。</li>
+<li><code>filter()</code>函数的第一个参数是一个自定义函数，第二个参数是一个可迭代对象iterable。该函数会遍历可迭代对象将满足第一个自定义函数的值过滤出来。</li>
+<li><code>sorted()</code>函数包含三个参数（后两个可选），第一个参数是一个可迭代对象iterable，第二个参数是用于自定义排序的函数，第三个参数指定是否逆序。<code>sorted()</code>函数的返回值是一个<code>list</code>对象。</li>
+<li>我更喜欢使用第二种遍历的方式，因为更方便调试一些。当然如果对SQL语言熟悉的同学，可能更喜欢SQL这种声明式编程的方式。</li>
+</ol>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Shapefile/" class="tag">#Shapefile</a><a href="/tags/GDAL/" class="tag">#GDAL</a><a href="/tags/矢量数据/" class="tag">#矢量数据</a><a href="/tags/属性操作/" class="tag">#属性操作</a><a href="/tags/增加字段/" class="tag">#增加字段</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/%E7%9F%A2%E9%87%8F%E6%95%B0%E6%8D%AE%E7%A9%BA%E9%97%B4%E6%9F%A5%E8%AF%A2/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">矢量数据空间查询</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/Shapefile%E5%B1%9E%E6%80%A7%E6%93%8D%E4%BD%9C%E4%B9%8B%E6%94%B9/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">Shapefile属性操作之改</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>使用卷积网络做手写数字识别 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="使用卷积网络做手写数字识别 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/dl/%E4%BD%BF%E7%94%A8%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E5%81%9A%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E8%AF%86%E5%88%AB/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2019-03-02T14:24:22.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/dl/">深度学习</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>March</span>
+            <span>2,</span>
+            <span>2019</span>
+        </div>
+        
+
+        <h2 class="title">使用卷积网络做手写数字识别</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>写作时间：2019-03-02 22:24:22</p>
+<h1 id="使用卷积网络做手写数字识别"><a href="#使用卷积网络做手写数字识别" class="headerlink" title="使用卷积网络做手写数字识别"></a>使用卷积网络做手写数字识别</h1><h2 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h2><p>上篇博文《<a target="_blank" rel="noopener" href="https://theonegis.blog.csdn.net/article/details/88086423">使用循环神经网络做手写数字识别</a>》介绍了利用LSTM做手写数字的识别，想着好事成双，也写一个姊妹篇卷积网络实现手写数字的识别。</p>
+<p>博文主要通过最简单的代码量展示一个入门级别的识别案例。需要注意的几点：</p>
+<ul>
+<li>卷积网络的输入大小为（<code>batch_size</code>，<code>num_channels</code>，<code>image_width</code>，<code>image_height</code>）</li>
+<li>本文中的模型使用了卷积层和线性连接层。Linear层的输入大小为（<code>*</code>，<code>num_input_feature</code>），所以在卷积层输出流入线性层的时候，需要转化一下张量的尺寸大小</li>
+<li>综合使用<code>MaxPooling</code>层和<code>Dropout</code>层可以提高识别准确率</li>
+</ul>
+<h2 id="PyTorch实现"><a href="#PyTorch实现" class="headerlink" title="PyTorch实现"></a>PyTorch实现</h2><pre><code class="Python">import torch
+from torch import nn
+import torchvision.datasets as datasets
+import torchvision.transforms as transforms
+
+torch.manual_seed(2019)
+
+# 超参设置
+EPOCH = 1  # 训练EPOCH次，这里为了测试方便只跑一次
+BATCH_SIZE = 32
+INIT_LR = 1e-3  # 初始学习率
+DOWNLOAD_MNIST = True  # 设置是否需要下载数据集
+
+# 使用DataLoader加载训练数据，为了演示方便，对于测试数据只取出2000个样本进行测试
+train_data = datasets.MNIST(root=&#39;mnist&#39;, train=True, transform=transforms.ToTensor(), download=DOWNLOAD_MNIST)
+train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True)
+test_data = datasets.MNIST(root=&#39;mnist&#39;, train=False)
+test_x = test_data.test_data.type(torch.FloatTensor)[:2000] / 255.
+test_x.unsqueeze_(1)  # 调整test_x的尺寸为四维，添加了一个channel维度
+test_y = test_data.test_labels.numpy()[:2000]
+
+
+class ConvNet(nn.Module):
+    def __init__(self):
+        super(ConvNet, self).__init__()
+        self.conv = nn.Sequential(
+            nn.Conv2d(1, 32, 5),  # 图像输出大小为24*24
+            nn.MaxPool2d(2),  # 图像输出大小为12*12
+            nn.ReLU(True),
+            nn.Conv2d(32, 64, 5),  # 图像输出大小为8*8
+            nn.Dropout2d(),
+            nn.MaxPool2d(2),  # 图像输出大小为4*4
+            nn.ReLU(True)
+        )
+
+        self.linear = nn.Sequential(
+            nn.Linear(4 * 4 * 64, 128),
+            nn.ReLU(True),
+            nn.Dropout2d(),
+            nn.Linear(128, 10),
+            nn.Softmax(1)
+        )
+
+    def forward(self, x):
+        x = self.conv(x)
+        x = x.view(-1, 4 * 4 * 64)
+        out = self.linear(x)
+        return out
+
+
+model = ConvNet()
+print(model)
+
+optimizer = torch.optim.Adam(model.parameters(), lr=INIT_LR)
+loss_func = nn.CrossEntropyLoss()
+
+# RNN训练
+for epoch in range(EPOCH):
+    for index, (b_x, b_y) in enumerate(train_loader):
+        model.train()
+        # 输入尺寸为(batch_size, channels, height, width)
+        output = model(b_x)  # (64, 1, 28, 28)
+        loss = loss_func(output, b_y)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if index % 50 == 0:
+            model.eval()
+            prediction = model(test_x)  # 输出为(2000, 10)
+            pred_y = torch.max(prediction, 1)[1].data.numpy()
+            accuracy = (pred_y == test_y).sum() / float(test_y.size)
+            print(f&#39;Epoch: [&#123;index&#125;/&#123;epoch&#125;]&#39;, f&#39;| train loss: &#123;loss.item()&#125;&#39;, f&#39;| test accuracy: &#123;accuracy&#125;&#39;)
+
+# 打印测试数据集中的后20个结果
+model.eval()
+prediction = model(test_x[:20])
+pred_y = torch.max(prediction, 1)[1].data.numpy()
+print(pred_y, &#39;prediction number&#39;)
+print(test_y[:20], &#39;real number&#39;)
+</code></pre>
+<p>训练结果如下，可以看到对于这种不太复杂的问题，CNN和RNN都可以得到比较高的精度。</p>
+<p><img src="/images/ml/CNN-MNIST.png" alt="使用卷积网络做手写数字识别"></p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/PyTorch/" class="tag">#PyTorch</a><a href="/tags/卷积神经网络/" class="tag">#卷积神经网络</a><a href="/tags/CNN/" class="tag">#CNN</a><a href="/tags/手写识别/" class="tag">#手写识别</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/python/Python%E4%B8%AD%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E4%BD%BF%E7%94%A8switch%E8%AF%AD%E5%8F%A5/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">Python中如何优雅地使用switch语句</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/dl/%E4%BD%BF%E7%94%A8%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%81%9A%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E8%AF%86%E5%88%AB/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">使用循环神经网络做手写数字识别</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

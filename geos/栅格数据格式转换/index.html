@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>栅格数据格式转换 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="栅格数据格式转换 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/%E6%A0%85%E6%A0%BC%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-07-11T12:12:12.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>July</span>
+            <span>11,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">栅格数据格式转换</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="栅格格式转换"><a href="#栅格格式转换" class="headerlink" title="栅格格式转换"></a>栅格格式转换</h1><p>作者：阿振</p>
+<p>邮箱：<a href="mailto:&#116;&#x61;&#x6e;&#122;&#x68;&#x65;&#110;&#121;&#x75;&#x67;&#105;&#115;&#64;&#49;&#x36;&#x33;&#x2e;&#x63;&#x6f;&#109;">&#116;&#x61;&#x6e;&#122;&#x68;&#x65;&#110;&#121;&#x75;&#x67;&#105;&#115;&#64;&#49;&#x36;&#x33;&#x2e;&#x63;&#x6f;&#109;</a></p>
+<p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a></p>
+<p>修改时间：2018-05-17</p>
+<p>声明：本文为博主原创文章，转载请注明原文出处</p>
+<hr>
+<h2 id="查看GDAL支持的栅格数据格式"><a href="#查看GDAL支持的栅格数据格式" class="headerlink" title="查看GDAL支持的栅格数据格式"></a>查看GDAL支持的栅格数据格式</h2><p>我们可以在终端中使用<code>gdal --formats</code>命令查看安装的GDAL库支持的栅格数据格式</p>
+<pre><code>Supported Formats:
+  VRT -raster- (rw+v): Virtual Raster
+  DERIVED -raster- (ro): Derived datasets using VRT pixel functions
+  GTiff -raster- (rw+vs): GeoTIFF
+  NITF -raster- (rw+vs): National Imagery Transmission Format
+  RPFTOC -raster- (rovs): Raster Product Format TOC format
+  ECRGTOC -raster- (rovs): ECRG TOC format
+  HFA -raster- (rw+v): Erdas Imagine Images (.img)
+  SAR_CEOS -raster- (rov): CEOS SAR Image
+  CEOS -raster- (rov): CEOS Image
+  JAXAPALSAR -raster- (rov): JAXA PALSAR Product Reader (Level 1.1/1.5)
+  GFF -raster- (rov): Ground-based SAR Applications Testbed File Format (.gff)
+  ELAS -raster- (rw+v): ELAS
+  AIG -raster- (rov): Arc/Info Binary Grid
+  AAIGrid -raster- (rwv): Arc/Info ASCII Grid
+  GRASSASCIIGrid -raster- (rov): GRASS ASCII Grid
+  SDTS -raster- (rov): SDTS Raster
+  DTED -raster- (rwv): DTED Elevation Raster
+  PNG -raster- (rwv): Portable Network Graphics
+  JPEG -raster- (rwv): JPEG JFIF
+  MEM -raster- (rw+): In Memory Raster
+  JDEM -raster- (rov): Japanese DEM (.mem)
+  GIF -raster- (rwv): Graphics Interchange Format (.gif)
+  BIGGIF -raster- (rov): Graphics Interchange Format (.gif)
+  ESAT -raster- (rov): Envisat Image Format
+  BSB -raster- (rov): Maptech BSB Nautical Charts
+  XPM -raster- (rwv): X11 PixMap Format
+  BMP -raster- (rw+v): MS Windows Device Independent Bitmap
+  DIMAP -raster- (rov): SPOT DIMAP
+  AirSAR -raster- (rov): AirSAR Polarimetric Image
+  RS2 -raster- (ros): RadarSat 2 XML Product
+  SAFE -raster- (rov): Sentinel-1 SAR SAFE Product
+  PCIDSK -raster,vector- (rw+v): PCIDSK Database File
+  PCRaster -raster- (rw+): PCRaster Raster File
+  ILWIS -raster- (rw+v): ILWIS Raster Map
+  SGI -raster- (rw+): SGI Image File Format 1.0
+  SRTMHGT -raster- (rwv): SRTMHGT File Format
+  Leveller -raster- (rw+): Leveller heightfield
+  Terragen -raster- (rw+): Terragen heightfield
+  GMT -raster- (rw): GMT NetCDF Grid Format
+  netCDF -raster,vector- (rw+s): Network Common Data Format
+  HDF4 -raster- (ros): Hierarchical Data Format Release 4
+  HDF4Image -raster- (rw+): HDF4 Dataset
+  ISIS3 -raster- (rw+v): USGS Astrogeology ISIS cube (Version 3)
+  ISIS2 -raster- (rw+v): USGS Astrogeology ISIS cube (Version 2)
+  PDS -raster- (rov): NASA Planetary Data System
+  VICAR -raster- (rov): MIPL VICAR file
+  TIL -raster- (rov): EarthWatch .TIL
+  ERS -raster- (rw+v): ERMapper .ers Labelled
+  JP2OpenJPEG -raster,vector- (rwv): JPEG-2000 driver based on OpenJPEG library
+  L1B -raster- (rovs): NOAA Polar Orbiter Level 1b Data Set
+  FIT -raster- (rwv): FIT Image
+  GRIB -raster- (rov): GRIdded Binary (.grb)
+  RMF -raster- (rw+v): Raster Matrix Format
+  WCS -raster- (rovs): OGC Web Coverage Service
+  WMS -raster- (rwvs): OGC Web Map Service
+  MSGN -raster- (ro): EUMETSAT Archive native (.nat)
+  RST -raster- (rw+v): Idrisi Raster A.1
+  INGR -raster- (rw+v): Intergraph Raster
+  GSAG -raster- (rwv): Golden Software ASCII Grid (.grd)
+  GSBG -raster- (rw+v): Golden Software Binary Grid (.grd)
+  GS7BG -raster- (rw+v): Golden Software 7 Binary Grid (.grd)
+  COSAR -raster- (rov): COSAR Annotated Binary Matrix (TerraSAR-X)
+  TSX -raster- (rov): TerraSAR-X Product
+  COASP -raster- (ro): DRDC COASP SAR Processor Raster
+  R -raster- (rwv): R Object Data Store
+  MAP -raster- (rov): OziExplorer .MAP
+  KMLSUPEROVERLAY -raster- (rwv): Kml Super Overlay
+  PDF -raster,vector- (rw+vs): Geospatial PDF
+  Rasterlite -raster- (rws): Rasterlite
+  MBTiles -raster- (rw+v): MBTiles
+  PLMOSAIC -raster- (ro): Planet Labs Mosaics API
+  CALS -raster- (rw): CALS (Type 1)
+  WMTS -raster- (rwv): OGC Web Mab Tile Service
+  SENTINEL2 -raster- (rovs): Sentinel 2
+  MRF -raster- (rw+v): Meta Raster Format
+  PNM -raster- (rw+v): Portable Pixmap Format (netpbm)
+  DOQ1 -raster- (rov): USGS DOQ (Old Style)
+  DOQ2 -raster- (rov): USGS DOQ (New Style)
+  GenBin -raster- (rov): Generic Binary (.hdr Labelled)
+  PAux -raster- (rw+): PCI .aux Labelled
+  MFF -raster- (rw+v): Vexcel MFF Raster
+  MFF2 -raster- (rw+): Vexcel MFF2 (HKV) Raster
+  FujiBAS -raster- (ro): Fuji BAS Scanner Image
+  GSC -raster- (rov): GSC Geogrid
+  FAST -raster- (rov): EOSAT FAST Format
+  BT -raster- (rw+v): VTP .bt (Binary Terrain) 1.3 Format
+  LAN -raster- (rw+v): Erdas .LAN/.GIS
+  CPG -raster- (ro): Convair PolGASP
+  IDA -raster- (rw+v): Image Data and Analysis
+  NDF -raster- (rov): NLAPS Data Format
+  EIR -raster- (rov): Erdas Imagine Raw
+  DIPEx -raster- (rov): DIPEx
+  LCP -raster- (rwv): FARSITE v.4 Landscape File (.lcp)
+  GTX -raster- (rw+v): NOAA Vertical Datum .GTX
+  LOSLAS -raster- (rov): NADCON .los/.las Datum Grid Shift
+  NTv2 -raster- (rw+vs): NTv2 Datum Grid Shift
+  CTable2 -raster- (rw+v): CTable2 Datum Grid Shift
+  ACE2 -raster- (rov): ACE2
+  SNODAS -raster- (rov): Snow Data Assimilation System
+  KRO -raster- (rw+v): KOLOR Raw
+  ROI_PAC -raster- (rw+v): ROI_PAC raster
+  RRASTER -raster- (rov): R Raster
+  ENVI -raster- (rw+v): ENVI .hdr Labelled
+  EHdr -raster- (rw+v): ESRI .hdr Labelled
+  ISCE -raster- (rw+v): ISCE raster
+  ARG -raster- (rwv): Azavea Raster Grid format
+  RIK -raster- (rov): Swedish Grid RIK (.rik)
+  USGSDEM -raster- (rwv): USGS Optional ASCII DEM (and CDED)
+  GXF -raster- (ro): GeoSoft Grid Exchange Format
+  DODS -raster- (ro): DAP 3.x servers
+  KEA -raster- (rw+): KEA Image Format (.kea)
+  BAG -raster- (ro): Bathymetry Attributed Grid
+  HDF5 -raster- (ros): Hierarchical Data Format Release 5
+  HDF5Image -raster- (ro): HDF5 Dataset
+  NWT_GRD -raster- (rw+v): Northwood Numeric Grid Format .grd/.tab
+  NWT_GRC -raster- (rov): Northwood Classified Grid Format .grc/.tab
+  ADRG -raster- (rw+vs): ARC Digitized Raster Graphics
+  SRP -raster- (rovs): Standard Raster Product (ASRP/USRP)
+  BLX -raster- (rwv): Magellan topo (.blx)
+  PostGISRaster -raster- (rws): PostGIS Raster driver
+  SAGA -raster- (rw+v): SAGA GIS Binary Grid (.sdat)
+  XYZ -raster- (rwv): ASCII Gridded XYZ
+  HF2 -raster- (rwv): HF2/HFZ heightfield raster
+  OZI -raster- (rov): OziExplorer Image File
+  CTG -raster- (rov): USGS LULC Composite Theme Grid
+  E00GRID -raster- (rov): Arc/Info Export E00 GRID
+  ZMap -raster- (rwv): ZMap Plus Grid
+  NGSGEOID -raster- (rov): NOAA NGS Geoid Height Grids
+  IRIS -raster- (rov): IRIS data (.PPI, .CAPPi etc)
+  PRF -raster- (rov): Racurs PHOTOMOD PRF
+  GPKG -raster,vector- (rw+vs): GeoPackage
+  CAD -raster,vector- (rovs): AutoCAD Driver
+  PLSCENES -raster,vector- (ro): Planet Labs Scenes API
+  HTTP -raster,vector- (ro): HTTP Fetching Wrapper
+</code></pre>
+<h2 id="使用命令行工具进行栅格格式转换"><a href="#使用命令行工具进行栅格格式转换" class="headerlink" title="使用命令行工具进行栅格格式转换"></a>使用命令行工具进行栅格格式转换</h2><p>GDAL库不但提供了C/C++编程语言的API接口，还提供了很多实用的命令行工具，帮助我们完成一些日常的数据处理工作。</p>
+<p>我们以将GeoTIFF格式转为IMAGE格式为例，说明如何使用命令行工具进行栅格格式转换：</p>
+<p><code>gdal_translate -of HFA example.tif example.img</code></p>
+<p>其中，<code>of</code>选项指示了输出数据格式，<code>HFA</code>代表的是Erdas Imagine Images ，<code>example.tif</code>是输入数据路径，<code>example.img</code>是输出数据路径</p>
+<p>详细参数参考：<a target="_blank" rel="noopener" href="http://www.gdal.org/gdal_translate.html">gdal_translate</a></p>
+<h2 id="使用Python代码进行栅格格式转换"><a href="#使用Python代码进行栅格格式转换" class="headerlink" title="使用Python代码进行栅格格式转换"></a>使用Python代码进行栅格格式转换</h2><p>下面介绍两种进行转换的方式：</p>
+<ol>
+<li><p>GDAL 2.1版本之后提供了，从代码中调用命令行的API接口，所以我们可以在Python代码中直接调用<code>Translate()</code>函数进行转换</p>
+<pre><code class="python">from osgeo import gdal
+
+ds = gdal.Open(&#39;example.tif&#39;)
+ds = gdal.Translate(&#39;example.img&#39;, ds, format=&#39;HFA&#39;)
+ds = None
+</code></pre>
+<p><code>Translate()</code>函数的第一个参数是输出数据路径，第二参数是输入数据路径或者输入数据的Dataset对象，后面都是可选参数，具体<code>Translate()</code>函数的参数可以参见：<a target="_blank" rel="noopener" href="http://gdal.org/python/">GDAL/OGR Python API</a></p>
+</li>
+<li><p>使用<code>CreateCopy()</code>方法进行数据的复制及格式转换</p>
+<pre><code class="python">from osgeo import gdal
+
+# 打开数据文件
+src_ds = gdal.Open(&#39;example.tif&#39;)
+
+# 获得数据驱动对象
+driver = gdal.GetDriverByName(&#39;HFA&#39;)
+
+# 进行数据格式转换
+dst_ds = driver.CreateCopy(&#39;example.img&#39;, src_ds)
+
+# 关闭数据集对象
+dst_ds = None
+src_ds = None
+</code></pre>
+</li>
+</ol>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/空间数据处理/" class="tag">#空间数据处理</a><a href="/tags/Python/" class="tag">#Python</a><a href="/tags/栅格数据/" class="tag">#栅格数据</a><a href="/tags/格式转换/" class="tag">#格式转换</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/%E6%A0%85%E6%A0%BC%E6%95%B0%E6%8D%AE%E5%88%9B%E5%BB%BA%E4%B8%8E%E4%BF%9D%E5%AD%98/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">栅格数据创建与保存</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/%E6%89%93%E5%BC%80%E6%A0%85%E6%A0%BC%E6%95%B0%E6%8D%AE%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E5%BC%8F/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">打开栅格数据的正确方式</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

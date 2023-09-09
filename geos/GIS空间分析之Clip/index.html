@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>GIS空间分析之Clip - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="GIS空间分析之Clip - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/GIS%E7%A9%BA%E9%97%B4%E5%88%86%E6%9E%90%E4%B9%8BClip/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2020-06-16T00:23:13.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>June</span>
+            <span>16,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">GIS空间分析之Clip</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>作者：阿振</p>
+<p>写作时间：2020-06-16 周一 早安</p>
+<hr>
+<h1 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h1><p>接着上篇《<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/106753745">GIS空间分析之Buffer</a>》之后，这篇来介绍矢量数据的裁剪（Clip）。裁剪其实算不上是一种空间分析功能，就是一种简单矢量数据处理操作。</p>
+<p>一般，我们会使用一个代表研究区域或者感兴趣的区域（AOI，Area of Interest）的多边形数据去裁剪一个比较大的全区域的数据，得到的结果就是感兴趣区域中包含的数据。矢量数据的裁剪在平时工作中用得不是特别多。</p>
+<h1 id="案例介绍"><a href="#案例介绍" class="headerlink" title="案例介绍"></a>案例介绍</h1><p>本文使用一个AOI区域（黄河流域区）区裁剪中国的县界（线要素），从而得到黄河流域区中的县界。</p>
+<p>在上篇《<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/106753745">GIS空间分析之Buffer</a>》中我们是使用了Geometry类的<code>Buffer()</code>方法建立缓冲区的，而本篇中我们需要使用Layer图层类的<code>Clip()</code>方法进行矢量数据裁切。</p>
+<p>对于矢量数据的操作，有的是通过Geometry类的方法实现的，有的是通过Layer类的方法实现的。</p>
+<p>下面来看一下我们的数据，红色区块是黄河流域，红色的线表示的是各个县的边界。</p>
+<p><img src="/images/geos/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-06-16%E4%B8%8A%E5%8D%888.34.13.png"></p>
+<h1 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h1><pre><code class="Python">from pathlib import Path
+import ogr
+
+ogr.UseExceptions()
+
+# 读取被裁剪的数据
+in_ds: ogr.DataSource = ogr.Open(&#39;../data/County.shp&#39;)
+in_lyr: ogr.Layer = in_ds.GetLayer()
+
+# 读取裁剪范围数据
+method_ds: ogr.DataSource = ogr.Open(&#39;../data/YellowRiver.shp&#39;)
+method_lyr: ogr.Layer = method_ds.GetLayer()
+
+fname: str = &#39;Clipped.shp&#39;
+# 创建被裁剪以后的输出文件
+driver: ogr.Driver = ogr.GetDriverByName(&#39;ESRI Shapefile&#39;)
+if Path(fname).exists():
+    driver.DeleteDataSource(fname)
+# 新建DataSource，Layer
+out_ds: ogr.DataSource = driver.CreateDataSource(fname)
+out_lyr: ogr.Layer = out_ds.CreateLayer(fname,
+                                        in_lyr.GetSpatialRef(),
+                                        in_lyr.GetGeomType())
+# 开始进行裁剪
+in_lyr.Clip(method_lyr, out_lyr)
+out_ds.FlushCache()
+del in_ds, method_ds, out_ds
+</code></pre>
+<p>裁剪的结果如下：</p>
+<p><img src="/images/geos/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-06-16%E4%B8%8A%E5%8D%888.34.55.png"></p>
+<h1 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h1><ol>
+<li>首先我们使用<code>ogr.Open()</code>函数分别读取被裁剪的数据以及裁剪范围数据；使用<code>GetLayer()</code>方法获取数据的图层。裁剪范围数据在GDAL中被称为Method Layer。</li>
+<li>使用Driver类的<code>CreateDataSource()</code>方法创建裁剪输出结果；使用<code>CreateLayer()</code>函数创建输出图层。<code>CreateLayer()</code>函数传入三个参数，分别是图层名，空间参考以及空间要素类型。后两个参数可以通过读取被裁剪数据获取。</li>
+<li>使用读取被裁剪数据图层的<code>Clip()</code>函数进行裁剪，改函数传入两个参数，分别是方法图层（Method Layer）以及输出结果图层（Result Layer）。</li>
+</ol>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/GDAL/" class="tag">#GDAL</a><a href="/tags/GIS/" class="tag">#GIS</a><a href="/tags/空间分析/" class="tag">#空间分析</a><a href="/tags/裁剪/" class="tag">#裁剪</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/algorithm/Dijkstra%E7%AE%97%E6%B3%95%E5%8F%8A%E5%85%B6C-%E5%AE%9E%E7%8E%B0/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">Dijkstra算法及其C++实现</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/GIS%E7%A9%BA%E9%97%B4%E5%88%86%E6%9E%90%E4%B9%8BBuffer/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">GIS空间分析之Buffer</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

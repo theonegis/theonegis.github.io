@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Python调用C++代码 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Python调用C++代码 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/python/Python%E8%B0%83%E7%94%A8C-%E4%BB%A3%E7%A0%81/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-09-06T09:07:32.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/python/">Python</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>September</span>
+            <span>6,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">Python调用C++代码</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Python调用C-代码"><a href="#Python调用C-代码" class="headerlink" title="Python调用C++代码"></a>Python调用C++代码</h1><p>今天在研究PyTorch中Tensor的一些操作的时候，发现其底层Tensor的操作都是用C++写的，并使用<a target="_blank" rel="noopener" href="https://github.com/pybind/pybind11">pybind11</a>进行C++和Python的桥接。所以，我就想着探索一下Python中如何调用C++代码？</p>
+<h2 id="可行方案"><a href="#可行方案" class="headerlink" title="可行方案"></a>可行方案</h2><p>其实，方案还是挺多的：</p>
+<ul>
+<li>Python内置的<a target="_blank" rel="noopener" href="https://docs.python.org/3/library/ctypes.html">ctypes</a>接口（可以将C/C++代码编译为动态库，在Python中进行调用）</li>
+<li><a target="_blank" rel="noopener" href="https://cffi.readthedocs.io/en/latest/">CFFI</a>（提供了一种在Python代码中混合C代码的途径）</li>
+<li><a target="_blank" rel="noopener" href="http://docs.cython.org/en/latest/index.html">Cython</a> (C后端版本的Python实现，建立了Python类型和C语言之间的映射关系，提供了使用Python代码调用C函数库的能力)</li>
+<li><a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/1_68_0/libs/python/doc/html/index.html">Boost.Python</a> (提供手动导出C++代码接口的能力供Python调用)</li>
+<li><a target="_blank" rel="noopener" href="http://www.swig.org/">SWIG</a>（不止支持C/C++到Python的桥接，SWIG支持很多语言跟C/C++的桥接，是广泛使用的一种解决方案）</li>
+</ul>
+<h2 id="Hello-Word示例"><a href="#Hello-Word示例" class="headerlink" title="Hello Word示例"></a>Hello Word示例</h2><p>感觉ctypes简单很多，对于小型程序感觉还是挺友好的，所以该篇博客介绍一下使用ctypes调用C/C++的步骤。</p>
+<h3 id="编写C或者C-代码"><a href="#编写C或者C-代码" class="headerlink" title="编写C或者C++代码"></a>编写C或者C++代码</h3><p>头文件（test.h）</p>
+<pre><code class="c">int sum(int, int);
+</code></pre>
+<p>C++代码（test.cpp）</p>
+<pre><code class="c++">// Windows需要__declspec(dllexport)申明
+// extern &quot;C&quot;指示以C语言规范进行编译
+#define DLLEXPORT extern &quot;C&quot;
+DLLEXPORT int sum(int a, int b) &#123;
+    return a + b;
+&#125;
+</code></pre>
+<p>或者C代码（test.c）</p>
+<pre><code class="c">// 同样的Windows在函数前面需要__declspec(dllexport)申明
+int sum(int a, int b) &#123;
+    return a + b;
+&#125;
+</code></pre>
+<h3 id="C代码编译成动态链接库"><a href="#C代码编译成动态链接库" class="headerlink" title="C代码编译成动态链接库"></a>C代码编译成动态链接库</h3><p>我使用的是macOS，选择使用<a target="_blank" rel="noopener" href="https://gcc.gnu.org/">gcc</a>进行编译<code>gcc -Wall -Wextra -O -ansi -pedantic -shared test.c -o test.so</code></p>
+<h3 id="在Python中调用"><a href="#在Python中调用" class="headerlink" title="在Python中调用"></a>在Python中调用</h3><pre><code>In [1]: from ctypes import cdll
+
+In [2]: mydll = cdll.LoadLibrary(&#39;test.so&#39;)
+
+In [3]: mydll.sum
+Out[3]: &lt;_FuncPtr object at 0x10f4cf688&gt;
+
+In [4]: mydll.sum(5, 2)
+Out[4]: 7
+</code></pre>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/C/" class="tag">#C++</a><a href="/tags/Python/" class="tag">#Python</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/leetcode/Range-Sum-Query-Immutable/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">Range Sum Query - Immutable</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/leetcode/Min-Cost-Climbing-Stairs/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">Min Cost Climbing Stairs</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

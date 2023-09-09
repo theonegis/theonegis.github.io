@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>关于C++函数返回值的拷贝优化问题 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="关于C++函数返回值的拷贝优化问题 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/cxx/%E5%85%B3%E4%BA%8EC-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E6%8B%B7%E8%B4%9D%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2023-09-09T00:00:26.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/cxx/">C++</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>September</span>
+            <span>9,</span>
+            <span>2023</span>
+        </div>
+        
+
+        <h2 class="title">关于C++函数返回值的拷贝优化问题</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>作者：阿振</p>
+<p>写作时间：1694217626000</p>
+<hr>
+<p>在传统C++程序中，如果函数的返回值是一个对象的话，可能需要对函数中的局部对象进行拷贝。如果该对象很大的话，则程序的效率会降低。</p>
+<p>在C++ 11以后，出现的移动语义（Move Semantic）及拷贝优化（Copy Elision）都是解决这个问题的方法。</p>
+<p>本文试图以一个最简单的例子来说明这个问题。</p>
+<h1 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h1><p>下面来看一个简单的例子（这里的BigObj类的实例假设是一个需要很大存储空间的大对象）：</p>
+<pre><code class="cpp">#include &lt;iostream&gt;
+
+using std::cout;
+using std::endl;
+
+
+class BigObj
+&#123;
+public:
+BigObj()
+&#123;
+    cout &lt;&lt; &quot;这是默认构造函数&quot; &lt;&lt; endl;
+&#125;
+
+BigObj(const BigObj&amp; that)
+&#123;
+    cout &lt;&lt; &quot;这是拷贝构造函数&quot; &lt;&lt; endl;
+&#125;
+
+BigObj(BigObj&amp;&amp; that)
+&#123;
+    cout &lt;&lt; &quot;这是移动构造函数&quot; &lt;&lt; endl;
+&#125;
+
+~BigObj()
+&#123;
+    cout &lt;&lt; &quot;这是析构函数&quot; &lt;&lt; endl;
+&#125;
+&#125;;
+
+
+BigObj fun()
+&#123;
+    BigObj obj = BigObj();
+    return obj;
+&#125;
+
+int main()
+&#123;
+    BigObj obj = fun();
+    return EXIT_SUCCESS;
+&#125;
+</code></pre>
+<h1 id="拷贝优化"><a href="#拷贝优化" class="headerlink" title="拷贝优化"></a>拷贝优化</h1><p>运行该程序，我们会得到如下输出：</p>
+<pre><code class="plain">这是默认构造函数
+这是析构函数
+</code></pre>
+<p>可以发现fun()函数在返回BigObj对象的时候没有进行拷贝，这是由于编译期帮我们做了拷贝优化。</p>
+<h1 id="移动语义"><a href="#移动语义" class="headerlink" title="移动语义"></a>移动语义</h1><p>但是编译器堆函数返回值的拷贝优化并不是能完全实现的，有一些特殊情况下会失效。所以比较保险的做法是定义移动构造函数，当没有拷贝优化的时候可以通过移动语义避免低效的拷贝。</p>
+<p>我们可以通过-fno-elide-constructors关闭编译器的拷贝优化，下面是对应的cmake文件：</p>
+<pre><code class="cmake">cmake_minimum_required(VERSION 3.26)
+project(CxxTutorial)
+
+set(CMAKE_CXX_STANDARD 23)
+#SET(CMAKE_CXX_FLAGS &quot;$&#123;CMAKE_CXX_FLAGS&#125; -fno-elide-constructors&quot;)
+
+add_executable(CxxTutorial main.cpp)
+</code></pre>
+<p>通过配置关闭拷贝优化以后，我们执行上面的程序，输出结果如下：</p>
+<pre><code class="plain">这是默认构造函数
+这是移动构造函数
+这是析构函数
+这是析构函数
+</code></pre>
+<p>可以看到关闭拷贝优化以后，在定义了移动构造函数的时候，函数返回零时对象的时候会调用移动构造函数，转义所有权，减少数据拷贝。但是移动构造也会生成一个新的对象，所以输出结果中会调用两次析构函数，第一次析构函数是析构了函数中定义的零时对象，第二次是析构了函数返回值返回后的对象。</p>
+<p>那如果我们没有定义移动构造函数，而且编译期也没有进行拷贝优化程序的运行会是怎么样的呢？</p>
+<p>注释掉上面的移动构造函数，我们可以看到输出结果如下：</p>
+<pre><code class="plain">这是默认构造函数
+这是拷贝构造函数
+这是析构函数
+这是析构函数
+</code></pre>
+<p>这个结果是在预料之中的，没有拷贝优化，没有移动构造函数的情况下，程序会调用拷贝构造函数。假设这个对象是一个大对象，则拷贝过程会花费一些时间，降低了程序的执行效率。而使用移动语义的话，直接转义对象的所有权，效率会高一些。</p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>对于C++函数返回一个大对象的时候，在编译器能进行拷贝优化的时候，会优先进行返回值的拷贝优化。如果不能进行拷贝优化，在有定义移动构造函数的时候，则会调用移动构造函数进行返回值对象所有权转义，减少不必要的拷贝。最后，这两种情况失效的时候，才会调用拷贝构造函数进行对象的深拷贝。</p>
+<p>有了上述结论，我们在写程序的时候最佳实践是函数返回值可以直接返回函数体内定义的零时对象，但是我们需要在定义该对象的时候实现移动构造函数。这样就可以保证函数的返回值要么有编译器拷贝优化，要么会调用移动构造函数减少拷贝开销。</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/C/" class="tag">#C++</a><a href="/tags/移动语义/" class="tag">#移动语义</a><a href="/tags/函数返回值/" class="tag">#函数返回值</a><a href="/tags/拷贝优化/" class="tag">#拷贝优化</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        <a class="next"></a>
+        
+        <a href="/tools/R%E5%8C%85%E5%AE%89%E8%A3%85%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%BC%80%E5%90%AFC-11%E6%94%AF%E6%8C%81/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">R包安装过程中开启C++11支持</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>macOS下GDAL Java开发环境搭建 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="macOS下GDAL Java开发环境搭建 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/macOS%E4%B8%8BGDAL-Java%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2020-04-09T08:58:09.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>April</span>
+            <span>9,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">macOS下GDAL Java开发环境搭建</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>写作时间：2020年4月9日下午</p>
+<hr>
+<h1 id="macOS下GDAL-Java开发环境搭建"><a href="#macOS下GDAL-Java开发环境搭建" class="headerlink" title="macOS下GDAL Java开发环境搭建"></a>macOS下GDAL Java开发环境搭建</h1><p>今天在笔记本（macOS平台）上折腾了一下如何搭建GDAL的Java开发环境。虽然GDAL的Python接口更好用，但是有时候需要协同使用一些Java库的时候，也必须使用Java版本的GDAL。</p>
+<p>在macOS上安装GDAL一般有三种方式：</p>
+<ol>
+<li>使用HomeBrew</li>
+<li>使用<a target="_blank" rel="noopener" href="https://www.kyngchaos.com/software/frameworks/">Kyng-Chaos</a>提供的编译好的二进制包（Framework）</li>
+<li>从源码编译</li>
+</ol>
+<p>由于前两种方式不自带有Java相关的接口，所以这里选择从源码编译。</p>
+<h2 id="GDAL源码编译安装"><a href="#GDAL源码编译安装" class="headerlink" title="GDAL源码编译安装"></a>GDAL源码编译安装</h2><p>首先，下载GDAL源码，可以从<a target="_blank" rel="noopener" href="https://github.com/OSGeo/gdal">GitHub</a>上下载，也可以从<a target="_blank" rel="noopener" href="https://gdal.org/download.html">GDAL</a>官网下载。</p>
+<p>我这里从官网下载了最新的2.4.4版本（3.X版本也发布了，但是还是先用稳定一点的吧）的源码进行编译安装。GDAL依赖的库都可以使用HomeBrew安装，我的方法是直接使用Brew安装GDAL，然后再卸载掉GDAL，这样GDAL依赖的第三方库都就自动安装了。</p>
+<p>此外，还需要系统中安装了Java JDK和SWIG以及Ant编译工具。</p>
+<p>下面进行GDAL源码编译并安装到<code>/usr/local</code>目录中。注意配置系统中Java的路径，我这里使用的是JDK11。</p>
+<pre><code>cd gdal-2.4.4
+./configure --with-threads --disable-static --without-grass --with-jasper=/usr/local/lib --with-libtiff=/usr/local/lib --with-jpeg=/usr/local/lib --with-gif=/usr/local/lib --with-png=/usr/local/lib --with-geotiff=/usr/local/lib --with-pcraster=internal --with-geos=/usr/local/lib --with-static-proj4=/usr/local/lib --with-expat=/usr/local/lib --with-curl=/usr/local/lib --with-netcdf=/usr/local/lib --with-hdf5=/usr/local/lib --with-opencl --with-libz=internal --without-python --with-java --with-jvm-lib=/Library/Java/JavaVirtualMachines/openjdk-11.0.2.jdk/Contents/Home 
+make
+sudo make install
+</code></pre>
+<p>然后接下来我们编译Java接口需要的相关文件。<code>make install</code>命令会将动态链接库<code> libgdalalljni.20.dylib</code>和<code>libgdalalljni.dylib</code>拷贝到<code>/usr/local/lib</code>目录中。</p>
+<pre><code>cd swig/java
+make CFLAGS=&quot;-I/Library/Java/JavaVirtualMachines/openjdk-11.0.2.jdk/Contents/Home/include -I//Library/Java/JavaVirtualMachines/openjdk-11.0.2.jdk/Contents/Home/include/darwin&quot;
+sudo make install
+</code></pre>
+<p><code>make</code>命令会生成我们需要的<code>gdal.jar</code>包，是我们做Java开发需要的依赖包，必须添加到工程中。</p>
+<p>我以为这样就可以了，但是当我在工程中调用GDAL的时候，提示找不到Native Library，然后我就把<code> libgdalalljni.20.dylib</code>和<code>libgdalalljni.dylib</code>又拷贝到了<code>/Library/Java/Extensions</code>目录中，问题才得以解决。</p>
+<h2 id="Maven安装本地JAR"><a href="#Maven安装本地JAR" class="headerlink" title="Maven安装本地JAR"></a>Maven安装本地JAR</h2><p>我习惯使用Maven管理依赖，但是Maven中央仓库中没有提供GDAL 2.4.4版本的JAR包。所以需要把刚才生成的<code>gdal.jar</code>文件安装到本地Maven仓库中，这样才能在Maven工程中使用。</p>
+<p>使用如下命令进行安装以后，我们就可以在工程中开心的使用了！</p>
+<pre><code>mvn install:install-file -Dfile=/Users/TheOneGIS/Development/gdal-2.4.4/swig/java/gdal.jar -DgroupId=org.gdal -DartifactId=gdal -Dversion=2.4.4 -Dpackaging=jar
+</code></pre>
+<h2 id="使用Java版GDAL示例"><a href="#使用Java版GDAL示例" class="headerlink" title="使用Java版GDAL示例"></a>使用Java版GDAL示例</h2><p>这里使用Better Java（Kotlin）语言进行一个简单的Shapefile文件读取的示例。首先，新建Maven Kotlin工程；然后在POM文件中添加GDAL依赖，最后书写我们的HelloWorld示例。</p>
+<pre><code class="XML">&lt;dependency&gt;
+  &lt;groupId&gt;org.gdal&lt;/groupId&gt;
+  &lt;artifactId&gt;gdal&lt;/artifactId&gt;
+  &lt;version&gt;2.4.4&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>示例代码如下：</p>
+<pre><code class="Kotlin">package cn.demo
+
+import org.gdal.gdal.*
+
+fun main(args: Array&lt;String&gt;) &#123;
+    // 初始化GDAL环境
+    gdal.UseExceptions()
+    gdal.AllRegister()
+    
+        // 读取数据，输出数据信息
+    val path = &quot;China.shp&quot;
+    val ds = gdal.OpenEx(path)
+    val layer = ds.GetLayer(0)
+    println(layer.GetName())
+    for (i in 0 until layer.GetFeatureCount()) &#123;
+        print(layer.GetNextFeature().GetFieldAsString(&quot;NAME&quot;))
+    &#125;
+    ds.delete()
+&#125;
+</code></pre>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Java/" class="tag">#Java</a><a href="/tags/GDAL/" class="tag">#GDAL</a><a href="/tags/Maven/" class="tag">#Maven</a><a href="/tags/macOS/" class="tag">#macOS</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/ESA-SNAP%E5%B7%A5%E5%85%B7%E5%8C%85Java%E6%8E%A5%E5%8F%A3%E7%9A%84%E4%BD%BF%E7%94%A8/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">ESA SNAP工具包Java接口的使用</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/tools/UNIX%E7%B3%BB%E7%BB%9F%E4%B8%8B%E5%88%A0%E9%99%A4%E8%80%81%E6%97%A7Maven%E4%BE%9D%E8%B5%96%E5%8C%85%E7%9A%84%E6%96%B9%E6%B3%95/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">UNIX系统下删除老旧Maven依赖包的方法</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

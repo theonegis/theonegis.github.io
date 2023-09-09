@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>GIS空间分析之Buffer - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="GIS空间分析之Buffer - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/GIS%E7%A9%BA%E9%97%B4%E5%88%86%E6%9E%90%E4%B9%8BBuffer/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2020-06-14T14:11:45.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>June</span>
+            <span>14,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">GIS空间分析之Buffer</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>作者：阿振</p>
+<p>写作时间：2020-06-14 周末 夏夜</p>
+<hr>
+<h1 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h1><p>GIS空间分析是通过对GIS系统中的空间地物的空间位置以及分布形态等空间特性进行分析推理等得到额外有用信息的过程。GIS空间分析包含广泛的内容，是GIS系统的核心功能。</p>
+<p>从这篇博文开始，我们会简单介绍几种GIS系统中最常见最简单的空间分析功能，并使用Python的GDAL API进行实现。</p>
+<p>首先，我们来看一下开源GIS软件QGIS中提供的几种简单的空间分析工具，我们接下来的几篇博文会介绍如何使用Python脚本实现这些功能。</p>
+<p><img src="/images/geos/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-06-14%E4%B8%8B%E5%8D%8810.07.57.png" alt="QGIS空间分析功能"></p>
+<p>虽然，这些都是最基础的空间分析操作，但是很多复杂的分析功能就是这些简单操作的组合，所以掌握这些基础操作很重要。</p>
+<h1 id="案例介绍"><a href="#案例介绍" class="headerlink" title="案例介绍"></a>案例介绍</h1><p>本文我们将使用缓冲区分析工具Buffer制作中国地图的晕线。中国地图边界的晕线就是我们经常看到的国界外面的突出色浅色部分。</p>
+<p>那么我们如何制作晕线呢？一个解决方案是我们给国界做一个缓冲区，然后将缓冲区图层放置在边界图层的上面就可以形成这样的效果。</p>
+<h1 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h1><p>下面的代码展示了如何制作面状地物的缓冲区。</p>
+<pre><code class="Python">from pathlib import Path
+import ogr
+
+ogr.UseExceptions()
+
+in_ds: ogr.DataSource = ogr.Open(&#39;../data/China.shp&#39;)
+in_lyr: ogr.Layer = in_ds.GetLayer()
+
+fname: str = &#39;Buffer.shp&#39;
+# 创建输出Buffer文件
+driver: ogr.Driver = ogr.GetDriverByName(&#39;ESRI Shapefile&#39;)
+if Path(fname).exists():
+    driver.DeleteDataSource(fname)
+# 新建DataSource，Layer
+out_ds: ogr.DataSource = driver.CreateDataSource(fname)
+out_lyr: ogr.Layer = out_ds.CreateLayer(fname,
+                                        in_lyr.GetSpatialRef(), ogr.wkbPolygon)
+def_feature: ogr.FeatureDefn = out_lyr.GetLayerDefn()
+
+# 遍历原始的Shapefile文件给每个Geometry做Buffer操作
+for feature in in_lyr:
+    geometry = feature.GetGeometryRef()
+    buffer = geometry.Buffer(20000.0)
+    out_feature = ogr.Feature(def_feature)
+    out_feature.SetGeometry(buffer)
+    out_lyr.CreateFeature(out_feature)
+    out_feature = None
+out_ds.FlushCache()
+del in_ds, out_ds
+</code></pre>
+<p>结果展示（紫色部分就是我们的缓冲区）：</p>
+<p><img src="/images/geos/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-06-14%E4%B8%8B%E5%8D%8810.07.31.png" alt="缓冲区分析"></p>
+<h1 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h1><ol>
+<li>首先我们使用<code>Driver</code>类的<code>CreateDataSource()</code>方法创建输出缓冲区文件。</li>
+<li>然后使用<code>DataSource</code>类的<code>CreateLayer()</code>方法创建一个图层，该方法有三个参数，分别是图层名，空间投影以及空间几何体类型。这里我们的空间投影直接从原始的Shapefile中进行读取，输入的空间几何体类型设置为<code>ogr.wkbPolygon</code>。</li>
+<li>加下来我们对原始数据图层中的每个Feature要素进行遍历，取出其中的Geometry，然后利用<code>Geometry</code>类的<code>Buffer()</code>方法生成新的缓冲区Feature。<code>Buffer</code>的参数是缓冲区的距离，距离的单位是投影坐标系中的默认单位。</li>
+<li>生成新的缓冲区Geometry以后，我们新建一个Feature并使用<code>SetGeometry()</code>将缓冲区Geometry设置为该Feature的Geometry。最后使用<code>CreateFeature()</code>方法将该Feature添加到图层中。</li>
+<li>如此循环，直到遍历完所有的Feature为止。</li>
+</ol>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/GDAL/" class="tag">#GDAL</a><a href="/tags/GIS/" class="tag">#GIS</a><a href="/tags/空间分析/" class="tag">#空间分析</a><a href="/tags/缓冲区分析/" class="tag">#缓冲区分析</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/GIS%E7%A9%BA%E9%97%B4%E5%88%86%E6%9E%90%E4%B9%8BClip/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">GIS空间分析之Clip</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/%E7%9F%A2%E9%87%8F%E6%95%B0%E6%8D%AE%E7%A9%BA%E9%97%B4%E6%9F%A5%E8%AF%A2/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">矢量数据空间查询</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

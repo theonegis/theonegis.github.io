@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Shapefile属性操作之增 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Shapefile属性操作之增 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/Shapefile%E5%B1%9E%E6%80%A7%E6%93%8D%E4%BD%9C%E4%B9%8B%E5%A2%9E/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2020-06-13T08:52:05.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>June</span>
+            <span>13,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">Shapefile属性操作之增</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>作者：阿振</p>
+<p>写作时间：2020-06-13 又是一个周末</p>
+<hr>
+<h1 id="开篇"><a href="#开篇" class="headerlink" title="开篇"></a>开篇</h1><p>《<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">Python空间数据处理实战</a>》系列的博文好久都没有更新了，今天乘周末有点时间，补了个觉，然后写几篇博文。</p>
+<p>关于Python空间数据处理，如果大家有什么想看到的内容，欢迎评论区留言，我会增加一些大家需要的内容！</p>
+<p>今天我打算用四篇博客简要介绍一下如何对空间矢量数据的属性数据进行操作。对于属性数据，我们可以简单将其看作一个二维表格，学过数据库的朋友，可能会想到关系数据库的概念。是的，我们现在的空间矢量数据的属性数据大部分就是以关系表的形式进行存储的。而对于关系数据库的操作，常用的就是增删改查（CRUD，即Create，Retrieve，Update，Delete）操作。</p>
+<p>这篇博文单讲Create增加操作，使用的工具还是我们的GDAL库。</p>
+<h1 id="案例介绍"><a href="#案例介绍" class="headerlink" title="案例介绍"></a>案例介绍</h1><p>我还是喜欢用案例的方式进行知识的讲解。这里我们要处理的数据是中国地图分省的矢量Shapefile，是一个面状数据。该数据有一个<code>NAME</code>字段，给出了每个省的名称。然后我们需要给给数据增加一个属性字段<code>Abbr</code>，用以表示每个省的简称。</p>
+<p>要完成这项工作，我们首先需要建立一个省份名称到简称的字典，方便程序查询。然后读取原始数据，新建一个属性字段<code>Abbr</code>，然后遍历数据中的每个Feature要素，取出<code>NAME</code>，再根据字典查询到当前<code>NAME</code>对应的<code>Abbr</code>填充进对应的字段即可。</p>
+<h1 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h1><p>Talk is cheap. Show me the code.</p>
+<pre><code class="Python">from osgeo import ogr
+ogr.UseExceptions()
+
+
+# 首先定义每个省全称到简称的映射字典
+names = &#123;
+    &#39;北京&#39;: &#39;京&#39;,
+    &#39;天津&#39;: &#39;津&#39;,
+    &#39;重庆&#39;: &#39;渝&#39;,
+    &#39;上海&#39;: &#39;沪&#39;,
+    &#39;河北&#39;: &#39;冀&#39;,
+    &#39;山西&#39;: &#39;晋&#39;,
+    &#39;辽宁&#39;: &#39;辽&#39;,
+    &#39;吉林&#39;: &#39;吉&#39;,
+    &#39;黑龙江&#39;: &#39;黑&#39;,
+    &#39;江苏&#39;: &#39;苏&#39;,
+    &#39;浙江&#39;: &#39;浙&#39;,
+    &#39;安徽&#39;: &#39;皖&#39;,
+    &#39;福建&#39;: &#39;闽&#39;,
+    &#39;江西&#39;: &#39;赣&#39;,
+    &#39;山东&#39;: &#39;鲁&#39;,
+    &#39;河南&#39;: &#39;豫&#39;,
+    &#39;湖北&#39;: &#39;鄂&#39;,
+    &#39;湖南&#39;: &#39;湘&#39;,
+    &#39;广东&#39;: &#39;粤&#39;,
+    &#39;海南&#39;: &#39;琼&#39;,
+    &#39;四川&#39;: &#39;川/蜀&#39;,
+    &#39;贵州&#39;: &#39;黔/贵&#39;,
+    &#39;云南&#39;: &#39;云/滇&#39;,
+    &#39;陕西&#39;: &#39;陕/秦&#39;,
+    &#39;甘肃&#39;: &#39;甘/陇&#39;,
+    &#39;青海&#39;: &#39;青&#39;,
+    &#39;台湾&#39;: &#39;台&#39;,
+    &#39;内蒙古&#39;: &#39;蒙&#39;,
+    &#39;广西&#39;: &#39;桂&#39;,
+    &#39;宁夏&#39;: &#39;宁&#39;,
+    &#39;新疆&#39;: &#39;新&#39;,
+    &#39;西藏&#39;: &#39;藏&#39;,
+    &#39;香港&#39;: &#39;港&#39;,
+    &#39;澳门&#39;: &#39;澳&#39;
+&#125;
+
+# 打开一个Shapefile文件获取属性定义
+ds: ogr.DataSource = ogr.Open(&#39;../data/省级行政区.shp&#39;, update=True)
+layer: ogr.Layer = ds.GetLayer()
+defs: ogr.FeatureDefn = layer.GetLayerDefn()
+for i in range(defs.GetFieldCount()):
+    defn: ogr.FieldDefn = defs.GetFieldDefn(i)
+    print(f&#39;&#123;defn.GetName()&#125; -&gt;  &#123;defn.GetType()&#125; -&gt; &#123;defn.GetWidth()&#125;&#39;)
+
+# 添加一个省简称的字段
+field: ogr.FieldDefn = ogr.FieldDefn(&#39;Abbr&#39;, ogr.OFTString)
+field.SetWidth(5)
+layer.CreateField(field)
+
+# 填充属性值
+for feature in layer:
+    name: str = feature.GetField(&#39;NAME&#39;)
+    feature.SetField(&#39;Abbr&#39;, names.get(name, &#39;&#39;))
+    # 修改完了记得Set一下
+    layer.SetFeature(feature)
+
+# 关闭数据集
+ds = None
+</code></pre>
+<h1 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h1><p>下面我们来对上面的代码进行一个方法的总结：</p>
+<ol>
+<li>首先，我们使用<code>ogr.Open()</code>函数打开Shapefile数据，注意我们要设置<code>update</code>参数为<code>True</code>，即允许GDAL更新我们的原始数据。</li>
+<li>使用<code>ogr.FieldDefn()</code>函数新建一个字段，然后添加到<code>layer</code>图层中。注意我们这里新建的字段的类型是字符串类型<code>ogr.OFTString</code>，当然我们还可以新建其他类型的字段，例如整形<code>ogr.OFTInteger</code>，实数形<code>ogr.OFTReal</code>，日期型<code>ogr.OFTDate</code>等。一般对于字符串类型，我们还需要设置字符串的宽度。</li>
+<li>接下来我们遍历<code>layer</code>中的<code>feature</code>，使用<code>SetField()</code>方法设置属性值。记得添加完属性值以后，需要使用<code>SetFeature()</code>方法将当前<code>feature</code>更新到涂层<code>layer</code>中去。</li>
+</ol>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Shapefile/" class="tag">#Shapefile</a><a href="/tags/GDAL/" class="tag">#GDAL</a><a href="/tags/矢量数据/" class="tag">#矢量数据</a><a href="/tags/属性操作/" class="tag">#属性操作</a><a href="/tags/增加字段/" class="tag">#增加字段</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/Shapefile%E5%B1%9E%E6%80%A7%E6%93%8D%E4%BD%9C%E4%B9%8B%E5%88%A0/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">Shapefile属性操作之删</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/QGIS%E5%88%B6%E5%9B%BE%E4%B8%AD%E9%9D%A2%E7%A7%AF%E5%B0%8F%E7%9A%84%E5%8C%BA%E5%9F%9F%E4%B8%8D%E6%98%BE%E7%A4%BA%E6%B3%A8%E8%AE%B0/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">QGIS制图中面积小的区域不显示注记</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

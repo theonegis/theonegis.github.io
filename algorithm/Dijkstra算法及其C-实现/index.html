@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Dijkstra算法及其C++实现 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Dijkstra算法及其C++实现 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/algorithm/Dijkstra%E7%AE%97%E6%B3%95%E5%8F%8A%E5%85%B6C-%E5%AE%9E%E7%8E%B0/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2020-08-19T12:02:34.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/algorithm/">算法</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>August</span>
+            <span>19,</span>
+            <span>2020</span>
+        </div>
+        
+
+        <h2 class="title">Dijkstra算法及其C++实现</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Dijkstra算法及其C-实现"><a href="#Dijkstra算法及其C-实现" class="headerlink" title="Dijkstra算法及其C++实现"></a>Dijkstra算法及其C++实现</h1><h2 id="什么是最短路径问题"><a href="#什么是最短路径问题" class="headerlink" title="什么是最短路径问题"></a>什么是最短路径问题</h2><p>如果从图中某一顶点（称为源点）到达另一顶点（称为终点）的路径可能不止一条，如何找到一条路径使得沿此路径上各边上的权值总和达到最小。</p>
+<p>单源最短路径问题是指对于给定的图$G=(V, E)$，求源点$v_0$到其它顶点$v_t$的最短路径。</p>
+<h2 id="Dijkstra算法"><a href="#Dijkstra算法" class="headerlink" title="Dijkstra算法"></a>Dijkstra算法</h2><p>Dijkstra算法用于计算一个节点到其他节点的最短路径。Dijkstra是一种按路径长度递增的顺序逐步产生最短路径的方法，是一种贪婪算法。</p>
+<p>Dijkstra算法的核心思想是首先求出长度最短的一条最短路径，再参照它求出长度次短的一条最短路径，依次类推，直到从源点$v_0$到其它各顶点的最短路径全部求出为止。</p>
+<p>具体来说：图中所有顶点分成两组，第一组是已确定最短路径的顶点，初始只包含一个源点，记为集合$S$；第二组是尚未确定最短路径的顶点，记为集合$U$。</p>
+<p>按最短路径长度递增的顺序逐个把$U$中的顶点加到$S$中去，同时动态更新$U$集合中源点到各个顶点的最短距离，直至所有顶点都包括到$S$中。</p>
+<h2 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h2><ol>
+<li>初始时，$S$集合只包含起点$v_0$；$U$集合包含除$v_0$外的其他顶点$v_t$，且$U$中顶点的距离为起点$v_0$到该顶点的距离。（$U$中顶点$v_t$的距离为$(v_0, v_t)$的长度，如果$v_0$和$v_t$不相邻，则$v_t$的最短距离为$\infty$）</li>
+<li>从$U$中选出距离最短的顶点$v_{t’}$，并将顶点$v_{t’}$加入到$S$中；同时，从$U$中移除顶点$v_{t’}$。</li>
+<li>更新$U$中各个顶点$v_t$到起点$v_0$的距离以及最短路径中当前顶点的前驱顶点。之所以更新$U$中顶点的距离以及前驱顶点是由于上一步中确定了$v_{t’}$是求出最短路径的顶点，从而可以利用$v_{t’}$来更新$U$中其它顶点$v_t$的距离，因为存在$(v_0, v_t)$的距离可能大于$(v_0, v_{t’}) + (v_{t’}, v_t)$距离的情况，从而也需要更新其前驱顶点</li>
+<li>重复步骤(2)和(3)，直到遍历完所有顶点</li>
+</ol>
+<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p><img src="/images/algorithm/Dijkstra.png" alt="Dijkstra"></p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>使用了部分C++11特性，注释丰富，读起来应该不会太困难！</p>
+<pre><code class="C++">#include &lt;cstdio&gt;
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;list&gt;
+#include &lt;stack&gt;
+
+using namespace std;
+using Matrix = vector&lt;vector&lt;uint&gt;&gt;;                // 连接矩阵（使用嵌套的vector表示）
+using SNodes = vector&lt;tuple&lt;uint, uint, uint&gt;&gt;;     // 已计算出最短路径的顶点集合S（类似一个动态数组）
+using UNodes = list&lt;tuple&lt;uint, uint, uint&gt;&gt;;       // 未进行遍历的顶点集合U（使用list主要是方便元素删除操作）
+using ENode = tuple&lt;uint, uint, uint&gt;;              // 每个节点包含（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）信息
+
+
+/***
+ * 从未遍历的U顶点集合中找到下一个离起始顶点距离最短的顶点
+ * @param unvisitedNodes 未遍历的U顶点集合
+ * 每个元素是（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）的tuple
+ * @return 下一个离起始顶点距离最短的顶点
+ */
+ENode searchNearest(const UNodes &amp;unvisitedNodes) &#123;
+    uint minDistance = UINT_MAX;
+    ENode nearest;
+    for (const auto &amp;node: unvisitedNodes) &#123;
+        if (get&lt;1&gt;(node) &lt;= minDistance) &#123;
+            minDistance = get&lt;1&gt;(node);
+            nearest = node;
+        &#125;
+    &#125;
+    return nearest;
+&#125;
+
+
+/***
+ * 迪克斯特拉算法的实现
+ * @param graph 连接矩阵（使用嵌套的vector表示）
+ * @param startNodeIndex 起始点编码（从0开始）
+ * @return 返回一个vector，每个元素是到起始顶点的距离排列的包含（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）的tuple
+ */
+SNodes dijkstra(const Matrix &amp;graph, uint startNodeIndex) &#123;
+    const uint numOfNodes = graph.size();   // 图中顶点的个数
+    // S是已计算出最短路径的顶点的集合（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）
+    SNodes visitedNodes;
+    // U是未计算出最短路径的顶点的集合（其中的key为顶点编号，value为到起始顶点最短距离和最短路径中上一个节点编号组成的pair）
+    UNodes unvisitedNodes;
+
+    // 对S和U集合进行初始化，起始顶点的距离为0，其他顶点的距离为无穷大
+    // 最短路径中当前顶点的上一个顶点初始化为起始顶点，后面会逐步进行修正
+    for (auto i = 0; i &lt; numOfNodes; ++i) &#123;
+        if (i == startNodeIndex) visitedNodes.emplace_back(i, 0, startNodeIndex);
+        else unvisitedNodes.emplace_back(i, graph[startNodeIndex][i], startNodeIndex);
+    &#125;
+
+    while (!unvisitedNodes.empty()) &#123;
+        // 从U中找到距离起始顶点距离最短的顶点，加入S，同时从U中删除
+        auto nextNode = searchNearest(unvisitedNodes);
+        unvisitedNodes.erase(find(unvisitedNodes.begin(), unvisitedNodes.end(), nextNode));
+        visitedNodes.emplace_back(nextNode);
+        // 更新U集合中各个顶点的最短距离以及最短路径中的上一个顶点
+        for (auto &amp;node: unvisitedNodes) &#123;
+            // 更新的判断依据就是起始顶点到当前顶点（nextNode）距离加上当前顶点到U集合中顶点的距离小于原来起始顶点到U集合中顶点的距离
+            // 更新最短距离的时候同时需要更新最短路径中的上一个顶点为nextNode
+            if (graph[get&lt;0&gt;(nextNode)][get&lt;0&gt;(node)] != UINT_MAX &amp;&amp;
+                graph[get&lt;0&gt;(nextNode)][get&lt;0&gt;(node)] + get&lt;1&gt;(nextNode) &lt; get&lt;1&gt;(node)) &#123;
+                get&lt;1&gt;(node) = graph[get&lt;0&gt;(nextNode)][get&lt;0&gt;(node)] + get&lt;1&gt;(nextNode);
+                get&lt;2&gt;(node) = get&lt;0&gt;(nextNode);
+            &#125;
+        &#125;
+    &#125;
+
+    return visitedNodes;
+&#125;
+
+
+/***
+ * 对使用迪克斯特拉算法求解的最短路径进行打印输出
+ * @param paths vector表示的最短路径集合
+ * 每个元素是到起始顶点的距离排列的包含（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）的tuple
+ */
+void print(const SNodes &amp;paths) &#123;
+    stack&lt;int&gt; tracks;  //从尾部出发，使用stack将每个顶点的最短路径中的前一个顶点入栈，然后出栈的顺序就是最短路径顺序
+    // 第一个元素是起始点，从第二个元素进行打印输出
+    for (auto it = ++paths.begin(); it != paths.end(); ++it) &#123;
+        // 打印头部信息
+        printf(&quot;%c -&gt; %c:\t Length: %d\t Paths: %c&quot;,
+               char(get&lt;0&gt;(paths[0]) + 65),
+               char(get&lt;0&gt;(*it) + 65),
+               get&lt;1&gt;(*it),
+               char(get&lt;0&gt;(paths[0]) + 65));
+        auto pointer = *it;
+        // 如果当前指针pointer指向的节点有中途节点（判断的条件是最短路径中的前一个节点不是起始点）
+        while (get&lt;2&gt;(pointer) != get&lt;0&gt;(paths[0])) &#123;
+            tracks.push(get&lt;0&gt;(pointer));
+            // Lambda表达式，使用find_if函数把当前顶点的前一个顶点从paths中找出来继续进行循环直到前一个节点就是起始点
+            auto condition = [pointer](tuple&lt;uint, uint, uint&gt; x) &#123; return get&lt;0&gt;(x) == get&lt;2&gt;(pointer); &#125;;
+            pointer = *find_if(paths.begin(), paths.end(), condition);
+        &#125;
+        tracks.push(get&lt;0&gt;(pointer));
+
+        // 以出栈的顺序进行打印输出
+        while (!tracks.empty()) &#123;
+            printf(&quot; -&gt; %c&quot;, char(tracks.top() + 65));
+            tracks.pop();
+        &#125;
+        printf(&quot;\n&quot;);
+    &#125;
+&#125;
+
+int main() &#123;
+    Matrix graph = &#123;
+            &#123;0,        12,       UINT_MAX, UINT_MAX, UINT_MAX, 16, 14&#125;,
+            &#123;12,       0,        10,       UINT_MAX, UINT_MAX, 7, UINT_MAX&#125;,
+            &#123;UINT_MAX, 10,       0, 3,               5,        6, UINT_MAX&#125;,
+            &#123;UINT_MAX, UINT_MAX, 3, 0,               4, UINT_MAX, UINT_MAX&#125;,
+            &#123;UINT_MAX, UINT_MAX, 5, 4,               0,        2,  8&#125;,
+            &#123;16,       7,        6,        UINT_MAX, 2,        9,  9&#125;,
+            &#123;14,       UINT_MAX, UINT_MAX, UINT_MAX, 8,        9,  0&#125;
+    &#125;;  // 图对应的连接矩阵
+    auto results = dijkstra(graph, uint(&#39;D&#39; - 65));          // 选取顶点C（大写字母A的ASCII编码是65）
+    print(results);     // 打印输出结果
+    return 0;
+&#125;
+</code></pre>
+<p>运行结果：</p>
+<pre><code>D -&gt; C:     Length: 3     Paths: D -&gt; C
+D -&gt; E:     Length: 4     Paths: D -&gt; E
+D -&gt; F:     Length: 6     Paths: D -&gt; E -&gt; F
+D -&gt; G:     Length: 12     Paths: D -&gt; E -&gt; G
+D -&gt; B:     Length: 13     Paths: D -&gt; C -&gt; B
+D -&gt; A:     Length: 22     Paths: D -&gt; E -&gt; F -&gt; A
+</code></pre>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2>
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/最短路径/" class="tag">#最短路径</a><a href="/tags/Dijkstra/" class="tag">#Dijkstra</a><a href="/tags/迪克斯特拉/" class="tag">#迪克斯特拉</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/QGIS%E4%B8%ADWKT%E8%BD%AC%E4%B8%BA%E5%8F%AF%E8%A7%86%E5%8C%96%E5%9B%BE%E5%B1%82/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">QGIS中WKT转为可视化图层</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/GIS%E7%A9%BA%E9%97%B4%E5%88%86%E6%9E%90%E4%B9%8BClip/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">GIS空间分析之Clip</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

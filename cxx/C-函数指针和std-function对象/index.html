@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>C++函数指针和std::function对象 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="C++函数指针和std::function对象 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/cxx/C-%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88%E5%92%8Cstd-function%E5%AF%B9%E8%B1%A1/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-10-07T07:18:57.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/cxx/">C++</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>October</span>
+            <span>7,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">C++函数指针和std::function对象</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="C-函数指针和std-function对象"><a href="#C-函数指针和std-function对象" class="headerlink" title="C++函数指针和std::function对象"></a>C++函数指针和std::function对象</h1><p>这篇博文中通过实现对String字符串大小写转换为列来说明C++中函数指针和std::function对象的使用。</p>
+<p>我们在博文《<a href="https://theonegis.github.io/cxx/C-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84String%E7%B1%BB/">C++实现一个简单的String类</a>》中的自定义的<code>String</code>类为基础，再添加两个成员函数用于将字符串全部转为大写（<code>toUpperCase</code>）和全部转为小写（<code>toLowerCase</code>）。</p>
+<p>分析一下这两个函数，我们可以发现，两个函数的实现有相同之处，都需要变量字符串中的每个字符，然后使用大写转换函数（<code>std::touuper</code>）和小写转换函数（<code>std::tolower</code>）进行转换即可。</p>
+<p>既然两个函数有相同的部分，我们可以将相同的部分抽取出来，抽取出来的这部分负责对字符串进行遍历，然后将对于单个字符转换的函数作为参数传递到该用于字符串遍历的函数中。</p>
+<p>下面我们分别使用函数指针的方式和C++ 11中的<code>std::function</code>对象进行实现。本文不对<code>std::function</code>的优点进行介绍，这是以一个简单示例进行入门介绍。</p>
+<h2 id="函数指针"><a href="#函数指针" class="headerlink" title="函数指针"></a>函数指针</h2><p>头文件：</p>
+<p>头文件实现中我们使用了<code>typedef</code>定义了一个函数指针类型，当然我们也可以使用<code>using</code>关键字进行定义，两者类似。</p>
+<p><code>String::map</code>函数用于对字符串进行遍历操作，然后通过传进来的函数指针对每个字符进行操作。</p>
+<p>注意我们定义的<code>transform</code>函数指针的返回值是<code>int</code>，函数参数也是<code>int</code>，这是因为<code>cctype</code>头文件中的<code>std::toupper</code>和<code>std::tolower</code>函数的签名也是这样的。</p>
+<pre><code class="C++">class String &#123;
+private:
+    char* _buffer;
+    size_t _length;
+    // 使用using和typedef都可以: typedef int (*transform)(int);
+    using transform = int (*)(int);
+    void init(const char* str);
+    String map(transform fun);
+
+public:
+    String(const char* str= nullptr);       // 默认构造函数
+    String(const String&amp; other);            // 拷贝构造函数
+    String(String&amp;&amp; other) noexcept;        // 移动构造函数
+    ~String();                              // 析构函数
+
+    size_t length();
+    const char* data();
+
+    char&amp; operator[](size_t index);
+    String&amp; operator=(const String&amp; other);
+    String&amp; operator=(String&amp;&amp; other) noexcept;
+    String operator+(const String&amp; other);
+    bool operator==(const String&amp; other);
+
+    String toUpperCase();
+    String toLowerCase();
+
+    friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; output, const String&amp; str);
+    friend std::istream&amp; operator&gt;&gt;(std::istream&amp; input, String&amp; str);
+&#125;;
+</code></pre>
+<p>具体实现：</p>
+<pre><code class="C++">String String::map(String::transform fun) &#123;
+    char* transformed = new char[_length];
+    for (size_t i = 0; i &lt; _length; ++i) &#123;
+        transformed[i] = static_cast&lt;char&gt;(fun(static_cast&lt;int&gt;(_buffer[i])));
+    &#125;
+    return String(transformed);
+&#125;
+
+String String::toUpperCase() &#123;
+    return map(std::toupper);
+&#125;
+
+String String::toLowerCase() &#123;
+    return map(std::tolower);
+&#125;
+</code></pre>
+<p>测试文件：</p>
+<pre><code class="C++">#include &quot;strings.h&quot;
+#include &lt;iostream&gt;
+
+using std::cout;
+
+int main() &#123;
+    String str1(&quot;Hello World&quot;);
+    String str2 = str1.toUpperCase();
+    cout &lt;&lt; str2 &lt;&lt; &#39;\n&#39;;
+    return 0;
+&#125;
+</code></pre>
+<p>输出结果：</p>
+<pre><code>默认构造函数(Hello World)
+默认构造函数(HELLO WORLD)
+HELLO WORLD
+析构函数(HELLO WORLD)
+析构函数(Hello World)
+</code></pre>
+<h2 id="std-function对象"><a href="#std-function对象" class="headerlink" title="std::function对象"></a>std::function对象</h2><p>头文件</p>
+<p>可以看到我们这里使用了<code>std::function</code>类型作为<code>String::map</code>函数的参数类型，<code>std::function</code>是一个模板类，尖括号中标识了返回值，圆括号中标识了参数列表（可以是多个）。</p>
+<p>这里我们的<code>std::function</code>对象类型的返回值和参数列表都是<code>char</code>。</p>
+<p>（为什么不跟前面一样都用<code>int</code>呢？不感兴趣的可以忽略这一段。我做了测试：如果用<code>int</code>的话，会跟<code>locale</code>中定义的<code>toupper</code>和<code>tolower</code>函数定义冲突。<code>locale</code>头文件中的这两个函数的返回值和参数是<code>char_type</code>类型，编译不通过。所以我将<code>std::function</code>对象类型的返回值和参数列表定义为<code>char</code>，然后在<code>String::toUpperCase</code>和<code>String::toLowerCase</code>函数中使用匿名函数（Lambda）将<code>cctype</code>中的<code>std::toupper</code>和<code>std::tolower</code>函数的返回值和参数类型由<code>int</code>强制转换为<code>char</code>即可。）</p>
+<pre><code class="C++">class String &#123;
+private:
+    char* _buffer;
+    size_t _length;
+    void init(const char* str);
+    String map(std::function&lt;char(char)&gt; fun);
+
+public:
+    String(const char* str= nullptr);       // 默认构造函数
+    String(const String&amp; other);            // 拷贝构造函数
+    String(String&amp;&amp; other) noexcept;        // 移动构造函数
+    ~String();                              // 析构函数
+
+    size_t length();
+    const char* data();
+
+    char&amp; operator[](size_t index);
+    String&amp; operator=(const String&amp; other);
+    String&amp; operator=(String&amp;&amp; other) noexcept;
+    String operator+(const String&amp; other);
+    bool operator==(const String&amp; other);
+
+    String toUpperCase();
+    String toLowerCase();
+
+    friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; output, const String&amp; str);
+    friend std::istream&amp; operator&gt;&gt;(std::istream&amp; input, String&amp; str);
+&#125;;
+</code></pre>
+<p>实现代码：</p>
+<p>在在<code>String::toUpperCase</code>和<code>String::toLowerCase</code>函数中使用可匿名函数（Lambda）对<code>std::toupper</code>和<code>std::tolower</code>函数的返回值和参数类型<code>int</code>进行了强制转换，这样才可以跟定义的<code>std::function</code>类型的函数签名相符。</p>
+<pre><code class="C++">String String::map(function&lt;char(char)&gt; fun) &#123;
+    char* transformed = new char[_length];
+    for (size_t i = 0; i &lt; _length; ++i) &#123;
+        transformed[i] = (fun(_buffer[i]));
+    &#125;
+    return String(transformed);
+&#125;
+
+String String::toUpperCase() &#123;
+    return map([](char c)&#123;return static_cast&lt;char&gt;(toupper(static_cast&lt;int&gt;(c)));&#125;);
+&#125;
+
+String String::toLowerCase() &#123;
+    return map([](char c)&#123;return static_cast&lt;char&gt;(toupper(static_cast&lt;int&gt;(c)));&#125;);
+&#125;
+</code></pre>
+<p>主函数跟上面函数指针的一样，输出结果也完全一样。</p>
+<p>这个案例虽然不能体现出使用<code>std::function</code>类型的优势，但是对于它的简单使用可以有一个参考。</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/c/" class="tag">#c++</a><a href="/tags/函数指针/" class="tag">#函数指针</a><a href="/tags/function/" class="tag">#function</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/cxx/C-17%E4%BD%BF%E7%94%A8std-apply%E5%92%8Cfold-expression%E5%AF%B9tuple%E8%BF%9B%E8%A1%8C%E9%81%8D%E5%8E%86/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">C++17使用std::apply和fold Expression对tuple进行遍历</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/cxx/C-%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%8F%8A%E6%8B%B7%E8%B4%9D%E4%BC%98%E5%8C%96/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">C++移动语义及拷贝优化</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

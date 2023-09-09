@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Morton码 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Morton码 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/algorithm/Morton%E7%A0%81/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2019-07-08T09:11:27.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/algorithm/">算法</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>July</span>
+            <span>8,</span>
+            <span>2019</span>
+        </div>
+        
+
+        <h2 class="title">Morton码</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>写作时间：2019-07-08 17:11:27</p>
+<hr>
+<h1 id="Morton码的计算"><a href="#Morton码的计算" class="headerlink" title="Morton码的计算"></a>Morton码的计算</h1><p>Morton码是对栅格格网进行编码的一种算法，在Google中搜索Morton，搜索结果第一位是Wikipedia的Z-order Curve，这是因为Morton码编码结果展现为一种Z形的填充曲线。下面简要说一下如何计算四进制和十进制的Morton码。</p>
+<p><img src="/images/geos/z-curve.png" alt="Morton码二进制"></p>
+<h2 id="四进制Morton码计算"><a href="#四进制Morton码计算" class="headerlink" title="四进制Morton码计算"></a>四进制Morton码计算</h2><p>四进制编码对左上，右上，左下，右下的顺序对四个格网单元分布编码为0，1，2，3。</p>
+<p>其计算方式为：二进制的行列号$r$、$l$（从第0行0列开始），四进制编码$M=2<em>l+ r$；那么这里就是：第5行（101）第7列（111）：$M=2</em>101+111=313$（313对应的十进制是55）</p>
+<h2 id="十进制Morton码计算"><a href="#十进制Morton码计算" class="headerlink" title="十进制Morton码计算"></a>十进制Morton码计算</h2><p>十进制的编码规则：首先，行列号转为二进制（从第0行0列开始）；然后行列号交叉排列；最后将二进制结果转为十进制。十进制Morton编码是按左上，右上，左下，右下的顺序从0开始对每个格网进行自然编码的。</p>
+<p>对于第5行（101）第7列（111），交叉排列得到110111，然后转为十进制就是55。和四进制的编码结果是一样的。</p>
+<p>下面给出十进制Morton码的C++实现：</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+
+using std::cout;
+
+int main() &#123;
+    uint32_t row = 5;
+    uint32_t col = 7;
+    uint64_t morton = 0;
+
+    for (int i = 0; i &lt; sizeof(row) * 8; i++) &#123;
+        morton |= (row &amp; (uint64_t)1 &lt;&lt; i) &lt;&lt; i | (col &amp; (uint64_t)1 &lt;&lt; i) &lt;&lt; (i + 1);
+    &#125;
+    cout &lt;&lt; morton &lt;&lt; &#39;\n&#39;;
+    return 0;
+&#125;
+</code></pre>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Morton/" class="tag">#Morton</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/math/%E4%BB%8E%E5%82%85%E7%AB%8B%E5%8F%B6%E7%BA%A7%E6%95%B0%E5%88%B0%E5%82%85%E7%AB%8B%E5%8F%B6%E5%8F%98%E5%8C%96/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">从傅立叶级数到傅立叶变化</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/python/NumPy%E4%B8%AD%E7%9A%84%E7%BB%B4%E5%BA%A6Axis/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">NumPy中的维度Axis</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

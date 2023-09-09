@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>小波变换三之Haar变换 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="小波变换三之Haar变换 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/math/%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2%E4%B8%89%E4%B9%8BHaar%E5%8F%98%E6%8D%A2/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2019-01-29T03:27:41.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/math/">数学</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>January</span>
+            <span>29,</span>
+            <span>2019</span>
+        </div>
+        
+
+        <h2 class="title">小波变换三之Haar变换</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="小波变换三之Haar变换"><a href="#小波变换三之Haar变换" class="headerlink" title="小波变换三之Haar变换"></a>小波变换三之Haar变换</h1><h2 id="什么是基（Basis）"><a href="#什么是基（Basis）" class="headerlink" title="什么是基（Basis）"></a>什么是基（Basis）</h2><p>数学上有一个常用神秘专有名词“基”，那么什么是“基”呢？举个例子：在平面直角坐标系中的的一个点$(x, y)$的坐标可以表示为$x\cdot{(1, 0)} + y\cdot{(0, 1)}$，这里的$(1, 0)$和$(0, 1)​$就是二维直角坐标系中的基，因为任意的点都可以通过这两个向量的加权进行表示。</p>
+<p>其实，数学中很多定理或者法则都有这样的表示形式。比如：泰勒公式将任意一个可微函数表示为在该函数在某点的各阶导数的多项式的和；傅里叶级数任何周期函数都可以用正弦函数和余弦函数构成的无穷级数来表示。这些定理都是用无穷项的和来毕竟一个函数，而无穷项中的每一项都是一个系数乘以一个给定的函数，这些函数一起构成了所谓的“基”。</p>
+<h2 id="Haar小波基"><a href="#Haar小波基" class="headerlink" title="Haar小波基"></a>Haar小波基</h2><p>其实，小波变换也是有“基”的。我们先直观来看，然后给出形式化的定义。</p>
+<p>看例子，对于一个信号$f = {4, 6, 10, 12, 8, 6, 5, 5}$，我们可以通过在《<a href="https://theonegis.github.io/math/%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2%E4%B8%80%E4%B9%8BHaar%E5%8F%98%E6%8D%A2/">小波变换一之Haar变换</a>》中讲述的方法计算其第一层的变换结果，我们也可以通过“基”辅助计算。</p>
+<h3 id="第一层的基"><a href="#第一层的基" class="headerlink" title="第一层的基"></a>第一层的基</h3><p>对于第一层的计算，Haar基是这样的：</p>
+<p>对于近似表示的基，我们有：$$\begin{matrix}V_1^1 = (\frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}, 0, 0, \cdots, 0) \ V_2^1 = (0, 0, \frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}}, \cdots, 0) \ V_{N/2}^1 = (0, 0, 0, 0, \frac{1}{\sqrt{2}}, \frac{1}{\sqrt{2}})\end{matrix}​$$</p>
+<p>所以，变换以后的近似系数为$a^1 = (fV_1^1, fV_2^1, \cdots, fV_{N/2}^1) = (5\sqrt{2}, 11\sqrt{2}, 7\sqrt{2}, 5\sqrt{2})​$</p>
+<p>类似的，对于细节表示的基，我们有：$$\begin{matrix}W_1^1 = (\frac{1}{\sqrt{2}}, -\frac{1}{\sqrt{2}}, 0, 0, \cdots, 0) \ W_2^1 = (0, 0, \frac{1}{\sqrt{2}}, -\frac{1}{\sqrt{2}}, \cdots, 0) \ W_{N/2}^1 = (0, 0, 0, 0, \frac{1}{\sqrt{2}}, -\frac{1}{\sqrt{2}})\end{matrix}​$$</p>
+<p>所以，变换以后的细节系数为$d^1 = (fW_1^1, fW_2^1, \cdots, fW_{N/2}^1) = (-\sqrt{2}, -\sqrt{2}, -\sqrt{2}, 0)$</p>
+<h3 id="第二层的基"><a href="#第二层的基" class="headerlink" title="第二层的基"></a>第二层的基</h3><p>对于第二层的计算（对$a_1$进行小波分解），Haar基是这样的：</p>
+<p>对于近似表示的基，我们有：$$\begin{matrix}V_1^2 = (\frac{1}{2}, \frac{1}{2}, \frac{1}{2}, \frac{1}{2},0, 0, 0, 0, \cdots, 0, 0, 0, 0) \ V_2^2 = (0, 0, 0, 0, \frac{1}{2}, \frac{1}{2}, \frac{1}{2}, \frac{1}{2}, \cdots, 0, 0, 0, 0) \ V_{N/4}^2 = (0, 0, 0, 0, 0, 0, 0, 0,  \cdots, \frac{1}{2}, \frac{1}{2}, \frac{1}{2}, \frac{1}{2})\end{matrix}​$$</p>
+<p>变换以后的近似系数为$a^2 = (fV_1^2, fV_2^2, \cdots, fV_{N/4}^2) = (16, 12)$</p>
+<p>对于细节表示的基，我们有：$$\begin{matrix}W_1^2 = (\frac{1}{2}, \frac{1}{2}, -\frac{1}{2}, -\frac{1}{2},0, 0, 0, 0, \cdots, 0, 0, 0, 0) \ W_2^2 = (0, 0, 0, 0, \frac{1}{2}, \frac{1}{2}, -\frac{1}{2}, -\frac{1}{2}, \cdots, 0, 0, 0, 0) \ W_{N/4}^2 = (0, 0, 0, 0, 0, 0, 0, 0,  \cdots, \frac{1}{2}, \frac{1}{2}, -\frac{1}{2}, -\frac{1}{2})\end{matrix}$$</p>
+<p>变换以后的细节系数为$d^1 = (fW_1^2, fW_2^2, \cdots, fW_{N/4}^2) = (-6, 2)​$</p>
+<p>后面，如果要继续再分解的话，我们可以找到类似上面的“基”做进一步分解。</p>
+<p>可以看到Haar小波基都是正交的（与除了自己以外的其它基的內积为0），而且都经过了单位化（模为1）。</p>
+<h2 id="母小波和父小波"><a href="#母小波和父小波" class="headerlink" title="母小波和父小波"></a>母小波和父小波</h2><p>在小波变换中有两个重要的术语：母小波（mother wavelet）和父小波（father wavelet），而我们的小波基就是由父小波和母小波经过平移和缩放得到的。母小波也叫做小波函数（wavelet function），对应着细节系数的基，父小波也叫做缩放函数（scaling function），对应着近似系数的基。</p>
+<p>Haar小波的母小波定义为$$\psi(x) = \begin{cases}1, &amp; 0 \le x \lt \frac{1}{2} \-1, &amp; \frac{1}{2}\le x \lt 1\ 0, &amp; \mathrm{其它}\end{cases}​$$</p>
+<p>Haar小波的父小波定义为$$\phi(x) = \begin{cases}1, &amp; 0 \le x \le 1\ 0, &amp; \mathrm{其它}\end{cases}$$</p>
+<p>不止对于Haar小波，任何小波的基都是对其母小波和父小波缩放和平移后的集合。感兴趣的朋友可以在下面的网址中查看一下，如何对小波函数进行缩放和平移：<a target="_blank" rel="noopener" href="http://demonstrations.wolfram.com/HaarFunctions/">Haar Functions</a></p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/小波变换/" class="tag">#小波变换</a><a href="/tags/Haar变换/" class="tag">#Haar变换</a><a href="/tags/Wavelet/" class="tag">#Wavelet</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/algorithm/LeetCode-Minimum-Cost-For-Tickets/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">LeetCode-Minimum Cost for Tickets</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/cxx/C-%E4%B8%AD%E7%9A%84%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">C++中的万能引用和完美转发</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

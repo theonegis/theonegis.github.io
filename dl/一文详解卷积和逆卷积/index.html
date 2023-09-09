@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>一文详解卷积和逆卷积 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="一文详解卷积和逆卷积 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/dl/%E4%B8%80%E6%96%87%E8%AF%A6%E8%A7%A3%E5%8D%B7%E7%A7%AF%E5%92%8C%E9%80%86%E5%8D%B7%E7%A7%AF/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-11-09T06:52:57.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/dl/">深度学习</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>November</span>
+            <span>9,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">一文详解卷积和逆卷积</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="一文详解卷积和逆卷积"><a href="#一文详解卷积和逆卷积" class="headerlink" title="一文详解卷积和逆卷积"></a>一文详解卷积和逆卷积</h1><p>卷积神经网络（CNN）在计算机视觉大放异彩，入门CNN的第一步就是理解什么是卷积（Convolution）运算。本文旨在以通俗易懂的方式让读者理解卷积的概念。</p>
+<p>注：本文的图片素材全部来源于网络，如有侵权，请联系作者删除。</p>
+<h2 id="卷积运算"><a href="#卷积运算" class="headerlink" title="卷积运算"></a>卷积运算</h2><p>卷积在数学上是两个变量在某范围内相乘后求和的结果。在数字图像处理中，卷积操作其实就是利用卷积核（卷积模板）在图像上滑动，将图像点上的像素灰度值与对应的卷积核上的数值相乘，然后将所有相乘后的值相加作为卷积核中间像素对应的图像上像素的灰度值，并最终滑动完所有图像的过程，如图下图所示（图中的蓝色代表输入，青色代表输出）。</p>
+<p><img src="/images/ml/no_padding_no_strides.gif" alt="卷积运算"></p>
+<p>在卷积运算中，我们有下面几个概念：</p>
+<ul>
+<li>Padding 有的时候对于给定输入图像的大小，我们需要得到制定大小的输出。这时候，我们可以通过给图像的边缘增加0像素值得方法获得。这个0像素值区域的大小，我们一般称之为padding。</li>
+<li>Stride 在一般的卷积过程中，我们使用步长为1进行卷积核在图像上的滑动；但是有时候出于缩小输出图片尺寸的原因，我们也会采用大于1的步长。卷积核每次滑动的步长，我们称之为stride。</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center"><img src="/images/ml/same_padding_no_strides.gif" alt="Padding为1的卷积" width="260"/></th>
+<th align="center"><img src="/images/ml/no_padding_strides.gif" alt="Stride为2的卷积" width="300"/></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Padding为$1\times1$的卷积操作</td>
+<td align="center">Stride为$2\times2$的卷积操作</td>
+</tr>
+</tbody></table>
+<h3 id="单通道"><a href="#单通道" class="headerlink" title="单通道"></a>单通道</h3><p>对于一个长为$H$，宽为$W$的灰度图像来说，其尺寸可以表示为$(1, W, H)$。这里的1我们称之为通道（Channel）。所谓“一图胜千言”，下面的动图以单通道为例，演示了如何进行卷积运算得到最终的输出结果。</p>
+<p><img src="/images/ml/stride1.gif" alt="步长为1的卷积"></p>
+<p><img src="/images/ml/stride2.gif" alt="步长为2的卷积"></p>
+<h3 id="多通道"><a href="#多通道" class="headerlink" title="多通道"></a>多通道</h3><p>那如果对于一个RGB彩色图像我们的通道就是3，对于多通道的输入，我们如何进行卷积操作，输出为多通道或者单通道呢？</p>
+<p><img src="/images/ml/rgb.gif" alt="多通道卷积"></p>
+<p>从上图可以知道，对于多通道的输入，卷积操作在每个Channel上分别进行，然后进行求和得到输出。比如，我的输入是$(32, W, H)$，我的输出是$(64, W, H)$，则需要新的卷积核的个数是$32 \times 64$。因为，对于在输入的32个通道的每个通道都需要64个卷积核，每个通道做完卷积运算，然后再求和，得到最后的64个通道的输出。</p>
+<h3 id="卷积运算的参数计算"><a href="#卷积运算的参数计算" class="headerlink" title="卷积运算的参数计算"></a>卷积运算的参数计算</h3><p>根据前面的分析，到这里，卷积运算的参数的求解就很明确了。</p>
+<p>设我们的输入通道是$p$，输出通道是$q$，则</p>
+<p>如果我们不考虑Bias（增益），那么对于一个$m \times n$的卷积核（我们一般取$m =n$），我们需要学习的参数为$(m \times n \times p) \times q$；</p>
+<p>如果加上Bias（就是给卷积核作用以后的结果添加一个常数），那么我们需要学习的参数为$(m \times n \times p + 1) \times q $。</p>
+<h2 id="逆卷积"><a href="#逆卷积" class="headerlink" title="逆卷积"></a>逆卷积</h2><p>在CNN中，我们经常会使用所谓的逆卷积（Decovolution）进行输入尺寸的放大，但是注意这个逆卷积不是卷积的逆操作。下面，我们还是看图说话，到底什么是逆卷积呢？(图中蓝色代表的是输入，青色代表的是输出)</p>
+<p><img src="/images/ml/no_padding_no_strides_transposed.gif" alt="逆卷积"></p>
+<p>可以看到其实逆卷积和卷积操作并没有本质的区别，只是在输出的尺寸上有所区别。</p>
+<h2 id="卷积运算的矩阵实现"><a href="#卷积运算的矩阵实现" class="headerlink" title="卷积运算的矩阵实现"></a>卷积运算的矩阵实现</h2><p>那么在计算机内部我们如何实现卷积操作呢？答案是矩阵乘法。</p>
+<p>我们还是看图说话，对于卷积操作，我们对输入图像以及卷积核做Unroll操作以后，进行矩阵相乘得到输出。</p>
+<p><img src="/images/ml/deconvolution-unroll.jpg" alt="卷积操作的矩阵实现"></p>
+<p>对于逆卷积操作，我们对卷积核进行Unroll操作以后进行转置，然后再做矩阵乘法，得到输入。所以基于这个原因，我们一般称逆卷积为转置卷积（Transposed Convolution）。</p>
+<p><img src="/images/ml/deconvolution.jpg" alt="逆卷积操作的矩阵实现"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://github.com/vdumoulin/conv_arithmetic/blob/master/README.md">Convolution arithmetic</a></li>
+<li><a target="_blank" rel="noopener" href="http://machinelearninguru.com/computer_vision/basics/convolution/convolution_layer.html">Undrestanding Convolutional Layers in Convolutional Neural Networks</a></li>
+<li><a target="_blank" rel="noopener" href="https://nrupatunga.github.io/convolution-2/">Convolution Arithmetic in Deep Learning</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/pdf/1603.07285.pdf">A guide to convolution arithmetic for deep learning</a></li>
+</ol>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/深度学习/" class="tag">#深度学习</a><a href="/tags/卷积/" class="tag">#卷积</a><a href="/tags/转置卷积/" class="tag">#转置卷积</a><a href="/tags/逆卷积/" class="tag">#逆卷积</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/math/%E4%BD%BF%E7%94%A8Python%E8%AE%A1%E7%AE%97%E6%96%B9%E5%B7%AE%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9B%B8%E5%85%B3%E7%B3%BB%E6%95%B0/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">使用Python计算方差协方差相关系数</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/cxx/C-%E4%B8%ADargmin%E5%92%8Cargmax%E7%9A%84%E5%AE%9E%E7%8E%B0/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">C++中argmin和argmax的实现</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

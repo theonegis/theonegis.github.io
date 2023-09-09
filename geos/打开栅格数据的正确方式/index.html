@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>打开栅格数据的正确方式 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="打开栅格数据的正确方式 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/%E6%89%93%E5%BC%80%E6%A0%85%E6%A0%BC%E6%95%B0%E6%8D%AE%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E5%BC%8F/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-07-11T12:10:17.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>July</span>
+            <span>11,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">打开栅格数据的正确方式</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="打开栅格数据的正确方式"><a href="#打开栅格数据的正确方式" class="headerlink" title="打开栅格数据的正确方式"></a>打开栅格数据的正确方式</h1><p>作者：阿振</p>
+<p>邮箱：<a href="mailto:&#116;&#97;&#110;&#122;&#x68;&#101;&#110;&#x79;&#117;&#103;&#105;&#x73;&#x40;&#x31;&#54;&#51;&#46;&#99;&#x6f;&#109;">&#116;&#97;&#110;&#122;&#x68;&#101;&#110;&#x79;&#117;&#103;&#105;&#x73;&#x40;&#x31;&#54;&#51;&#46;&#99;&#x6f;&#109;</a></p>
+<p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a></p>
+<p>修改时间：2018-05-16</p>
+<p>声明：本文为博主原创文章，转载请注明原文出处</p>
+<hr>
+<h2 id="以一个简单例子说明如何打开栅格影像"><a href="#以一个简单例子说明如何打开栅格影像" class="headerlink" title="以一个简单例子说明如何打开栅格影像"></a>以一个简单例子说明如何打开栅格影像</h2><p>下面的例子打开一副GeoTIFF影像，输出了影像的一些信息，然后遍历了所有波段，输出波段的一些信息</p>
+<pre><code class="python">import gdal
+
+# 打开栅格数据集
+ds = gdal.Open(&#39;example.tif&#39;)
+
+# 获得栅格数据的一些重要信息
+print(f&#39;投影信息：&#123;ds.GetProjection()&#125;&#39;)
+print(f&#39;栅格波段数：&#123;ds.RasterCount&#125;&#39;)
+print(f&#39;栅格列数（宽度）：&#123;ds.RasterXSize&#125;&#39;)
+print(f&#39;栅格行数（高度）：&#123;ds.RasterYSize&#125;&#39;)
+
+# 获取数据集的元数据信息
+metadata = ds.GetMetadata_Dict()
+for key, value in metadata.items():
+    print(f&#39;&#123;key&#125; -&gt; &#123;value&#125;&#39;)
+
+
+for b in range(ds.RasterCount):
+    # 注意GDAL中的band计数是从1开始的
+    band = ds.GetRasterBand(b + 1)
+    # 波段数据的一些信息
+    print(f&#39;数据类型：&#123;gdal.GetDataTypeName(band.DataType)&#125;&#39;)  # DataType属性返回的是数字
+    print(f&#39;NoData值：&#123;band.GetNoDataValue()&#125;&#39;)  # 很多影像都是NoData，我们在做数据处理时要特别对待
+    print(f&#39;统计值（最大值最小值）：&#123;band.ComputeRasterMinMax()&#125;&#39;)  # 有些数据本身就存储了统计信息，有些数据没有需要计算
+
+# 关闭数据集
+ds = None
+</code></pre>
+<p>输出如下：</p>
+<pre><code>投影信息：PROJCS[&quot;WGS 84 / UTM zone 49N&quot;,GEOGCS[&quot;WGS 84&quot;,DATUM[&quot;WGS_1984&quot;,SPHEROID[&quot;WGS 84&quot;,6378137,298.257223563,AUTHORITY[&quot;EPSG&quot;,&quot;7030&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;6326&quot;]],PRIMEM[&quot;Greenwich&quot;,0,AUTHORITY[&quot;EPSG&quot;,&quot;8901&quot;]],UNIT[&quot;degree&quot;,0.0174532925199433,AUTHORITY[&quot;EPSG&quot;,&quot;9122&quot;]],AUTHORITY[&quot;EPSG&quot;,&quot;4326&quot;]],PROJECTION[&quot;Transverse_Mercator&quot;],PARAMETER[&quot;latitude_of_origin&quot;,0],PARAMETER[&quot;central_meridian&quot;,111],PARAMETER[&quot;scale_factor&quot;,0.9996],PARAMETER[&quot;false_easting&quot;,500000],PARAMETER[&quot;false_northing&quot;,0],UNIT[&quot;metre&quot;,1,AUTHORITY[&quot;EPSG&quot;,&quot;9001&quot;]],AXIS[&quot;Easting&quot;,EAST],AXIS[&quot;Northing&quot;,NORTH],AUTHORITY[&quot;EPSG&quot;,&quot;32649&quot;]]
+栅格波段数：3
+栅格列数（宽度）：4800
+栅格行数（高度）：4800
+AREA_OR_POINT -&gt; Area
+数据类型：Int16
+NoData值：-28672.0
+统计值（最大值最小值）：(-435.0, 6134.0)
+数据类型：Int16
+NoData值：-28672.0
+统计值（最大值最小值）：(-468.0, 6265.0)
+数据类型：Int16
+NoData值：-28672.0
+统计值（最大值最小值）：(21.0, 7267.0)
+</code></pre>
+<h2 id="如何将Dataset转为Numpy的ndarray"><a href="#如何将Dataset转为Numpy的ndarray" class="headerlink" title="如何将Dataset转为Numpy的ndarray"></a>如何将Dataset转为Numpy的ndarray</h2><p>当我们得到<code>Band</code>对象以后，如果按照GDAL的C/C++接口惯例，我们可以使用<code>WriteRaster()</code>方法进行数据写入（C/C++接口是<code>WriteBlock()</code>），但是在Python中我们有很强大的<code>ndarray</code>对象，所以我们一般是将<code>Band</code>对象中存储的数据转为<code>ndarray</code>进行处理以后，然后再写回去。</p>
+<p>下面介绍几种转换的方法：</p>
+<ol>
+<li>在<code>Dataset</code>级别进行转换，转换结果是一个三维数组，第一个维度是波段数</li>
+<li>在<code>Band</code>级别进行转换，转换的结果是一个二维数据</li>
+<li>使用<code>gdal_array</code>模块中的<code>LoadFile()</code>函数直接进行（相当于第一种转换）</li>
+</ol>
+<pre><code class="python">import gdal
+
+# 打开栅格数据集
+ds = gdal.Open(&#39;example.tif&#39;)
+# 在数据集层面转换
+image = ds.ReadAsArray()
+
+print(f&#39;数据的尺寸：&#123;image.shape&#125;&#39;)
+# 输出结果为：数据的尺寸：(3, 4800, 4800)
+# 这说明ReadAsArray方法将每个波段都转换为了一个二维数组
+
+# 获得第一个波段的数据
+band1 = image[0]
+
+# 在波段层面的转换
+for b in range(ds.RasterCount):
+    # 注意GDAL中的band计数是从1开始的
+    band = ds.GetRasterBand(b + 1)
+    band = band.ReadAsArray()
+    print(f&#39;波段大小：&#123;band.shape&#125;&#39;)
+
+# 关闭数据集
+ds = None
+</code></pre>
+<p>输出结果：</p>
+<pre><code>数据的尺寸：(3, 4800, 4800)
+波段大小：(4800, 4800)
+波段大小：(4800, 4800)
+波段大小：(4800, 4800)
+</code></pre>
+<p>使用<code>gdal_array</code>模块</p>
+<pre><code class="python">from osgeo import gdal_array
+# gdal_array模块
+image = gdal_array.LoadFile(&#39;example.tif&#39;)
+print(f&#39;数据的尺寸：&#123;image.shape&#125;&#39;)
+</code></pre>
+<h2 id="在GDAL中使用Python的异常对象"><a href="#在GDAL中使用Python的异常对象" class="headerlink" title="在GDAL中使用Python的异常对象"></a>在GDAL中使用Python的异常对象</h2><pre><code class="python">import gdal
+import sys
+
+# 允许GDAL跑出Python异常
+gdal.UseExceptions()
+
+try:
+    ds = gdal.Open(&#39;example.tif&#39;)
+except (FileNotFoundError, RuntimeError) as e:
+    print(&#39;文件打开失败！&#39;)
+    print(e)
+    sys.exit(1)
+</code></pre>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/空间数据处理/" class="tag">#空间数据处理</a><a href="/tags/Python/" class="tag">#Python</a><a href="/tags/栅格数据/" class="tag">#栅格数据</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/%E6%A0%85%E6%A0%BC%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">栅格数据格式转换</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/GDAL%E7%AE%80%E4%BB%8B/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">GDAL简介</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>通俗LSTM长短时循环神经网络介绍 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="通俗LSTM长短时循环神经网络介绍 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/dl/%E9%80%9A%E4%BF%97LSTM%E9%95%BF%E7%9F%AD%E6%97%B6%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%BB%8B%E7%BB%8D/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2019-03-02T10:20:11.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/dl/">深度学习</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>March</span>
+            <span>2,</span>
+            <span>2019</span>
+        </div>
+        
+
+        <h2 class="title">通俗LSTM长短时循环神经网络介绍</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！<br>写作时间：2019-03-02 18:20:11<br>本文部分图片素材来自互联网，如有侵权，请联系作者删除！</p>
+<h1 id="通俗LSTM长短时记忆循环神经网络介绍"><a href="#通俗LSTM长短时记忆循环神经网络介绍" class="headerlink" title="通俗LSTM长短时记忆循环神经网络介绍"></a>通俗LSTM长短时记忆循环神经网络介绍</h1><h2 id="LSTM图解"><a href="#LSTM图解" class="headerlink" title="LSTM图解"></a>LSTM图解</h2><h3 id="处理流程"><a href="#处理流程" class="headerlink" title="处理流程"></a>处理流程</h3><p>在上一篇<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/88084305">文章</a>中简单介绍了经典RNN模型，并提到了RNN的一些缺点。LSTM（Long Short-Term Memory）解决了经典RNN不能很好地保存长时序信息的缺点，得到了更加广泛地应用。下面简单说说LSTM的流程。</p>
+<p><img src="/images/ml/Long_Short-Term_Memory.png" alt="Long Short-Term Memory"></p>
+<p>通过对比我们可以发现，LSTM和经典RNN有如下的区别：</p>
+<ul>
+<li>除了中间状态H，还多了一个C</li>
+<li>每个循环网络的单元（Cell）变得复杂了（多了所谓的三道门“遗忘门”（forget gate），“输入门”（input gate）和“输出门”（output gate））</li>
+</ul>
+<p>这里所谓的“门”其实就是选择性地对信息进行过滤，在实践中用<code>sigmoid</code>函数（在图中用$\sigma$表示）实现。</p>
+<p>首先，$t-1$时刻的输入$h_{t-1}$和$x_t$经过一个线性变换+<code>sigmoid</code>激活以后（这就是所谓的遗忘门），输出$f_t$。$f_t$再与$c_{t-1}$进行相乘（element-wise multiplication）得到一个中间结果。</p>
+<p>然后，$t-1$时刻的输入$h_{t-1}$和$x_t$经过另外一个线性变换+<code>sigmoid</code>激活以后（这就是所谓的输入门），输出$l_t$。同时，$h_{t-1}$和$x_t$经过再另外一个线性变换+<code>tanh</code>激活以后），与$l_t$相乘得到一个中间结果。这个中间结果和上一步的中间结果相加（element-wise addition）得到$c_t$。</p>
+<p>最后，$t-1$时刻的输入$h_{t-1}$和$x_t$经过另外一个线性变换+<code>sigmoid</code>激活以后（这就是所谓的输出门），输出$o_t$。$o_t$与经过<code>tanh</code>的$c_t$相乘得到$h_t$。</p>
+<p>至此，所有的状态更新完毕。</p>
+<h3 id="流程图解"><a href="#流程图解" class="headerlink" title="流程图解"></a>流程图解</h3><p>下面给出上面文字描述的步骤所对应的数学公式：</p>
+<p><img src="/images/ml/LSTM3-focus-f.png" alt="LSTM第一步遗忘门"></p>
+<p><img src="/images/ml/LSTM3-focus-i.png" alt="LSTM第二步输入门"></p>
+<p><img src="/images/ml/LSTM3-focus-C.png" alt="LSTM得到中间状态C"></p>
+<p><img src="/images/ml/LSTM3-focus-o.png" alt="LSTM第三步输出门"></p>
+<h3 id="总结说明"><a href="#总结说明" class="headerlink" title="总结说明"></a>总结说明</h3><p><img src="/images/ml/LSTM-Pipeline.png" alt="LSTM数据管道"></p>
+<p>上图的左子图给出了对于每个门的输入和输出，右子图说明了每个门的作用。</p>
+<h2 id="PyTorch实战"><a href="#PyTorch实战" class="headerlink" title="PyTorch实战"></a>PyTorch实战</h2><p>我们还是以《<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis">最简单的RNN回归模型入门</a>》中的使用Sin预测Cos的例子进行演示，代码跟之间的没有太大的区别，唯一的不同就是在中间状态更新的时候，现在有C和H两种中间状态需要更新。</p>
+<pre><code class="Python">import torch
+from torch import nn
+import numpy as np
+import matplotlib.pyplot as plt
+
+torch.manual_seed(2019)
+
+# 超参设置
+TIME_STEP = 20  # RNN时间步长
+INPUT_SIZE = 1  # RNN输入尺寸
+INIT_LR = 0.02  # 初始学习率
+N_EPOCHS = 100  # 训练回数
+
+
+class RNN(nn.Module):
+    def __init__(self):
+        super(RNN, self).__init__()
+        self.rnn = nn.LSTM(
+            input_size=INPUT_SIZE,
+            hidden_size=32,  # RNN隐藏神经元个数
+            num_layers=1,  # RNN隐藏层个数
+        )
+        self.out = nn.Linear(32, 1)
+
+    def forward(self, x, h):
+        # x (time_step, batch_size, input_size)
+        # h (n_layers, batch, hidden_size)
+        # out (time_step, batch_size, hidden_size)
+        out, h = self.rnn(x, h)
+        prediction = self.out(out)
+        return prediction, h
+
+
+rnn = RNN()
+print(rnn)
+
+optimizer = torch.optim.Adam(rnn.parameters(), lr=INIT_LR)
+loss_func = nn.MSELoss()
+h_state = None  # 初始化隐藏层
+
+plt.figure()
+plt.ion()
+for step in range(N_EPOCHS):
+    start, end = step * np.pi, (step + 1) * np.pi  # 时间跨度
+    # 使用Sin函数预测Cos函数
+    steps = np.linspace(start, end, TIME_STEP, dtype=np.float32, endpoint=False)
+    x_np = np.sin(steps)
+    y_np = np.cos(steps)
+    x = torch.from_numpy(x_np[:, np.newaxis, np.newaxis])  # 尺寸大小为(time_step, batch, input_size)
+    y = torch.from_numpy(y_np[:, np.newaxis, np.newaxis])
+
+    prediction, h_state = rnn(x, h_state)  # RNN输出（预测结果，隐藏状态）
+    h_state = (h_state[0].detach(), h_state[1].detach())  # 注意这里和原来的RNN的不同
+    loss = loss_func(prediction, y)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+    # 绘制中间结果
+    plt.cla()
+    plt.plot(steps, y_np, &#39;r-&#39;)
+    plt.plot(steps, prediction.data.numpy().flatten(), &#39;b-&#39;)
+    plt.draw()
+    plt.pause(0.1)
+plt.ioff()
+plt.show()
+</code></pre>
+<p>当<code>TIME_STEP</code>设置为20的时候，输出结果如下：</p>
+<p><img src="/images/ml/LSTM-Sin-20.png" alt="LSTM Sin预测Cos"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a target="_blank" rel="noopener" href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/mlreview/understanding-lstm-and-its-diagrams-37e2f46f1714">Understanding LSTM and its diagrams</a></li>
+</ol>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/循环神经网络/" class="tag">#循环神经网络</a><a href="/tags/长短时/" class="tag">#长短时</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/dl/%E4%BD%BF%E7%94%A8%E5%BE%AA%E7%8E%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%81%9A%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97%E8%AF%86%E5%88%AB/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">使用循环神经网络做手写数字识别</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/dl/%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84RNN%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B%E5%85%A5%E9%97%A8-PyTorch/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">最简单的RNN回归模型入门(PyTorch)</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>创建Shapefile文件并写入数据 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="创建Shapefile文件并写入数据 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/%E5%88%9B%E5%BB%BAShapefile%E6%96%87%E4%BB%B6%E5%B9%B6%E5%86%99%E5%85%A5%E6%95%B0%E6%8D%AE/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-07-11T12:21:07.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>July</span>
+            <span>11,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">创建Shapefile文件并写入数据</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="创建Shapefile文件并写入数据"><a href="#创建Shapefile文件并写入数据" class="headerlink" title="创建Shapefile文件并写入数据"></a>创建Shapefile文件并写入数据</h1><p>作者：阿振</p>
+<p>邮箱：<a href="mailto:&#x74;&#97;&#110;&#x7a;&#104;&#x65;&#x6e;&#121;&#117;&#103;&#x69;&#x73;&#x40;&#x31;&#54;&#51;&#46;&#99;&#x6f;&#109;">&#x74;&#97;&#110;&#x7a;&#104;&#x65;&#x6e;&#121;&#117;&#103;&#x69;&#x73;&#x40;&#x31;&#54;&#51;&#46;&#99;&#x6f;&#109;</a></p>
+<p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a></p>
+<p>修改时间：2018-06-02</p>
+<p>声明：本文为博主原创文章，转载请注明原文出处</p>
+<hr>
+<h2 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h2><p>使用GDAL创建Shapefile数据的基本步骤如下：</p>
+<ol>
+<li>使用<code>osgeo.ogr.Driver</code>的<code>CreateDataSource()</code>方法创建<code>osgeo.ogr.DataSource</code>矢量数据集</li>
+<li>使用<code>osgeo.ogr.DataSource</code>的<code>CreateLayer()</code>方法创建一个图层</li>
+<li>使用<code>osgeo.ogr.FieldDefn()</code>定义Shapefile文件的属性字段</li>
+<li>创建<code>osgeo.ogr.Feature</code>对象，设置每个属性字段的值，使用<code>Feature</code>对象的<code>SetGeometry()</code>定义几何属性</li>
+<li>创建<code>Feature</code>对象以后，使用<code>osgeo.ogr.Layer</code>的<code>CreateFeature()</code>添加<code>Feature</code>对象到当前图层</li>
+<li>重复步骤4和5依次添加所有的<code>Feature</code>到当前图层即可</li>
+</ol>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>下面的例子中，我们读取GeoJSON表示的中国省区数据，然后其转为Shapefile格式。</p>
+<p>GeoJSON编码片段如下：</p>
+<p><img src="../../../../../Resources/Books/Python%E7%A9%BA%E9%97%B4%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%AE%9E%E6%88%98/GDAL%E7%A9%BA%E9%97%B4%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/GDAL%E6%95%B0%E6%8D%AE%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/GeoJSON%E6%A0%BC%E5%BC%8F%E8%A1%A8%E7%A4%BA%E7%9A%84%E4%B8%AD%E5%9B%BD%E7%9C%81%E5%8C%BA.png" alt="GeoJSON格式表示的中国省区"></p>
+<p>可以看到每个Feature都有一个properties字段和geometry字段，我们需要根据properties字段的信息创建Shapefile数据的属性表，根据geometry字段创建Shapefile中的几何数据。</p>
+<pre><code class="python">from osgeo import ogr
+from osgeo import osr
+import json
+import os
+os.environ[&#39;SHAPE_ENCODING&#39;] = &quot;utf-8&quot;
+
+
+with open(&#39;China.json&#39;) as f:
+    china = json.load(f)
+
+# 创建DataSource
+driver = ogr.GetDriverByName(&#39;ESRI Shapefile&#39;)
+ds = driver.CreateDataSource(&#39;China.shp&#39;)
+
+# 创建WGS84空间参考
+srs = osr.SpatialReference()
+srs.ImportFromEPSG(4326)
+
+# 创建图层
+layer = ds.CreateLayer(&#39;province&#39;, srs, ogr.wkbPolygon)
+# 添加属性定义
+fname = ogr.FieldDefn(&#39;Name&#39;, ogr.OFTString)
+fname.SetWidth(24)
+layer.CreateField(fname)
+fcx = ogr.FieldDefn(&#39;CenterX&#39;, ogr.OFTReal)
+layer.CreateField(fcx)
+fcy = ogr.FieldDefn(&#39;CenterY&#39;, ogr.OFTReal)
+layer.CreateField(fcy)
+
+# 变量GeoJSON中的features
+for f in china[&#39;features&#39;]:
+    # 新建Feature并且给其属性赋值
+    feature = ogr.Feature(layer.GetLayerDefn())
+    feature.SetField(&#39;Name&#39;, f[&#39;properties&#39;][&#39;name&#39;])
+    feature.SetField(&#39;CenterX&#39;, f[&#39;properties&#39;][&#39;cp&#39;][0])
+    feature.SetField(&#39;CenterY&#39;, f[&#39;properties&#39;][&#39;cp&#39;][1])
+
+    # 设置Feature的几何属性Geometry
+    polygon = ogr.CreateGeometryFromJson(str(f[&#39;geometry&#39;]))
+    feature.SetGeometry(polygon)
+    # 创建Feature
+    layer.CreateFeature(feature)
+    del feature
+ds.FlushCache()
+
+del ds
+</code></pre>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/空间数据处理/" class="tag">#空间数据处理</a><a href="/tags/Python/" class="tag">#Python</a><a href="/tags/Shapefile/" class="tag">#Shapefile</a><a href="/tags/矢量数据/" class="tag">#矢量数据</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/%E7%9F%A2%E9%87%8F%E6%95%B0%E6%8D%AE%E6%8A%95%E5%BD%B1%E8%BD%AC%E6%8D%A2/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">矢量数据投影转换</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/%E6%89%93%E5%BC%80Shapefile%E6%96%87%E4%BB%B6%E7%9A%84%E6%AD%A3%E7%A1%AE%E6%96%B9%E5%BC%8F/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">打开Shapefile文件的正确方式</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

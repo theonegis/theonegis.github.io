@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Longest Palindromic Substring - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Longest Palindromic Substring - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/algorithm/Longest-Palindromic-Substring/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2019-02-09T16:04:34.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/algorithm/">算法</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>February</span>
+            <span>10,</span>
+            <span>2019</span>
+        </div>
+        
+
+        <h2 class="title">Longest Palindromic Substring</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>写作时间：2019-02-10 00:04:34</p>
+<h1 id="LeetCode-Longest-Palindromic-Substring"><a href="#LeetCode-Longest-Palindromic-Substring" class="headerlink" title="LeetCode-Longest Palindromic Substring"></a>LeetCode-Longest Palindromic Substring</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>LeetCode第5道题目：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-palindromic-substring/">5. Longest Palindromic Substring</a></p>
+<p>Given a string <strong>s</strong>, find the longest palindromic substring in <strong>s</strong>. You may assume that the maximum length of <strong>s</strong> is 1000.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: &quot;babad&quot;
+Output: &quot;bab&quot;
+Note: &quot;aba&quot; is also a valid answer.
+</code></pre>
+<p><strong>Example 2:</strong></p>
+<pre><code>Input: &quot;cbbd&quot;
+Output: &quot;bb&quot;
+</code></pre>
+<p>题目要求我们找到给定字符串中的所有回文子串中最长子串。</p>
+<h2 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h2><p>这个题目和之前的<a href="https://theonegis.github.io/algorithm/LeetCode-Palindromic-Substrings/">LeetCode-Palindromic Substrings</a>题目的思路是一样的，<a target="_blank" rel="noopener" href="https://leetcode.com/problems/palindromic-substrings/">Palindromic Substrings</a>是找回文的个数。在这个过程中其实我们是找出了所有的回文子串，接下来我们统计一下每个回文的长度，选择出最长的那个就是本文的答案了（当然，在代码实现过程中统计最长子串不一定是找到了所有的子串之后再统计，可能是边寻找边统计）。所以，方法还是老方法，可以利用动态规划，也可以利用中心扩散法。</p>
+<p>有不明白的地方可以参见我之前的博文《<a href="https://theonegis.github.io/algorithm/LeetCode-Palindromic-Substrings/">LeetCode-Palindromic Substrings</a>》，这里我只给出了使用中心扩散法进行求解的代码实现。</p>
+<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><pre><code class="C++">class Solution &#123;
+private:
+    int longest = 0;            // 记录最长子串的字符个数
+    string palindrome = &quot;&quot;;     // 保存最长的子串
+    void extendPalindrome(const string&amp; s, int left, int right) &#123;
+        while ((left &gt;= 0) &amp;&amp; (right &lt; s.size()) &amp;&amp; (s[left] == s[right])) &#123;
+            --left;
+            ++right;
+        &#125;
+        int count = right - left - 1;
+        if (count &gt; longest) &#123;
+            longest = count;
+            palindrome = s.substr(left + 1, longest);
+        &#125;
+    &#125;
+
+public:
+    string longestPalindrome(string s) &#123;
+        for (int i = 0; i &lt; s.size(); ++i) &#123;
+            extendPalindrome(s, i, i);
+            extendPalindrome(s, i, i + 1);
+        &#125;
+        return palindrome;
+    &#125;
+&#125;;
+</code></pre>
+<p>可以对比一下，和<a href="https://theonegis.github.io/algorithm/LeetCode-Palindromic-Substrings/">LeetCode-Palindromic Substrings</a>的答案是不是没多大变化？</p>
+<h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><pre><code class="Scala">object Solution &#123;
+  def longestPalindrome(s: String): String = &#123;
+    s.length match &#123;
+      case 0 =&gt; s
+      case _ =&gt; &#123;
+        val longest = (for &#123;
+          i &lt;- s.indices
+          j &lt;- List(i, i + 1)
+          k &lt;- (i to 0 by -1).zip(j until s.length).takeWhile(p =&gt; s(p._1) == s(p._2))
+        &#125; yield (k._1, k._2)).maxBy(p =&gt; p._2 - p._1)
+        s.substring(longest._1, longest._2 + 1)
+      &#125;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+<p>这里需要注意的是：</p>
+<ol>
+<li><p>需要对于空字符串的特殊处理（这里使用的是<code>match</code>匹配，当然也可以使用<code>if...else</code>条件语句）</p>
+</li>
+<li><p>我们使用<code>yield</code>每次生成回文子串的左右指针，然后再使用<code>maxBy</code>得到最长子串对应的左右指针。</p>
+</li>
+<li><p><code>takeWhile</code>函数对集合进行遍历过程中当条件不满足的时候会立即停止判断，返回的是最后那个满足的元素。（<code>filter</code>函数会返回集合中所有满足条件的元素）</p>
+</li>
+</ol>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/LeetCode/" class="tag">#LeetCode</a><a href="/tags/回文/" class="tag">#回文</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/algorithm/LeetCode-Longest-Palindromic-Subsequence/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">LeetCode-Longest Palindromic Subsequence</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/algorithm/LeetCode-Palindromic-Substrings/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">LeetCode-Palindromic Substrings</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

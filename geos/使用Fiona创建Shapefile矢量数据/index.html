@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>使用Fiona创建Shapefile矢量数据 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="使用Fiona创建Shapefile矢量数据 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/geos/%E4%BD%BF%E7%94%A8Fiona%E5%88%9B%E5%BB%BAShapefile%E7%9F%A2%E9%87%8F%E6%95%B0%E6%8D%AE/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-07-11T12:26:21.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/geos/">空间数据处理</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>July</span>
+            <span>11,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">使用Fiona创建Shapefile矢量数据</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="使用Fiona创建Shapefile矢量数据"><a href="#使用Fiona创建Shapefile矢量数据" class="headerlink" title="使用Fiona创建Shapefile矢量数据"></a>使用Fiona创建Shapefile矢量数据</h1><p>作者：阿振 邮箱：<a href="mailto:&#116;&#x61;&#110;&#122;&#104;&#x65;&#110;&#x79;&#117;&#103;&#x69;&#115;&#x40;&#49;&#54;&#x33;&#46;&#99;&#x6f;&#109;">&#116;&#x61;&#110;&#122;&#104;&#x65;&#110;&#x79;&#117;&#103;&#x69;&#115;&#x40;&#49;&#54;&#x33;&#46;&#99;&#x6f;&#109;</a></p>
+<p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a></p>
+<p>修改时间：2018-06-10</p>
+<p>声明：本文为博主原创文章，转载请注明原文出处</p>
+<hr>
+<h2 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h2><p>使用Fiona写入Shapefile数据，主要是构建一个Schema，然后将空间对象转为GeoJSON的形式进行写入。</p>
+<p>这个Schema是一个字典结构，定义了Geometry的类型，属性字段的名称及其类型。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>这里我们举两个例子进行说明：第一是将GeoJSON数据转为Shapefile，第二个是新建一个Shapefile，然后再里面写入自定义的空间几何数据。</p>
+<p>因为从GeoJSON中读入的数据本身就是JSON格式，所以我们可以直接写入。GeoJSON的格式定义，参见：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80554993">创建Shapefile文件并写入数据</a>。</p>
+<pre><code class="python">import fiona
+import json
+
+with open(&#39;China.json&#39;) as f:
+    data = json.load(f)
+
+# schema是一个字典结构，指定了geometry及其它属性结构
+schema = &#123;&#39;geometry&#39;: &#39;Polygon&#39;,
+          &#39;properties&#39;: &#123;&#39;id&#39;: &#39;int&#39;, &#39;name&#39;: &#39;str&#39;&#125;&#125;
+
+# 使用fiona.open方法打开文件，写入数据
+with fiona.open(&#39;Provinces.shp&#39;, mode=&#39;w&#39;, driver=&#39;ESRI Shapefile&#39;,
+                schema=schema, crs=&#39;EPSG:4326&#39;, encoding=&#39;utf-8&#39;) as layer:
+    # 依次遍历GeoJSON中的空间对象
+    for feature in data[&#39;features&#39;]:
+        # 从GeoJSON中读取JSON格式的geometry和properties的记录
+        element = &#123;&#39;geometry&#39;: feature[&#39;geometry&#39;],
+                   &#39;properties&#39;: &#123;&#39;id&#39;: feature[&#39;properties&#39;][&#39;id&#39;],
+                                  &#39;name&#39;: feature[&#39;properties&#39;][&#39;name&#39;]&#125;&#125;
+        # 写入文件
+        layer.write(element)
+</code></pre>
+<p>第二种方法使用shapely包创建Geometry对象，然后利用<code>mapping</code>方法将创建的对象转为GeoJSON格式进行写入。</p>
+<p>Shapely包提供了对空间几何体的定义，操作等功能。</p>
+<pre><code class="python">import fiona
+from shapely.geometry import Polygon, mapping
+
+# schema是一个字典结构，指定了geometry及其它属性结构
+schema = &#123;&#39;geometry&#39;: &#39;Polygon&#39;,
+          &#39;properties&#39;: &#123;&#39;id&#39;: &#39;int&#39;, &#39;name&#39;: &#39;str&#39;&#125;&#125;
+
+# 使用fiona.open方法打开文件，写入数据
+with fiona.open(&#39;Beijing.shp&#39;, mode=&#39;w&#39;, driver=&#39;ESRI Shapefile&#39;,
+                schema=schema, crs=&#39;EPSG:4326&#39;, encoding=&#39;utf-8&#39;) as layer:
+    # 使用shapely创建空间几何对象
+    coordinates = [[117.4219, 40.21], [117.334, 40.1221], [117.2461, 40.0781], [116.8066, 39.9902], [116.8945, 39.8145],
+                   [116.8945, 39.6826], [116.8066, 39.5947], [116.543, 39.5947], [116.3672, 39.4629],
+                   [116.1914, 39.5947], [115.752, 39.5068], [115.4883, 39.6387], [115.4004, 39.9463],
+                   [115.9277, 40.2539], [115.752, 40.5615], [116.1035, 40.6055], [116.1914, 40.7813],
+                   [116.4551, 40.7813], [116.3672, 40.9131], [116.6309, 41.0449], [116.9824, 40.6934],
+                   [117.4219, 40.6494], [117.2461, 40.5176], [117.4219, 40.21]]
+    polygon = Polygon(coordinates)  # 使用地理坐标定义Polygon对象
+    polygon = mapping(polygon)  # 将Polygon对象转为GeoJSON格式
+    feature = &#123;&#39;geometry&#39;: polygon,
+               &#39;properties&#39;: &#123;&#39;id&#39;: 1, &#39;name&#39;: &#39;北京市&#39;&#125;&#125;
+    # 写入文件
+    layer.write(feature)
+</code></pre>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/空间数据处理/" class="tag">#空间数据处理</a><a href="/tags/Python/" class="tag">#Python</a><a href="/tags/Fiona/" class="tag">#Fiona</a><a href="/tags/Shapefile/" class="tag">#Shapefile</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/geos/%E4%BD%BF%E7%94%A8Rasterio%E8%AF%BB%E5%8F%96%E6%A0%85%E6%A0%BC%E6%95%B0%E6%8D%AE/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">使用Rasterio读取栅格数据</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/geos/Fiona%E7%AE%80%E4%BB%8B%E5%8F%8AShapefile%E6%95%B0%E6%8D%AE%E8%AF%BB%E5%8F%96/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">Fiona简介及Shapefile数据读取</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

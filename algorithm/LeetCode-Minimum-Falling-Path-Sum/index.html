@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>LeetCode-Minimum Falling Path Sum - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="LeetCode-Minimum Falling Path Sum - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/algorithm/LeetCode-Minimum-Falling-Path-Sum/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2019-02-04T13:13:56.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/algorithm/">算法</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>February</span>
+            <span>4,</span>
+            <span>2019</span>
+        </div>
+        
+
+        <h2 class="title">LeetCode-Minimum Falling Path Sum</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Minimum-Falling-Path-Sum"><a href="#Minimum-Falling-Path-Sum" class="headerlink" title="Minimum Falling Path Sum"></a>Minimum Falling Path Sum</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>本题目链接：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/minimum-falling-path-sum/">931. Minimum Falling Path Sum</a></p>
+<p>Given a <strong>square</strong> array of integers <code>A</code>, we want the <strong>minimum</strong> sum of a <em>falling path</em>through <code>A</code>.</p>
+<p>A falling path starts at any element in the first row, and chooses one element from each row.  The next row’s choice must be in a column that is different from the previous row’s column by at most one.</p>
+<p>题目的意思是在一个给定的二维方格中，从上往下走。列方向每次只走一步，行方向上最多只能跨越一个单元格。即就是只能向正下方，左下方，右下方行进。每个方格都有一个值，目标是走到最后一行的路径中包含的值之和最小。</p>
+<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>还是使用动态规划，而动态规划的重中之重就是建立递推关系。</p>
+<p>显然，对于第一行，我们选择最小的数进行开始；</p>
+<p>然后，对于后面的，我们每次只要选择正下方，左下方，右下方中最小的数即可。</p>
+<p>递推公式为：<code>dp[i][j] = dp[i-1][j] + min(A[i][j-1], A[i][j], A[i][j+1])</code>（注意对数组越界的处理）</p>
+<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><p>使用<code>A</code>当做<code>dp</code>数组，这样可以节省空间，但是我觉得对输入参数直接进行了修改，这样不是很好。</p>
+<pre><code class="C++">class Solution &#123;
+public:
+    int minFallingPathSum(vector&lt;vector&lt;int&gt;&gt; &amp;A) &#123;
+        for (auto i = 1; i &lt; A.size(); ++i) &#123;
+            for (auto j = 0; j &lt; A.size(); ++j) &#123;
+                A[i][j] +=
+                        min(&#123;A[i - 1][max(0, j - 1)],
+                             A[i - 1][j],
+                             A[i - 1][min(static_cast&lt;int&gt;(A.size() - 1), j + 1)]&#125;);
+            &#125;
+
+        &#125;
+        return *min_element(A.back().begin(), A.back().end());
+    &#125;
+&#125;;
+</code></pre>
+<h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><p>Scala版本的对输入参数<code>A</code>保持不变，但是这仍然不是纯函数的实现。如果有朋友有纯函数实现的方案，请不吝赐教！</p>
+<pre><code class="Scala">object Solution &#123;
+  def minFallingPathSum(A: Array[Array[Int]]): Int = &#123;
+    val dp = A.clone()
+    for (i &lt;- 1 until dp.length; j &lt;- dp.indices) &#123;
+      dp(i)(j) += List(
+        dp(i - 1)(math.max(0, j - 1)),
+        dp(i - 1)(j),
+        dp(i - 1)(math.min(dp.length - 1, j + 1))).min
+    &#125;
+    dp.last.min
+  &#125;
+&#125;
+</code></pre>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/LeetCode/" class="tag">#LeetCode</a><a href="/tags/动态规划/" class="tag">#动态规划</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/algorithm/LeetCode-Palindromic-Substrings/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">LeetCode-Palindromic Substrings</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/algorithm/LeetCode-Minimum-Cost-For-Tickets/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">LeetCode-Minimum Cost for Tickets</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

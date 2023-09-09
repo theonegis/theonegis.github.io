@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>C++中的万能引用和完美转发 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="C++中的万能引用和完美转发 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/cxx/C-%E4%B8%AD%E7%9A%84%E4%B8%87%E8%83%BD%E5%BC%95%E7%94%A8%E5%92%8C%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2019-01-20T09:38:11.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/cxx/">C++</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>January</span>
+            <span>20,</span>
+            <span>2019</span>
+        </div>
+        
+
+        <h2 class="title">C++中的万能引用和完美转发</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="C-中的万能引用和完美转发"><a href="#C-中的万能引用和完美转发" class="headerlink" title="C++中的万能引用和完美转发"></a>C++中的万能引用和完美转发</h1><ol>
+<li>阅读这篇博文需要了解C++中的左值（lvalue）和右值（rvalue）的概念，详情参见我的另外一篇博文：<a href="https://theonegis.github.io/cxx/C-%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E5%8F%8A%E6%8B%B7%E8%B4%9D%E4%BC%98%E5%8C%96/">C++移动语义及拷贝优化</a></li>
+<li>万能引用和完美转发多涉及到模板的使用，如若不是自己写模板，则可不用关心</li>
+</ol>
+<h2 id="万能引用（Universal-Reference）"><a href="#万能引用（Universal-Reference）" class="headerlink" title="万能引用（Universal Reference）"></a>万能引用（Universal Reference）</h2><p>首先，我们来看一个例子：</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+
+using std::cout;
+using std::endl;
+
+
+template&lt;typename T&gt;
+void func(T&amp; param) &#123;
+    cout &lt;&lt; param &lt;&lt; endl;
+&#125;
+
+
+int main() &#123;
+    int num = 2019;
+    func(num);
+    return 0;
+&#125;
+</code></pre>
+<p>这样例子的编译输出都没有什么问题，但是如果我们修改成下面的调用方式呢？</p>
+<pre><code class="C++">int main() &#123;
+    func(2019);
+    return 0;
+&#125;
+</code></pre>
+<p>则会得到一个大大的编译错误。因为上面的模板函数只能接受左值或者左值引用（左值一般是有名字的变量，可以取到地址的），我们当然可以重载一个接受右值的模板函数，如下也可以达到效果。</p>
+<pre><code class="C++">template&lt;typename T&gt;
+void func(T&amp; param) &#123;
+    cout &lt;&lt; &quot;传入的是左值&quot; &lt;&lt; endl;
+&#125;
+template&lt;typename T&gt;
+void func(T&amp;&amp; param) &#123;
+    cout &lt;&lt; &quot;传入的是右值&quot; &lt;&lt; endl;
+&#125;
+
+
+
+int main() &#123;
+    int num = 2019;
+    func(num);
+    func(2019);
+    return 0;
+&#125;
+</code></pre>
+<p>输出结果：</p>
+<pre><code>传入的是左值
+传入的是右值
+</code></pre>
+<p>第一次函数调用的是左值得版本，第二次函数调用的是右值版本。但是，有没有办法只写一个模板函数即可以接收左值又可以接收右值呢？</p>
+<p>C++ 11中有万能引用（Universal Reference）的概念：使用<code>T&amp;&amp;</code>类型的形参既能绑定右值，又能绑定左值。</p>
+<p>但是注意了：<strong>只有发生类型推导的时候，T&amp;&amp;才表示万能引用</strong>；否则，表示右值引用。</p>
+<p>所以，上面的案例我们可以修改为：</p>
+<pre><code class="C++">template&lt;typename T&gt;
+void func(T&amp;&amp; param) &#123;
+    cout &lt;&lt; param &lt;&lt; endl;
+&#125;
+
+
+int main() &#123;
+    int num = 2019;
+    func(num);
+    func(2019);
+    return 0;
+&#125;
+</code></pre>
+<h2 id="引用折叠（Universal-Collapse）"><a href="#引用折叠（Universal-Collapse）" class="headerlink" title="引用折叠（Universal Collapse）"></a>引用折叠（Universal Collapse）</h2><p>万能引用说完了，接着来聊引用折叠（Univers Collapse），因为完美转发（Perfect Forwarding）的概念涉及引用折叠。一个模板函数，根据定义的形参和传入的实参的类型，我们可以有下面四中组合：</p>
+<ul>
+<li>左值-左值 T&amp; &amp;        # 函数定义的形参类型是左值引用，传入的实参是左值引用</li>
+<li>左值-右值 T&amp; &amp;&amp;      # 函数定义的形参类型是左值引用，传入的实参是右值引用</li>
+<li>右值-左值 T&amp;&amp; &amp;      # 函数定义的形参类型是右值引用，传入的实参是左值引用</li>
+<li>右值-右值 T&amp;&amp; &amp;&amp;    # 函数定义的形参类型是右值引用，传入的实参是右值引用</li>
+</ul>
+<p>但是C++中不允许对引用再进行引用，对于上述情况的处理有如下的规则：</p>
+<p>所有的折叠引用最终都代表一个引用，要么是左值引用，要么是右值引用。规则是：<strong>如果任一引用为左值引用，则结果为左值引用。否则（即两个都是右值引用），结果为右值引用</strong>。</p>
+<p>即就是前面三种情况代表的都是左值引用，而第四种代表的右值引用。</p>
+<h2 id="完美转发（Perfect-Forwarding）"><a href="#完美转发（Perfect-Forwarding）" class="headerlink" title="完美转发（Perfect Forwarding）"></a>完美转发（Perfect Forwarding）</h2><p>下面接着说完美转发（Perfect Forwarding），首先，看一个例子：</p>
+<pre><code class="C++">#include &lt;iostream&gt;
+
+using std::cout;
+using std::endl;
+
+template&lt;typename T&gt;
+void func(T&amp; param) &#123;
+    cout &lt;&lt; &quot;传入的是左值&quot; &lt;&lt; endl;
+&#125;
+template&lt;typename T&gt;
+void func(T&amp;&amp; param) &#123;
+    cout &lt;&lt; &quot;传入的是右值&quot; &lt;&lt; endl;
+&#125;
+
+
+template&lt;typename T&gt;
+void warp(T&amp;&amp; param) &#123;
+    func(param);
+&#125;
+
+
+int main() &#123;
+    int num = 2019;
+    warp(num);
+    warp(2019);
+    return 0;
+&#125;
+</code></pre>
+<p>猜一下，上面的输出结果是什么？</p>
+<pre><code>传入的是左值
+传入的是左值
+</code></pre>
+<p>是不是和我们预期的不一样，下面我们来分析一下原因：</p>
+<p><code>warp()</code>函数本身的形参是一个万能引用，即可以接受左值又可以接受右值；第一个<code>warp()</code>函数调用实参是左值，所以，<code>warp()</code>函数中调用<code>func()</code>中传入的参数也应该是左值；第二个<code>warp()</code>函数调用实参是右值，根据上面所说的引用折叠规则，warp()<code>函数接收的参数类型是右值引用，那么为什么却调用了调用</code>func()的左值版本了呢？这是因为在<code>warp()</code>函数内部，左值引用类型变为了右值，因为参数有了名称，我们也通过变量名取得变量地址。</p>
+<p>那么问题来了，怎么保持函数调用过程中，变量类型的不变呢？这就是我们所谓的“完美转发”技术，在C++11中通过<code>std::forward()</code>函数来实现。我们修改我们的<code>warp()</code>函数如下：</p>
+<pre><code class="C++">template&lt;typename T&gt;
+void warp(T&amp;&amp; param) &#123;
+    func(std::forward&lt;T&gt;(param));
+&#125;
+</code></pre>
+<p>则可以输出预期的结果。</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/C-11/" class="tag">#C++11</a><a href="/tags/完美转发/" class="tag">#完美转发</a><a href="/tags/万能引用/" class="tag">#万能引用</a><a href="/tags/引用折叠/" class="tag">#引用折叠</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/math/%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2%E4%B8%89%E4%B9%8BHaar%E5%8F%98%E6%8D%A2/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">小波变换三之Haar变换</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/math/%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2%E4%BA%8C%E4%B9%8BHaar%E5%8F%98%E6%8D%A2/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">小波变换二之Haar变换</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

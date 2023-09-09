@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Python求解正态分布置信区间 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Python求解正态分布置信区间 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/math/Python%E6%B1%82%E8%A7%A3%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83%E7%BD%AE%E4%BF%A1%E5%8C%BA%E9%97%B4/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2018-09-28T05:48:02.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/math/">数学</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>September</span>
+            <span>28,</span>
+            <span>2018</span>
+        </div>
+        
+
+        <h2 class="title">Python求解正态分布置信区间</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="Python求解正态分布置信区间"><a href="#Python求解正态分布置信区间" class="headerlink" title="Python求解正态分布置信区间"></a>Python求解正态分布置信区间</h1><h2 id="正态分布和置信区间"><a href="#正态分布和置信区间" class="headerlink" title="正态分布和置信区间"></a>正态分布和置信区间</h2><p>正态分布（Normal Distribution）又叫高斯分布，是一种非常重要的概率分布。其概率密度函数的数学表达如下：</p>
+<p>$$f(x) = \frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x - \mu)^2}{2\sigma^2}}$$</p>
+<p>当$\mu=0​$，$\sigma = 1​$时，称为标准正太分布。</p>
+<p>置信区间是对该区间能包含未知参数的可置信的程度的描述。</p>
+<h2 id="使用SciPy求解置信区间"><a href="#使用SciPy求解置信区间" class="headerlink" title="使用SciPy求解置信区间"></a>使用SciPy求解置信区间</h2><pre><code class="Python">import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+N = 10000
+x = np.random.normal(0, 1, N)
+# ddof取值为1是因为在统计学中样本的标准偏差除的是(N-1)而不是N，统计学中的标准偏差除的是N
+# SciPy中的std计算默认是采用统计学中标准差的计算方式
+mean, std = x.mean(), x.std(ddof=1)
+print(mean, std)
+# 计算置信区间
+# 这里的0.9是置信水平
+conf_intveral = stats.norm.interval(0.9, loc=mean, scale=std)
+print(conf_intveral)
+</code></pre>
+<p>输出如下：</p>
+<pre><code>0.0033541207210673997 0.9986647964318905
+(-1.639303291798682, 1.6460115332408163)
+</code></pre>
+<p>这里的-1.639303291798682是置信上界，1.6460115332408163是置信下界，两个数值构成的区间就是置信区间</p>
+<h2 id="使用Matplotlib绘制正态分布密度曲线"><a href="#使用Matplotlib绘制正态分布密度曲线" class="headerlink" title="使用Matplotlib绘制正态分布密度曲线"></a>使用Matplotlib绘制正态分布密度曲线</h2><pre><code># 绘制概率密度分布图
+x = np.arange(-5, 5, 0.001)
+# PDF是概率密度函数
+y = stats.norm.pdf(x, loc=mean, scale=std)
+plt.plot(x, y)
+plt.show()
+</code></pre>
+<p>这里的<code>pdf()</code>函数是Probability density function，就是本文最开始的那个公式</p>
+<p>最后的输出图像如下，可以看到结果跟理论上的正太分布还是比较像的：</p>
+<p><img src="/images/math/norm.png"></p>
+<h2 id="正态分布置信区间规律"><a href="#正态分布置信区间规律" class="headerlink" title="正态分布置信区间规律"></a>正态分布置信区间规律</h2><p>函数曲线下68.268949%的面积在平均数左右的一个标准差范围内</p>
+<p>函数曲线下95.449974%的面积在平均数左右两个标准差的范围内</p>
+<p>函数曲线下99.730020%的面积在平均数左右三个标准差的范围内</p>
+<p>函数曲线下99.993666%的面积在平均数左右四个标准差的范围内</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/正态分布/" class="tag">#正态分布</a><a href="/tags/SciPy/" class="tag">#SciPy</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/cxx/C-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84String%E7%B1%BB/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">C++实现一个简单的String类</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/leetcode/Stone-Game/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">Stone Game</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>

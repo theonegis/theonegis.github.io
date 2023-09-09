@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>LeetCode-Palindromic Substrings - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="LeetCode-Palindromic Substrings - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/algorithm/LeetCode-Palindromic-Substrings/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2019-02-07T02:54:47.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 5.4.2"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/algorithm/">算法</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>February</span>
+            <span>7,</span>
+            <span>2019</span>
+        </div>
+        
+
+        <h2 class="title">LeetCode-Palindromic Substrings</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <h1 id="LeetCode-Palindromic-Substrings"><a href="#LeetCode-Palindromic-Substrings" class="headerlink" title="LeetCode-Palindromic Substrings"></a>LeetCode-Palindromic Substrings</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>这是第647道题目：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/palindromic-substrings/">Palindromic Substrings</a></p>
+<p>Given a string, your task is to count how many palindromic substrings in this string.</p>
+<p>The substrings with different start indexes or end indexes are counted as different substrings even they consist of same characters.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: &quot;abc&quot;
+Output: 3
+Explanation: Three palindromic strings: &quot;a&quot;, &quot;b&quot;, &quot;c&quot;.
+</code></pre>
+<p><strong>Example 2:</strong></p>
+<pre><code>Input: &quot;aaa&quot;
+Output: 6
+Explanation: Six palindromic strings: &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;aa&quot;, &quot;aa&quot;, &quot;aaa&quot;.
+</code></pre>
+<p>题目要求是需要计算出给定字符串中所有回文子串的个数（单个字符也算一个回文子串，不同索引位置的相同内容的回文子串也算不同的回文）</p>
+<h2 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h2><p>有两种思路：一种是采用动态规划的方法；另一种是采用中心扩散的方法。</p>
+<ol>
+<li><p>动态规划</p>
+<p>如果用<code>dp[i][j]</code>表示从第<code>i</code>个字符到第<code>j</code>个字符是不是回文子串，<code>s</code>表示给定字符串，则有</p>
+<p><code>dp[i][j]</code>= (<code>s[i]</code> == <code>s[j]</code>) &amp;&amp; (<code>i</code> - <code>j</code> &lt; 2) （这里表示的是子串是一个字符，两个字符的情形）</p>
+<p><code>dp[i][j]</code>= (<code>s[i]</code> == <code>s[j]</code>) &amp;&amp; (<code>dp[i + 1][j -1]</code> ) （这里表示的是除了前面两种情形之外的情形）</p>
+<p>注：三个字符串的情形既可以归类到第一种情况（如果归类到第一种情况，则条件需要变为<code>i</code> - <code>j</code> &lt; 3），也可以归类到第二种情形</p>
+</li>
+<li><p>中心扩散</p>
+<p>扩散法假定一个中心，然后采用左右两个指针同时向两边走来判断是不是回文。</p>
+<p>注：中心扩散法需要区分回文子串中的字符个数是奇数和偶数两种情况。</p>
+</li>
+</ol>
+<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><ol>
+<li><p>动态规划</p>
+<pre><code class="C++">class Solution &#123;
+public:
+    int countSubstrings(string s) &#123;
+        const int N = static_cast&lt;int&gt;(s.size());   // 如果不强转就会超时，好奇怪
+        int count = 0;
+        // 下面这一行换成原生数组也是可以的int dp[N][N]
+        vector&lt;vector&lt;bool&gt;&gt; dp(N, vector&lt;bool&gt;(N));
+        // 从后面遍历是为了让求dp[i][j]的时候dp[i + 1][j - 1]是已经计算过的
+        for (auto i = N - 1; i &gt;= 0; --i) &#123;
+            for (auto j = i; j &lt; N; ++j) &#123;
+                // (j - i &lt; 2)包含了两种情况，使得dp[i + 1][j - 1]可以包含剩下的所有情况
+                dp[i][j] = (s[i] == s[j]) &amp;&amp; ((j - i &lt; 2) || dp[i + 1][j - 1]);
+                if (dp[i][j]) count++;
+            &#125;
+        &#125;
+
+        return count;
+    &#125;
+&#125;;
+</code></pre>
+<p>在使用C++实现的时候，我发现一些有意思的现象：</p>
+<ol>
+<li>在第四行<code>s.size()</code>的返回类型本来是<code>size_t</code>，但是如果直接使用<code>size_t</code>的话，运行直接超时。我强制转换为<code>int</code>以后就可以通过测试。有童鞋能帮我解答一下疑惑吗？🙏</li>
+<li>用于存储<code>dp</code>的使用动态数组<code>vector</code>是一般都会想到的，但是我看到一些提交中也有直接使用C++原生数组的。我就奇怪了，C++原生数组的话需要使用<code>new</code>操作符去动态申请，为什么直接使用也可以通过编译呢？我后来查了一些资料，原来C99标准中支持了原生动态数组（标准中称之为变成数组variable length array）。但是C++标准中这个特性是可选的，就是说可能有的编译器支持这样写，而有的编译器不行。不过，原生数组相对<code>vector</code>容器，效率会更高一些。如果你的编译器支持，大胆地使用吧！</li>
+</ol>
+</li>
+<li><p>中心扩散</p>
+<pre><code class="C++">class Solution &#123;
+private:
+    int count = 0;
+    void extendPalindrome(const string&amp; s, int left, int right) &#123;
+        while ((left &gt;= 0) &amp;&amp; (right &lt; s.size()) &amp;&amp; (s[left] == s[right])) &#123;
+            --left;
+            ++right;
+            ++count;
+        &#125;
+    &#125;
+
+public:
+    int countSubstrings(string s) &#123;
+        for (int i = 0; i &lt; s.size(); ++i) &#123;
+            extendPalindrome(s, i, i);      // 对于奇数个字符的回文
+            extendPalindrome(s, i, i + 1);  // 对于偶数个字符的回文
+        &#125;
+        return count;
+    &#125;
+&#125;;
+</code></pre>
+</li>
+</ol>
+<h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><p>Scala的实现是在LeetCode上看到一个大神的答案，使用纯函数实现，写得很美妙，拿过来与大家分享！</p>
+<pre><code class="Scala">object Solution &#123;
+    def countSubstrings(s: String): Int = &#123;
+        (for &#123;
+            i &lt;- 0 until s.length
+            j &lt;- List(i, i + 1)
+            _ &lt;- (i to 0 by -1).zip(j until s.length).takeWhile(p =&gt; s(p._1) == s(p._2))
+        &#125; yield true).length
+    &#125;
+&#125;
+</code></pre>
+<p>这也是采用中心扩散法实现的。</p>
+<p><code>for</code>循环中的<code>i</code>从左到右依次遍历给定字符串，<code>j</code>控制的是奇数个数的子串情况和偶数个数的子串情况，<code>for</code>循环中的第三个匿名变量其实相当于一个条件判断。整个<code>for</code>循环返回一个<code>vector</code>（里面都是<code>true</code>），最后统计这个<code>vector</code>个中包含元素的个数即可。</p>
+<p>这里重点说一下<code>for</code>循环中的第三个匿名循环控制语句。<code>(i to 0 by -1).zip(j until s.length)</code>生成一个从中间向两边扩散的<code>List</code>（其实是<code>List</code>的子类<code>::</code>非空链表），这个<code>List</code>中的每个元素是一个<code>Tuple2</code>包含的是左指针<code>i</code>和右指针<code>j</code>。<code>takeWhile</code>方法是起到一个过滤作用，将左指针和右指针指向的值相等的这<code>Tuple2</code>返回（其实返回类型是<code>::</code>,只是里面只有一个元素）。如果左指针和右指针指向的值不相等，则返回<code>Nil（一个空的List）</code>。如果返回的是<code>Nil</code>的话，则不会生成一个<code>true</code>。这样子，其实第三个循环控制语句起到的是判断的作用。</p>
+<p>注：</p>
+<ol>
+<li>Scala中的<code>Vector</code>类似于Java中的<code>ArrayList</code>，而Scala中的<code>List</code>类似于Java中的<code>LinkedList</code></li>
+<li>Scala中的<code>List</code>有两个特殊的子类：<code>::</code>表示非空的<code>List</code>，<code>Nil</code>表示空的<code>List</code></li>
+<li>函数<code>filter</code>和<code>takeWhile</code>都可以起到过滤的作用，<code>filter</code>会过滤出给定集合中所有满足条件的元素，而<code>takeWhile</code>只会返回第一个满足条件的元素。但是两者返回的都是集合，即使<code>takeWhile</code>返回的集合只有一个元素。</li>
+</ol>
+<p>感觉函数式编程是挺好玩的，只是现在水平有限，还玩不起来！继续加油！</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/LeetCode/" class="tag">#LeetCode</a><a href="/tags/动态规划/" class="tag">#动态规划</a><a href="/tags/回文/" class="tag">#回文</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        
+        <a href="/algorithm/Longest-Palindromic-Substring/" class="next">
+            <div>
+                <div class="text">
+                    <p class="label">Next</p>
+                    <h3 class="title">Longest Palindromic Substring</h3>
+                </div>
+            </div>
+        </a>
+        
+        
+        <a href="/algorithm/LeetCode-Minimum-Falling-Path-Sum/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">LeetCode-Minimum Falling Path Sum</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2023 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
