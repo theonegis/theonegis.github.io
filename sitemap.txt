@@ -1,3 +1,4 @@
+http://theonegis.github.io/cxx/C-%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E5%A4%84%E7%90%86%E5%88%9D%E6%8E%A2/
 http://theonegis.github.io/about/index.html
 http://theonegis.github.io/cxx/%E5%85%B3%E4%BA%8EC-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E6%8B%B7%E8%B4%9D%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98/
 http://theonegis.github.io/categories/index.html
@@ -187,6 +188,7 @@ http://theonegis.github.io/tags/%E7%A9%BA%E9%97%B4%E5%8F%82%E8%80%83/
 http://theonegis.github.io/tags/%E7%A9%BA%E9%97%B4%E6%95%B0%E6%8D%AE/
 http://theonegis.github.io/tags/Conda/
 http://theonegis.github.io/tags/%E9%95%BF%E7%9F%AD%E6%97%B6/
+http://theonegis.github.io/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/
 http://theonegis.github.io/categories/cxx/
 http://theonegis.github.io/categories/algorithm/
 http://theonegis.github.io/categories/geos/

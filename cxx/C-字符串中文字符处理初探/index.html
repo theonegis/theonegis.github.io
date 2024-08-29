@@ -8,7 +8,7 @@
   <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
   <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
   
-  <title>Longest Palindromic Substring - 阿振的个人主页</title>
+  <title>C++字符串中文字符处理初探 - 阿振的个人主页</title>
   
     <link rel="shortcut icon" href="/favicon.png">
   
@@ -19,15 +19,15 @@
   
   
   
-  <meta property="og:title" content="Longest Palindromic Substring - 阿振的个人主页" />
+  <meta property="og:title" content="C++字符串中文字符处理初探 - 阿振的个人主页" />
   
   <meta property="og:type" content="article" />
   
-  <meta property="og:url" content="http://theonegis.github.io/algorithm/Longest-Palindromic-Substring/index.html" />
+  <meta property="og:url" content="http://theonegis.github.io/cxx/C-%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B8%AD%E6%96%87%E5%AD%97%E7%AC%A6%E5%A4%84%E7%90%86%E5%88%9D%E6%8E%A2/index.html" />
   
   <meta property="og:image" content="/favicon.png" />
   
-  <meta property="og:article:published_time" content="2019-02-09T16:04:34.000Z" />
+  <meta property="og:article:published_time" content="2024-08-29T01:32:15.000Z" />
   
   <meta property="og:article:author" content="阿振" />
   
@@ -147,93 +147,92 @@
         
         <div class="categories text-uppercase">
         
-            <a href="/categories/algorithm/">算法</a>
+            <a href="/categories/cxx/">C++</a>
         
         </div>
         
 
         
         <div class="date" id="date">
-            <span>February</span>
-            <span>9,</span>
-            <span>2019</span>
+            <span>August</span>
+            <span>29,</span>
+            <span>2024</span>
         </div>
         
 
-        <h2 class="title">Longest Palindromic Substring</h2>
+        <h2 class="title">C++字符串中文字符处理初探</h2>
     </div>
 
     <div class="divider"></div>
 
     <div class="content">
         <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
-<p>写作时间：2019-02-10 00:04:34</p>
-<h1 id="LeetCode-Longest-Palindromic-Substring"><a href="#LeetCode-Longest-Palindromic-Substring" class="headerlink" title="LeetCode-Longest Palindromic Substring"></a>LeetCode-Longest Palindromic Substring</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>LeetCode第5道题目：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-palindromic-substring/">5. Longest Palindromic Substring</a></p>
-<p>Given a string <strong>s</strong>, find the longest palindromic substring in <strong>s</strong>. You may assume that the maximum length of <strong>s</strong> is 1000.</p>
-<p><strong>Example 1:</strong></p>
-<pre><code>Input: &quot;babad&quot;
-Output: &quot;bab&quot;
-Note: &quot;aba&quot; is also a valid answer.
-</code></pre>
-<p><strong>Example 2:</strong></p>
-<pre><code>Input: &quot;cbbd&quot;
-Output: &quot;bb&quot;
-</code></pre>
-<p>题目要求我们找到给定字符串中的所有回文子串中最长子串。</p>
-<h2 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h2><p>这个题目和之前的<a href="https://theonegis.github.io/algorithm/LeetCode-Palindromic-Substrings/">LeetCode-Palindromic Substrings</a>题目的思路是一样的，<a target="_blank" rel="noopener" href="https://leetcode.com/problems/palindromic-substrings/">Palindromic Substrings</a>是找回文的个数。在这个过程中其实我们是找出了所有的回文子串，接下来我们统计一下每个回文的长度，选择出最长的那个就是本文的答案了（当然，在代码实现过程中统计最长子串不一定是找到了所有的子串之后再统计，可能是边寻找边统计）。所以，方法还是老方法，可以利用动态规划，也可以利用中心扩散法。</p>
-<p>有不明白的地方可以参见我之前的博文《<a href="https://theonegis.github.io/algorithm/LeetCode-Palindromic-Substrings/">LeetCode-Palindromic Substrings</a>》，这里我只给出了使用中心扩散法进行求解的代码实现。</p>
-<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><pre><code class="C++">class Solution &#123;
-private:
-    int longest = 0;            // 记录最长子串的字符个数
-    string palindrome = &quot;&quot;;     // 保存最长的子串
-    void extendPalindrome(const string&amp; s, int left, int right) &#123;
-        while ((left &gt;= 0) &amp;&amp; (right &lt; s.size()) &amp;&amp; (s[left] == s[right])) &#123;
-            --left;
-            ++right;
-        &#125;
-        int count = right - left - 1;
-        if (count &gt; longest) &#123;
-            longest = count;
-            palindrome = s.substr(left + 1, longest);
-        &#125;
-    &#125;
+<p>作者：阿振</p>
+<p>写作时间：1724895135000</p>
+<hr>
+<h1 id="C-字符串中文字符处理初探"><a href="#C-字符串中文字符处理初探" class="headerlink" title="C++字符串中文字符处理初探"></a>C++字符串中文字符处理初探</h1><p>好久没有写博客了，工作忙得都快忘记自己之前还有写博客的习惯。今天我们简单聊一下C++中如何处理中文字符。学过C++的都知道标准库中的 <code>std::string</code>更像是一个存储着 <code>char</code>的容器，而不是普遍意义上的字符串。而我们的中文字符又无法使用单个 <code>char</code>进行存储。</p>
+<p>常见用于中文的的字符编码有 <code>GBK</code>和 <code>UTF-8</code>，<code>UTF-16</code>等，在Windows中文操作系统中，默认字符编码是 <code>GBK</code>使用2个字节存储一个中文字符；而在Linux以及macOS中使用 <code>UTF-8</code>编码。UTF-8编码是一个变长的编码：一个ASCIl字符只需1字节编码；带有变音符号的其他语言文字的字母需要2字节编码；中文以及日韩等一些亚洲文字需要3个字节编码；其他一些极少使用的字符使用4个字节编码。</p>
+<p>那C++中的 <code>std::string</code>采用什么编码呢？一般来说，在Windows中文环境下，C++源文件的编码通常为GBK； 在Linux及macOS环境下，默认的为UTF-8 编码。在不依赖第三方库处理C++字符串时，一般可以使用 <code>std::string</code>进行读写，输入和输出；当要进行中文处理的时候，将其转为 <code>std::wstring</code>进行。当然，如果你需要进行复杂的字符串处理，可以通过第三方库例如，<a target="_blank" rel="noopener" href="https://icu.unicode.org/">ICU</a>、<a target="_blank" rel="noopener" href="https://doc.qt.io/">Qt</a>、<a target="_blank" rel="noopener" href="https://pocoproject.org/">Poco</a>等，这些第三方库提供了很多强大的功能。</p>
+<p>下面程序演示了如何进行两者的转化，最后将转换后的 <code>std::wstring</code>使用空格进行分割输出（程序在macOS上运行通过，在Windows下可能还需要额外工作）。</p>
+<pre><code class="C++">module;
+// Created by Victor Tan on 8/28/24.
+// 中文字符串使用
 
+#include &lt;string&gt;
+#include &lt;codecvt&gt;
+#include &lt;print&gt;
+#include &lt;ranges&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;iostream&gt;
+
+export module CString;
+
+using std::print;
+using std::println;
+
+using std::string;
+using std::wstring;
+using std::vector;
+
+
+export class Solution &#123;
 public:
-    string longestPalindrome(string s) &#123;
-        for (int i = 0; i &lt; s.size(); ++i) &#123;
-            extendPalindrome(s, i, i);
-            extendPalindrome(s, i, i + 1);
+    static void run() &#123;
+        // 定义一个普通字符串，使用现代C++的println函数进行输出
+        const string s = &quot;你好 Jay Chou&quot;;
+        println(&quot;采用std::string存储的「&#123;&#125;」的长度为&#123;&#125;&quot;, s, s.length());
+
+        // 将string转为wstring，这里的codecvt_utf8对象用于将UTF-8编码的字符串转为宽字符串
+        std::wstring_convert&lt;std::codecvt_utf8&lt;wchar_t&gt;&gt; converter;
+        const wstring ws = converter.from_bytes(s.data());
+        // 由于println函数不支持wstring的输出，这里输出仍然采用char存储的字符串
+        println(&quot;采用std::wstring存储的「&#123;&#125;」的长度为&#123;&#125;&quot;, s, ws.length());
+
+        // 将本地编码支持设置为系统环境变量默认编码
+        std::setlocale(LC_ALL, &quot;&quot;);
+        // 遍历wstring，将宽字符转为UTF-8编码的字符，中文是三个字节长度
+        for (const auto&amp; c: ws) &#123;
+            char chars[3] = &quot;&quot;;
+            std::wctomb(chars, c);
+            print(&quot;&#123;&#125;\t&quot;, chars);
         &#125;
-        return palindrome;
+        println();
+
+        // 将字符串按照空格及其标点符号分割，L前缀用于标识宽字符
+        // 这里使用了现代C++中的range，通过管道运算符实现了字符串分割然后将分割结果转为wstring
+        auto tokens = ws |
+                      std::views::split(&#39; &#39;) |
+                      std::ranges::to&lt;vector&lt;wstring&gt;&gt;();
+        // 这里使用了ranges的for_each函数，配合Lambda表达式进行wstring的输出
+        // 注意cout和print函数都不支持wstring，这里使用wcout进行输出
+        std::ranges::for_each(tokens, [](const auto&amp; token) &#123;
+            std::wcout &lt;&lt; token &lt;&lt; std::endl;
+        &#125;);
     &#125;
 &#125;;
 </code></pre>
-<p>可以对比一下，和<a href="https://theonegis.github.io/algorithm/LeetCode-Palindromic-Substrings/">LeetCode-Palindromic Substrings</a>的答案是不是没多大变化？</p>
-<h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><pre><code class="Scala">object Solution &#123;
-  def longestPalindrome(s: String): String = &#123;
-    s.length match &#123;
-      case 0 =&gt; s
-      case _ =&gt; &#123;
-        val longest = (for &#123;
-          i &lt;- s.indices
-          j &lt;- List(i, i + 1)
-          k &lt;- (i to 0 by -1).zip(j until s.length).takeWhile(p =&gt; s(p._1) == s(p._2))
-        &#125; yield (k._1, k._2)).maxBy(p =&gt; p._2 - p._1)
-        s.substring(longest._1, longest._2 + 1)
-      &#125;
-    &#125;
-  &#125;
-&#125;
-</code></pre>
-<p>这里需要注意的是：</p>
-<ol>
-<li><p>需要对于空字符串的特殊处理（这里使用的是<code>match</code>匹配，当然也可以使用<code>if...else</code>条件语句）</p>
-</li>
-<li><p>我们使用<code>yield</code>每次生成回文子串的左右指针，然后再使用<code>maxBy</code>得到最长子串对应的左右指针。</p>
-</li>
-<li><p><code>takeWhile</code>函数对集合进行遍历过程中当条件不满足的时候会立即停止判断，返回的是最后那个满足的元素。（<code>filter</code>函数会返回集合中所有满足条件的元素）</p>
-</li>
-</ol>
+<p>运行之后的结果如下图：<br><img src="/images/cxx/C++%E4%B8%AD%E6%96%87String.png" alt="C++中文String"></p>
 
     </div>
 
@@ -247,29 +246,20 @@ public:
         <p class="tags">
             
             <i class="icon"></i>
-            <a href="/tags/LeetCode/" class="tag">#LeetCode</a><a href="/tags/回文/" class="tag">#回文</a>
+            <a href="/tags/C-11/" class="tag">#C++11</a><a href="/tags/字符串/" class="tag">#字符串</a>
         </p>
         
     </div>
      -->
 
     <div class="container post-prev-next">
+        <a class="next"></a>
         
-        <a href="/algorithm/LeetCode-Longest-Palindromic-Subsequence/" class="next">
-            <div>
-                <div class="text">
-                    <p class="label">Next</p>
-                    <h3 class="title">LeetCode-Longest Palindromic Subsequence</h3>
-                </div>
-            </div>
-        </a>
-        
-        
-        <a href="/algorithm/LeetCode-Palindromic-Substrings/" class="prev">
+        <a href="/cxx/%E5%85%B3%E4%BA%8EC-%E5%87%BD%E6%95%B0%E8%BF%94%E5%9B%9E%E5%80%BC%E7%9A%84%E6%8B%B7%E8%B4%9D%E4%BC%98%E5%8C%96%E9%97%AE%E9%A2%98/" class="prev">
             <div>
                 <div class="text">
                     <p class="label">Previous</p>
-                    <h3 class="title">LeetCode-Palindromic Substrings</>
+                    <h3 class="title">关于C++函数返回值的拷贝优化问题</>
                 </div>
             </div>
         </a>
