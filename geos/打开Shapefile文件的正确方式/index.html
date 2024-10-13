@@ -167,7 +167,7 @@
 
     <div class="content">
         <h1 id="打开Shapefile文件的正确方式"><a href="#打开Shapefile文件的正确方式" class="headerlink" title="打开Shapefile文件的正确方式"></a>打开Shapefile文件的正确方式</h1><p>作者：阿振</p>
-<p>邮箱：<a href="mailto:&#x74;&#x61;&#110;&#x7a;&#x68;&#x65;&#110;&#x79;&#117;&#x67;&#105;&#115;&#x40;&#x31;&#54;&#51;&#46;&#x63;&#x6f;&#109;">&#x74;&#x61;&#110;&#x7a;&#x68;&#x65;&#110;&#x79;&#117;&#x67;&#105;&#115;&#x40;&#x31;&#54;&#51;&#46;&#x63;&#x6f;&#109;</a></p>
+<p>邮箱：<a href="mailto:&#x74;&#x61;&#x6e;&#122;&#x68;&#x65;&#x6e;&#x79;&#117;&#x67;&#105;&#115;&#x40;&#49;&#54;&#51;&#46;&#99;&#x6f;&#x6d;">&#x74;&#x61;&#x6e;&#122;&#x68;&#x65;&#x6e;&#x79;&#117;&#x67;&#105;&#115;&#x40;&#49;&#54;&#51;&#46;&#99;&#x6f;&#x6d;</a></p>
 <p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a></p>
 <p>修改时间：2018-05-25</p>
 <p>声明：本文为博主原创文章，转载请注明原文出处</p>
@@ -184,32 +184,8 @@
 <h2 id="GDAL中矢量数据组织"><a href="#GDAL中矢量数据组织" class="headerlink" title="GDAL中矢量数据组织"></a>GDAL中矢量数据组织</h2><p>GDAL中的栅格数据使用<code>OGRDataSource</code>表示(<code>OGRDataSoruce</code>是抽象类<code>GDALDataset</code>的子类)，一个<code>OGRDataSource</code>中包含一个或多个<code>OGRLayer</code>层，每个图层中又包含一个或者多个<code>OGRFeature</code>要素， 每个要素包含一个<code>OGRGeometry</code>及其关联的属性数据。</p>
 <p>GDAL中的空间要素模型是按照OGC的Simple Feature规范实现的，有兴趣的童鞋可以参考官方文档：<a target="_blank" rel="noopener" href="http://www.opengeospatial.org/standards/sfa">Simple Feature Access</a></p>
 <h2 id="使用GDAL打开Shapefile文件"><a href="#使用GDAL打开Shapefile文件" class="headerlink" title="使用GDAL打开Shapefile文件"></a>使用GDAL打开Shapefile文件</h2><p>下面的例子演示了如何打开Shapefile文件，并读取空间要素及其属性。 实现代码如下：</p>
-<pre><code class="python">from osgeo import ogr
-import json
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> ogr</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">data = ogr.Open(<span class="string">&#x27;USA_adm1.shp&#x27;</span>)  <span class="comment"># 返回一个DataSource对象</span></span><br><span class="line">layer = data.GetLayer(<span class="number">0</span>)  <span class="comment"># 获得第一层数据（多数Shapefile只有一层）</span></span><br><span class="line"></span><br><span class="line">extent = layer.GetExtent()  <span class="comment"># 当前图层的地理范围</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;the extent of the layer: <span class="subst">&#123;extent&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line">srs = layer.GetSpatialRef()</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;the spatial reference system of the data: <span class="subst">&#123;srs.ExportToPrettyWkt()&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line">schema = []  <span class="comment"># 当前图层的属性字段</span></span><br><span class="line">ldefn = layer.GetLayerDefn()</span><br><span class="line"><span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(ldefn.GetFieldCount()):</span><br><span class="line">    fdefn = ldefn.GetFieldDefn(n)</span><br><span class="line">    schema.append(fdefn.name)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;the fields of this layer: <span class="subst">&#123;schema&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line">features = []  <span class="comment"># 图层中包含的所有feature要素</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(layer.GetFeatureCount()):</span><br><span class="line">    feature = layer.GetFeature(i)</span><br><span class="line">    features.append(json.loads(feature.ExportToJson()))</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&#x27;the first feature represented with JSON: <span class="subst">&#123;features[<span class="number">0</span>]&#125;</span>&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
-data = ogr.Open(&#39;USA_adm1.shp&#39;)  # 返回一个DataSource对象
-layer = data.GetLayer(0)  # 获得第一层数据（多数Shapefile只有一层）
-
-extent = layer.GetExtent()  # 当前图层的地理范围
-print(f&#39;the extent of the layer: &#123;extent&#125;&#39;)
-
-srs = layer.GetSpatialRef()
-print(f&#39;the spatial reference system of the data: &#123;srs.ExportToPrettyWkt()&#125;&#39;)
-
-schema = []  # 当前图层的属性字段
-ldefn = layer.GetLayerDefn()
-for n in range(ldefn.GetFieldCount()):
-    fdefn = ldefn.GetFieldDefn(n)
-    schema.append(fdefn.name)
-print(f&#39;the fields of this layer: &#123;schema&#125;&#39;)
-
-features = []  # 图层中包含的所有feature要素
-for i in range(layer.GetFeatureCount()):
-    feature = layer.GetFeature(i)
-    features.append(json.loads(feature.ExportToJson()))
-
-print(f&#39;the first feature represented with JSON: &#123;features[0]&#125;&#39;)
-</code></pre>
 
     </div>
 

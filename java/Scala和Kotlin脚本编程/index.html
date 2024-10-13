@@ -174,39 +174,24 @@
 <h2 id="Kotlin脚本编程"><a href="#Kotlin脚本编程" class="headerlink" title="Kotlin脚本编程"></a>Kotlin脚本编程</h2><p>Kotlin脚本的扩展名为<code>kts</code>，运行命令为<code>kotlinc -script &lt;脚本文件名.kts&gt;</code></p>
 <h3 id="HelloWorld示例"><a href="#HelloWorld示例" class="headerlink" title="HelloWorld示例"></a>HelloWorld示例</h3><p>下面我们来看一个HelloWorld示例：</p>
 <p>新建名称为<code>Main.kts</code>的Kotlin脚本文件，内容如下：</p>
-<pre><code class="Kotlin">println(&quot;你好 $&#123;if (args.isNotEmpty()) args[0] else &quot;&quot;&#125;!&quot;)
-</code></pre>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">println(<span class="string">&quot;你好 <span class="subst">$&#123;if (args.isNotEmpty()) args[<span class="number">0</span>] else <span class="string">&quot;&quot;</span>&#125;</span>!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
 <p>可以看到脚本程序不需要主函数，Kotlin脚本以<code>args</code>参数接收用户输入（args是一个<code>Array&lt;String&gt;</code>类型的数组）</p>
 <p>在命令行执行：<code>kotlinc -script Main.kts 高寒</code></p>
 <p>得到脚本运行结果为：<code>你好 高寒!</code></p>
 <h3 id="调用外部命令"><a href="#调用外部命令" class="headerlink" title="调用外部命令"></a>调用外部命令</h3><p>如果我们想在Kotlin脚本中调用外部的命令或者程序需要怎么做呢？</p>
 <p>使用Java API中提供的<code>Runtime.getRuntime().exec()</code>函数或者<code>ProcessBuilder</code>类创建一个<code>Process</code>对象调用外部命令。</p>
 <p>下面以调用系统<code>ls</code>命令作为示例程序进行演示说明。</p>
-<pre><code class="Kotlin">import java.lang.Runtime
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.Runtime</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> process: Process = Runtime.getRuntime().exec(<span class="string">&quot;ls /Users/TheOneGIS/Desktop&quot;</span>)</span><br><span class="line">process.waitFor()</span><br><span class="line"></span><br><span class="line">process.inputStream.reader().use &#123;</span><br><span class="line">    println(it.readText())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-val process: Process = Runtime.getRuntime().exec(&quot;ls /Users/TheOneGIS/Desktop&quot;)
-process.waitFor()
-
-process.inputStream.reader().use &#123;
-    println(it.readText())
-&#125;
-</code></pre>
 <p>或者</p>
-<pre><code class="Kotlin">import java.lang.ProcessBuilder
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.ProcessBuilder</span><br><span class="line"></span><br><span class="line"><span class="keyword">val</span> process: Process = ProcessBuilder(<span class="string">&quot;ls&quot;</span>, <span class="string">&quot;/Users/TheOneGIS/Desktop&quot;</span>).start()</span><br><span class="line">process.waitFor()</span><br><span class="line"></span><br><span class="line">process.inputStream.reader().use &#123;</span><br><span class="line">    println(it.readText())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-val process: Process = ProcessBuilder(&quot;ls&quot;, &quot;/Users/TheOneGIS/Desktop&quot;).start()
-process.waitFor()
-
-process.inputStream.reader().use &#123;
-    println(it.readText())
-&#125;
-</code></pre>
 <p>在命令行中执行<code> kotlinc -script Main.kts</code>，输出结果如下：</p>
-<pre><code class="Kotlin">11
-data
-raw
-[这里有一个空行]
-</code></pre>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">11</span></span><br><span class="line"><span class="keyword">data</span></span><br><span class="line">raw</span><br><span class="line">[这里有一个空行]</span><br></pre></td></tr></table></figure>
+
+
+
 <p>注意：</p>
 <ol>
 <li><code>Runtime.getRuntime().exec()</code>函数中直接输入命令名称加参数组成的字符串</li>
@@ -217,8 +202,8 @@ raw
 </ol>
 <h2 id="Scala脚本编程"><a href="#Scala脚本编程" class="headerlink" title="Scala脚本编程"></a>Scala脚本编程</h2><p>Scala脚本的扩展名仍为<code>scala</code>，运行命令为<code>scala &lt;脚本文件名.scala&gt;</code>，和普通的Scala类一样。</p>
 <h3 id="HelloWorld示例-1"><a href="#HelloWorld示例-1" class="headerlink" title="HelloWorld示例"></a>HelloWorld示例</h3><p>新建名称为<code>Main.scala</code>的Scala脚本文件，内容如下：</p>
-<pre><code class="Scala">println(s&quot;你好 $&#123;if (args.nonEmpty) args(0) else &quot;&quot;&#125;!&quot;)
-</code></pre>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">println(<span class="string">s&quot;你好 <span class="subst">$&#123;if (args.nonEmpty) args(0) else &quot;&quot;&#125;</span>!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
 <p>可以看到和Kotlin脚本程序一样不需要主函数，Scala脚本同样以<code>args</code>参数接收用户输入（args是一个<code>Array[String]</code>类型的数组）</p>
 <p>在命令行执行：<code>scala Main.scala 高寒</code></p>
 <p>得到脚本运行结果为：<code>你好 高寒!</code></p>
@@ -230,32 +215,22 @@ raw
 </ol>
 <p>注意：这里的<code>Process</code>类是Scala类库中提供的，前面在Kotlin中使用的<code>Process</code>类是Java类库中提供的。</p>
 <p>我们先来看第一种方式：</p>
-<pre><code class="Scala">import sys.process._
-Process(&quot;ls /Users/TheOneGIS/Desktop&quot;).!
-</code></pre>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys.process._</span><br><span class="line"><span class="type">Process</span>(<span class="string">&quot;ls /Users/TheOneGIS/Desktop&quot;</span>).!</span><br></pre></td></tr></table></figure>
+
 <p>在命令行中运行<code>scala Main.scala</code>，得到执行结果：</p>
-<pre><code class="Scala">11
-data
-raw
-</code></pre>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">11</span></span><br><span class="line">data</span><br><span class="line">raw</span><br></pre></td></tr></table></figure>
+
 <p><code>Process</code>的<code>!</code>方法是有返回值的，这里我们直接舍弃了，并不关心<code>ls</code>的返回值，我们只关心<code>ls</code>命令的输出结果。</p>
 <p>再看第二种方式：</p>
-<pre><code class="Scala">import sys.process._
-val results = Process(&quot;ls /Users/TheOneGIS/Desktop&quot;).!!
-println(results)
-</code></pre>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys.process._</span><br><span class="line"><span class="keyword">val</span> results = <span class="type">Process</span>(<span class="string">&quot;ls /Users/TheOneGIS/Desktop&quot;</span>).!!</span><br><span class="line">println(results)</span><br></pre></td></tr></table></figure>
+
 <p>在命令行中运行<code>scala Main.scala</code>，得到执行结果：</p>
-<pre><code class="Scala">11
-data
-raw
-[这里有一个空行]
-</code></pre>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">11</span></span><br><span class="line">data</span><br><span class="line">raw</span><br><span class="line">[这里有一个空行]</span><br></pre></td></tr></table></figure>
+
 <p>可以看到<code>results</code>字符串是给<code>ls</code>命令的每个输出字符后面都加了换行符。</p>
 <p>再看第三种方式：</p>
-<pre><code class="Scala">import sys.process._
-val results = Process(&quot;ls /Users/TheOneGIS/Desktop&quot;).lazyLines
-results.foreach(println)
-</code></pre>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys.process._</span><br><span class="line"><span class="keyword">val</span> results = <span class="type">Process</span>(<span class="string">&quot;ls /Users/TheOneGIS/Desktop&quot;</span>).lazyLines</span><br><span class="line">results.foreach(println)</span><br></pre></td></tr></table></figure>
+
 <p>输出结果和第一种方式一样，不过当需要获取最后输出并且需要对输出进行操作的时候我最喜欢使用第三种方式，不需要对输出进行进一步处理的时候我喜欢使用第一种方式。</p>
 <h2 id="Scala和Kotlin脚本编程的异同"><a href="#Scala和Kotlin脚本编程的异同" class="headerlink" title="Scala和Kotlin脚本编程的异同"></a>Scala和Kotlin脚本编程的异同</h2><ol>
 <li>Scala脚本的扩展名和执行方式和普通Scala类一样；Kotlin脚本的扩展名为<code>kts</code>，执行的时候需要加<code>-script</code>参数</li>

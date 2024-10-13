@@ -167,67 +167,30 @@
 
     <div class="content">
         <h1 id="使用Python计算方差，协方差和相关系数"><a href="#使用Python计算方差，协方差和相关系数" class="headerlink" title="使用Python计算方差，协方差和相关系数"></a>使用Python计算方差，协方差和相关系数</h1><p>[TOC]</p>
-<h2 id="数学定义"><a href="#数学定义" class="headerlink" title="数学定义"></a>数学定义</h2><h3 id="期望"><a href="#期望" class="headerlink" title="期望"></a>期望</h3><p>设随机变量$X$只取有限个可能值$a_i (i=0, 1, …, m)$，其概率分布为$P (X = a_i) = p_i$. 则$X$的数学期望，记为$E(X)$或$EX$，定义为：</p>
-<p>$$E(X) = \sum\limits_ia_ip_i$$</p>
+<h2 id="数学定义"><a href="#数学定义" class="headerlink" title="数学定义"></a>数学定义</h2><h3 id="期望"><a href="#期望" class="headerlink" title="期望"></a>期望</h3><p>设随机变量$X$只取有限个可能值$a_i (i&#x3D;0, 1, …, m)$，其概率分布为$P (X &#x3D; a_i) &#x3D; p_i$. 则$X$的数学期望，记为$E(X)$或$EX$，定义为：</p>
+<p>$$E(X) &#x3D; \sum\limits_ia_ip_i$$</p>
 <h3 id="方差"><a href="#方差" class="headerlink" title="方差"></a>方差</h3><p>设$X$为随机变量，分布为$F$，则</p>
-<p>$$Var(X) = E(X-EX)^2 $$</p>
+<p>$$Var(X) &#x3D; E(X-EX)^2 $$</p>
 <p>称为$X$(或分布$F$)的方差，其平方根$\sqrt{Var(X)}$称为$X$(或分布$F$)的标准差.</p>
 <p>方差和标准差是刻画随机变量在其中心位置附近散布程度的数字特征。</p>
 <p>注意：样本方差和总体方差的区别</p>
 <p>统计学上对于样本方差的无偏估计使用如下公式计算：</p>
-<p>$$s^2 = \frac{1}{n-1} \sum\limits_{i=1}^n(x_i -\bar{x})^2 $$</p>
+<p>$$s^2 &#x3D; \frac{1}{n-1} \sum\limits_{i&#x3D;1}^n(x_i -\bar{x})^2 $$</p>
 <p>前面有一个系数$\frac{1}{n-1}$，当时当样本数量很大的时候，$\frac{n}{n-1}$近似为1，可以直接使用总体方差公式进行计算。</p>
 <h3 id="协方差"><a href="#协方差" class="headerlink" title="协方差"></a>协方差</h3><p>协方差用来刻画两个随机变量$X, Y$之间的相关性，定义为</p>
-<p>$$Cov(X, Y) = E[(X - EX)(Y-EY)]$$</p>
+<p>$$Cov(X, Y) &#x3D; E[(X - EX)(Y-EY)]$$</p>
 <p>如果协方差为正，说明X，Y同向变化，协方差越大说明同向程度越高；如果协方差为负，说明X，Y反向运动，协方差越小说明反向程度越高</p>
 <h3 id="相关系数"><a href="#相关系数" class="headerlink" title="相关系数"></a>相关系数</h3><p>相关系数可以理解为标准化以后的协方差，设$X$的标准差为$\sigma_x$，$Y$的标准差为$\sigma_y$定义为</p>
-<p>$$\rho = \frac{Cov(X, Y)}{\sigma_x\sigma_y}$$</p>
+<p>$$\rho &#x3D; \frac{Cov(X, Y)}{\sigma_x\sigma_y}$$</p>
 <p>相关系数消除了两个变量变化幅度的影响，而只是单纯反应两个变量每单位变化时的相似程度</p>
 <h3 id="协方差矩阵"><a href="#协方差矩阵" class="headerlink" title="协方差矩阵"></a>协方差矩阵</h3><p>协方差只能表示两个随机变量的相关程度（二维问题），对于大于二维的随机变量，可以使用协方差矩阵表示.</p>
 <p>协方差矩阵的每一个值就是对应下标的两个随机变量的协方差</p>
-<p>对于三维协方差矩阵，$C=\begin{bmatrix}Cov(X, X) &amp; Cov(X, Y) &amp; Cov(X, Z) \ Cov(Y, X) &amp; Cov(Y, Y) &amp; Cov(X, Y) \ Cov(Z, X) &amp; Cov(Z, Y) &amp; Cov(Z, Z)\end{bmatrix}$</p>
-<h2 id="使用NumPy包计算"><a href="#使用NumPy包计算" class="headerlink" title="使用NumPy包计算"></a>使用NumPy包计算</h2><pre><code class="Python">import numpy as np
+<p>对于三维协方差矩阵，$C&#x3D;\begin{bmatrix}Cov(X, X) &amp; Cov(X, Y) &amp; Cov(X, Z) \ Cov(Y, X) &amp; Cov(Y, Y) &amp; Cov(X, Y) \ Cov(Z, X) &amp; Cov(Z, Y) &amp; Cov(Z, Z)\end{bmatrix}$</p>
+<h2 id="使用NumPy包计算"><a href="#使用NumPy包计算" class="headerlink" title="使用NumPy包计算"></a>使用NumPy包计算</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"><span class="comment"># 随机生成两个样本</span></span><br><span class="line">x = np.random.randint(<span class="number">0</span>, <span class="number">9</span>, <span class="number">1000</span>)</span><br><span class="line">y = np.random.randint(<span class="number">0</span>, <span class="number">9</span>, <span class="number">1000</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算平均值</span></span><br><span class="line">mx = x.mean()</span><br><span class="line">my = y.mean()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算标准差</span></span><br><span class="line">stdx = x.std()</span><br><span class="line">stdy = y.std()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算协方差矩阵</span></span><br><span class="line">covxy = np.cov(x, y)</span><br><span class="line"><span class="built_in">print</span>(covxy)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 我们可以手动进行验证</span></span><br><span class="line"><span class="comment"># covx等于covxy[0, 0], covy等于covxy[1, 1]</span></span><br><span class="line"><span class="comment"># 我们这里的计算结果应该是约等于，因为我们在计算的时候是使用的总体方差(总体方差和样本方差是稍微有点区别的)</span></span><br><span class="line">covx = np.mean((x - x.mean()) ** <span class="number">2</span>) </span><br><span class="line">covy = np.mean((y - y.mean()) ** <span class="number">2</span>) </span><br><span class="line"><span class="built_in">print</span>(covx)</span><br><span class="line"><span class="built_in">print</span>(covy)</span><br><span class="line"><span class="comment"># 这里计算的covxy等于上面的covxy[0, 1]和covxy[1, 0]，三者相等</span></span><br><span class="line">covxy = np.mean((x - x.mean()) * (y - y.mean()))</span><br><span class="line"><span class="built_in">print</span>(covxy)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 下面计算的是相关系数矩阵(和上面的协方差矩阵是类似的)</span></span><br><span class="line">coefxy = np.corrcoef(x, y)</span><br><span class="line"><span class="built_in">print</span>(coefxy)</span><br></pre></td></tr></table></figure>
 
-# 随机生成两个样本
-x = np.random.randint(0, 9, 1000)
-y = np.random.randint(0, 9, 1000)
-
-# 计算平均值
-mx = x.mean()
-my = y.mean()
-
-# 计算标准差
-stdx = x.std()
-stdy = y.std()
-
-# 计算协方差矩阵
-covxy = np.cov(x, y)
-print(covxy)
-
-# 我们可以手动进行验证
-# covx等于covxy[0, 0], covy等于covxy[1, 1]
-# 我们这里的计算结果应该是约等于，因为我们在计算的时候是使用的总体方差(总体方差和样本方差是稍微有点区别的)
-covx = np.mean((x - x.mean()) ** 2) 
-covy = np.mean((y - y.mean()) ** 2) 
-print(covx)
-print(covy)
-# 这里计算的covxy等于上面的covxy[0, 1]和covxy[1, 0]，三者相等
-covxy = np.mean((x - x.mean()) * (y - y.mean()))
-print(covxy)
-
-# 下面计算的是相关系数矩阵(和上面的协方差矩阵是类似的)
-coefxy = np.corrcoef(x, y)
-print(coefxy)
-</code></pre>
 <p>一组可能的输出结果：</p>
-<pre><code>[[6.83907508 0.10925926]
- [0.10925926 6.53390891]]
-6.832236
-6.527375
-0.10914999999999989
-[[1.         0.01634455]
- [0.01634455 1.        ]]
-</code></pre>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[[6.83907508 0.10925926]</span></span><br><span class="line"><span class="string"> [0.10925926 6.53390891]]</span></span><br><span class="line"><span class="number">6.832236</span></span><br><span class="line"><span class="number">6.527375</span></span><br><span class="line"><span class="number">0.10914999999999989</span></span><br><span class="line"><span class="string">[[1.         0.01634455]</span></span><br><span class="line"><span class="string"> [0.01634455 1.        ]]</span></span><br></pre></td></tr></table></figure>
+
 
     </div>
 

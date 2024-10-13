@@ -181,23 +181,10 @@
 </ol>
 <h1 id="案例一"><a href="#案例一" class="headerlink" title="案例一"></a>案例一</h1><h2 id="案例说明"><a href="#案例说明" class="headerlink" title="案例说明"></a>案例说明</h2><p>我们现在有省的面状数据以及每个城市的点数据，我们需要找到湖北省内的所有城市。</p>
 <p>实现思路是先从省的面状数据中找出湖北省，然后遍历城市的点数据看是否落在湖北省境内。</p>
-<h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h2><pre><code class="Python">import ogr
-ogr.UseExceptions()
+<h2 id="代码演示"><a href="#代码演示" class="headerlink" title="代码演示"></a>代码演示</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ogr</span><br><span class="line">ogr.UseExceptions()</span><br><span class="line"></span><br><span class="line">ds_province: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/Provinces.shp&#x27;</span>)</span><br><span class="line">l_province: ogr.Layer = ds_province.GetLayer()</span><br><span class="line"><span class="comment"># 使用filter()方法找出湖北省</span></span><br><span class="line">f_hubei: ogr.Feature = <span class="built_in">next</span>(<span class="built_in">filter</span>(<span class="keyword">lambda</span> f: <span class="string">&#x27;湖北&#x27;</span> <span class="keyword">in</span> f.GetField(<span class="string">&#x27;NAME&#x27;</span>), l_province))</span><br><span class="line"></span><br><span class="line">ds_city: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/Cities.shp&#x27;</span>)</span><br><span class="line">l_city: ogr.Layer = ds_city.GetLayer()</span><br><span class="line"><span class="comment"># 使用filter()方法过滤出落在湖北省境内的所有市</span></span><br><span class="line">selected = <span class="built_in">filter</span>(<span class="keyword">lambda</span> f: f.GetGeometryRef().Within(f_hubei.GetGeometryRef()), l_city)</span><br><span class="line"><span class="keyword">for</span> city <span class="keyword">in</span> selected:</span><br><span class="line">    <span class="built_in">print</span>(city.GetField(<span class="string">&#x27;name&#x27;</span>))</span><br><span class="line"><span class="keyword">del</span> ds_province</span><br><span class="line"><span class="keyword">del</span> ds_city</span><br></pre></td></tr></table></figure>
 
-ds_province: ogr.DataSource = ogr.Open(&#39;../data/Provinces.shp&#39;)
-l_province: ogr.Layer = ds_province.GetLayer()
-# 使用filter()方法找出湖北省
-f_hubei: ogr.Feature = next(filter(lambda f: &#39;湖北&#39; in f.GetField(&#39;NAME&#39;), l_province))
 
-ds_city: ogr.DataSource = ogr.Open(&#39;../data/Cities.shp&#39;)
-l_city: ogr.Layer = ds_city.GetLayer()
-# 使用filter()方法过滤出落在湖北省境内的所有市
-selected = filter(lambda f: f.GetGeometryRef().Within(f_hubei.GetGeometryRef()), l_city)
-for city in selected:
-    print(city.GetField(&#39;name&#39;))
-del ds_province
-del ds_city
-</code></pre>
+
 <h2 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h2><ol>
 <li>使用<code>ogr.Open()</code>函数读取Shapefile数据，使用<code>GetLayer()</code>获取当前图层，图层中包含了所有的Feature要素。</li>
 <li>使用Python的内置<code>filter()</code>函数对省进行过滤，通过<code>NAME</code>字段找出湖北省。<code>filter()</code>函数的第一个参数是一个自定义函数，第二个参数是一个可迭代对象iterable。该函数会遍历可迭代对象将满足第一个自定义函数的值过滤出来。通过<code>next()</code>方法拿到迭代器的当前值，即湖北省的Feature对象。</li>
@@ -205,21 +192,10 @@ del ds_city
 </ol>
 <h1 id="案例二"><a href="#案例二" class="headerlink" title="案例二"></a>案例二</h1><h2 id="案例说明-1"><a href="#案例说明-1" class="headerlink" title="案例说明"></a>案例说明</h2><p>我们将使用城市的点数据获取离武汉市最近的三座城市。</p>
 <p>实现的思路是首先从数据中找到武汉市，然后计算每个城市到武汉市的距离并排序，对排好序的Feature选择前三即可。</p>
-<h2 id="代码演示-1"><a href="#代码演示-1" class="headerlink" title="代码演示"></a>代码演示</h2><pre><code class="Python">import ogr
-ogr.UseExceptions()
+<h2 id="代码演示-1"><a href="#代码演示-1" class="headerlink" title="代码演示"></a>代码演示</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ogr</span><br><span class="line">ogr.UseExceptions()</span><br><span class="line"></span><br><span class="line">ds: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/Cities.shp&#x27;</span>)</span><br><span class="line">cities: ogr.Layer = ds.GetLayer()</span><br><span class="line"><span class="comment"># 使用filter()方法找出武汉市</span></span><br><span class="line">city: ogr.Feature = <span class="built_in">next</span>(<span class="built_in">filter</span>(<span class="keyword">lambda</span> f: <span class="string">&#x27;武汉&#x27;</span> <span class="keyword">in</span> f.GetField(<span class="string">&#x27;name&#x27;</span>), cities))</span><br><span class="line"><span class="comment"># 调用ResetReading()方法特别重要，如果不ResetReading的话后面的对Feature的遍历会出错</span></span><br><span class="line">cities.ResetReading()</span><br><span class="line"><span class="comment"># 根据每个市到武汉市的距离进行排序</span></span><br><span class="line">selected = <span class="built_in">sorted</span>(cities, key=<span class="keyword">lambda</span> f: f.GetGeometryRef().Distance(city.GetGeometryRef()))</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">4</span>):</span><br><span class="line">    <span class="built_in">print</span>(selected[i].GetField(<span class="string">&#x27;name&#x27;</span>))</span><br><span class="line"><span class="keyword">del</span> ds</span><br></pre></td></tr></table></figure>
 
-ds: ogr.DataSource = ogr.Open(&#39;../data/Cities.shp&#39;)
-cities: ogr.Layer = ds.GetLayer()
-# 使用filter()方法找出武汉市
-city: ogr.Feature = next(filter(lambda f: &#39;武汉&#39; in f.GetField(&#39;name&#39;), cities))
-# 调用ResetReading()方法特别重要，如果不ResetReading的话后面的对Feature的遍历会出错
-cities.ResetReading()
-# 根据每个市到武汉市的距离进行排序
-selected = sorted(cities, key=lambda f: f.GetGeometryRef().Distance(city.GetGeometryRef()))
-for i in range(1, 4):
-    print(selected[i].GetField(&#39;name&#39;))
-del ds
-</code></pre>
+
+
 <h2 id="方法总结-1"><a href="#方法总结-1" class="headerlink" title="方法总结"></a>方法总结</h2><ol>
 <li>跟案例一一样，我们使用Python的内置<code>filter()</code>函数对市进行过滤，通过<code>NAME</code>字段找出武汉市。</li>
 <li>需要特别注意了，当我们遍历完一遍Layer的Feature以后需要调用<code>ResetReading()</code>对迭代器重新归位，否则后面要继续进行要素遍历的话会出错。</li>

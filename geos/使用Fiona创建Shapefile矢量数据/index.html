@@ -166,7 +166,7 @@
     <div class="divider"></div>
 
     <div class="content">
-        <h1 id="使用Fiona创建Shapefile矢量数据"><a href="#使用Fiona创建Shapefile矢量数据" class="headerlink" title="使用Fiona创建Shapefile矢量数据"></a>使用Fiona创建Shapefile矢量数据</h1><p>作者：阿振 邮箱：<a href="mailto:&#116;&#x61;&#110;&#122;&#104;&#x65;&#110;&#x79;&#117;&#103;&#x69;&#115;&#x40;&#49;&#54;&#x33;&#46;&#99;&#x6f;&#109;">&#116;&#x61;&#110;&#122;&#104;&#x65;&#110;&#x79;&#117;&#103;&#x69;&#115;&#x40;&#49;&#54;&#x33;&#46;&#99;&#x6f;&#109;</a></p>
+        <h1 id="使用Fiona创建Shapefile矢量数据"><a href="#使用Fiona创建Shapefile矢量数据" class="headerlink" title="使用Fiona创建Shapefile矢量数据"></a>使用Fiona创建Shapefile矢量数据</h1><p>作者：阿振 邮箱：<a href="mailto:&#116;&#97;&#x6e;&#122;&#104;&#x65;&#110;&#121;&#117;&#x67;&#x69;&#115;&#64;&#49;&#x36;&#x33;&#x2e;&#x63;&#x6f;&#109;">&#116;&#97;&#x6e;&#122;&#104;&#x65;&#110;&#121;&#117;&#x67;&#x69;&#115;&#64;&#49;&#x36;&#x33;&#x2e;&#x63;&#x6f;&#109;</a></p>
 <p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a></p>
 <p>修改时间：2018-06-10</p>
 <p>声明：本文为博主原创文章，转载请注明原文出处</p>
@@ -175,54 +175,12 @@
 <p>这个Schema是一个字典结构，定义了Geometry的类型，属性字段的名称及其类型。</p>
 <h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>这里我们举两个例子进行说明：第一是将GeoJSON数据转为Shapefile，第二个是新建一个Shapefile，然后再里面写入自定义的空间几何数据。</p>
 <p>因为从GeoJSON中读入的数据本身就是JSON格式，所以我们可以直接写入。GeoJSON的格式定义，参见：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80554993">创建Shapefile文件并写入数据</a>。</p>
-<pre><code class="python">import fiona
-import json
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> fiona</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;China.json&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    data = json.load(f)</span><br><span class="line"></span><br><span class="line"><span class="comment"># schema是一个字典结构，指定了geometry及其它属性结构</span></span><br><span class="line">schema = &#123;<span class="string">&#x27;geometry&#x27;</span>: <span class="string">&#x27;Polygon&#x27;</span>,</span><br><span class="line">          <span class="string">&#x27;properties&#x27;</span>: &#123;<span class="string">&#x27;id&#x27;</span>: <span class="string">&#x27;int&#x27;</span>, <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;str&#x27;</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用fiona.open方法打开文件，写入数据</span></span><br><span class="line"><span class="keyword">with</span> fiona.<span class="built_in">open</span>(<span class="string">&#x27;Provinces.shp&#x27;</span>, mode=<span class="string">&#x27;w&#x27;</span>, driver=<span class="string">&#x27;ESRI Shapefile&#x27;</span>,</span><br><span class="line">                schema=schema, crs=<span class="string">&#x27;EPSG:4326&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> layer:</span><br><span class="line">    <span class="comment"># 依次遍历GeoJSON中的空间对象</span></span><br><span class="line">    <span class="keyword">for</span> feature <span class="keyword">in</span> data[<span class="string">&#x27;features&#x27;</span>]:</span><br><span class="line">        <span class="comment"># 从GeoJSON中读取JSON格式的geometry和properties的记录</span></span><br><span class="line">        element = &#123;<span class="string">&#x27;geometry&#x27;</span>: feature[<span class="string">&#x27;geometry&#x27;</span>],</span><br><span class="line">                   <span class="string">&#x27;properties&#x27;</span>: &#123;<span class="string">&#x27;id&#x27;</span>: feature[<span class="string">&#x27;properties&#x27;</span>][<span class="string">&#x27;id&#x27;</span>],</span><br><span class="line">                                  <span class="string">&#x27;name&#x27;</span>: feature[<span class="string">&#x27;properties&#x27;</span>][<span class="string">&#x27;name&#x27;</span>]&#125;&#125;</span><br><span class="line">        <span class="comment"># 写入文件</span></span><br><span class="line">        layer.write(element)</span><br></pre></td></tr></table></figure>
 
-with open(&#39;China.json&#39;) as f:
-    data = json.load(f)
-
-# schema是一个字典结构，指定了geometry及其它属性结构
-schema = &#123;&#39;geometry&#39;: &#39;Polygon&#39;,
-          &#39;properties&#39;: &#123;&#39;id&#39;: &#39;int&#39;, &#39;name&#39;: &#39;str&#39;&#125;&#125;
-
-# 使用fiona.open方法打开文件，写入数据
-with fiona.open(&#39;Provinces.shp&#39;, mode=&#39;w&#39;, driver=&#39;ESRI Shapefile&#39;,
-                schema=schema, crs=&#39;EPSG:4326&#39;, encoding=&#39;utf-8&#39;) as layer:
-    # 依次遍历GeoJSON中的空间对象
-    for feature in data[&#39;features&#39;]:
-        # 从GeoJSON中读取JSON格式的geometry和properties的记录
-        element = &#123;&#39;geometry&#39;: feature[&#39;geometry&#39;],
-                   &#39;properties&#39;: &#123;&#39;id&#39;: feature[&#39;properties&#39;][&#39;id&#39;],
-                                  &#39;name&#39;: feature[&#39;properties&#39;][&#39;name&#39;]&#125;&#125;
-        # 写入文件
-        layer.write(element)
-</code></pre>
 <p>第二种方法使用shapely包创建Geometry对象，然后利用<code>mapping</code>方法将创建的对象转为GeoJSON格式进行写入。</p>
 <p>Shapely包提供了对空间几何体的定义，操作等功能。</p>
-<pre><code class="python">import fiona
-from shapely.geometry import Polygon, mapping
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> fiona</span><br><span class="line"><span class="keyword">from</span> shapely.geometry <span class="keyword">import</span> Polygon, mapping</span><br><span class="line"></span><br><span class="line"><span class="comment"># schema是一个字典结构，指定了geometry及其它属性结构</span></span><br><span class="line">schema = &#123;<span class="string">&#x27;geometry&#x27;</span>: <span class="string">&#x27;Polygon&#x27;</span>,</span><br><span class="line">          <span class="string">&#x27;properties&#x27;</span>: &#123;<span class="string">&#x27;id&#x27;</span>: <span class="string">&#x27;int&#x27;</span>, <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;str&#x27;</span>&#125;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用fiona.open方法打开文件，写入数据</span></span><br><span class="line"><span class="keyword">with</span> fiona.<span class="built_in">open</span>(<span class="string">&#x27;Beijing.shp&#x27;</span>, mode=<span class="string">&#x27;w&#x27;</span>, driver=<span class="string">&#x27;ESRI Shapefile&#x27;</span>,</span><br><span class="line">                schema=schema, crs=<span class="string">&#x27;EPSG:4326&#x27;</span>, encoding=<span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> layer:</span><br><span class="line">    <span class="comment"># 使用shapely创建空间几何对象</span></span><br><span class="line">    coordinates = [[<span class="number">117.4219</span>, <span class="number">40.21</span>], [<span class="number">117.334</span>, <span class="number">40.1221</span>], [<span class="number">117.2461</span>, <span class="number">40.0781</span>], [<span class="number">116.8066</span>, <span class="number">39.9902</span>], [<span class="number">116.8945</span>, <span class="number">39.8145</span>],</span><br><span class="line">                   [<span class="number">116.8945</span>, <span class="number">39.6826</span>], [<span class="number">116.8066</span>, <span class="number">39.5947</span>], [<span class="number">116.543</span>, <span class="number">39.5947</span>], [<span class="number">116.3672</span>, <span class="number">39.4629</span>],</span><br><span class="line">                   [<span class="number">116.1914</span>, <span class="number">39.5947</span>], [<span class="number">115.752</span>, <span class="number">39.5068</span>], [<span class="number">115.4883</span>, <span class="number">39.6387</span>], [<span class="number">115.4004</span>, <span class="number">39.9463</span>],</span><br><span class="line">                   [<span class="number">115.9277</span>, <span class="number">40.2539</span>], [<span class="number">115.752</span>, <span class="number">40.5615</span>], [<span class="number">116.1035</span>, <span class="number">40.6055</span>], [<span class="number">116.1914</span>, <span class="number">40.7813</span>],</span><br><span class="line">                   [<span class="number">116.4551</span>, <span class="number">40.7813</span>], [<span class="number">116.3672</span>, <span class="number">40.9131</span>], [<span class="number">116.6309</span>, <span class="number">41.0449</span>], [<span class="number">116.9824</span>, <span class="number">40.6934</span>],</span><br><span class="line">                   [<span class="number">117.4219</span>, <span class="number">40.6494</span>], [<span class="number">117.2461</span>, <span class="number">40.5176</span>], [<span class="number">117.4219</span>, <span class="number">40.21</span>]]</span><br><span class="line">    polygon = Polygon(coordinates)  <span class="comment"># 使用地理坐标定义Polygon对象</span></span><br><span class="line">    polygon = mapping(polygon)  <span class="comment"># 将Polygon对象转为GeoJSON格式</span></span><br><span class="line">    feature = &#123;<span class="string">&#x27;geometry&#x27;</span>: polygon,</span><br><span class="line">               <span class="string">&#x27;properties&#x27;</span>: &#123;<span class="string">&#x27;id&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;北京市&#x27;</span>&#125;&#125;</span><br><span class="line">    <span class="comment"># 写入文件</span></span><br><span class="line">    layer.write(feature)</span><br></pre></td></tr></table></figure>
 
-# schema是一个字典结构，指定了geometry及其它属性结构
-schema = &#123;&#39;geometry&#39;: &#39;Polygon&#39;,
-          &#39;properties&#39;: &#123;&#39;id&#39;: &#39;int&#39;, &#39;name&#39;: &#39;str&#39;&#125;&#125;
-
-# 使用fiona.open方法打开文件，写入数据
-with fiona.open(&#39;Beijing.shp&#39;, mode=&#39;w&#39;, driver=&#39;ESRI Shapefile&#39;,
-                schema=schema, crs=&#39;EPSG:4326&#39;, encoding=&#39;utf-8&#39;) as layer:
-    # 使用shapely创建空间几何对象
-    coordinates = [[117.4219, 40.21], [117.334, 40.1221], [117.2461, 40.0781], [116.8066, 39.9902], [116.8945, 39.8145],
-                   [116.8945, 39.6826], [116.8066, 39.5947], [116.543, 39.5947], [116.3672, 39.4629],
-                   [116.1914, 39.5947], [115.752, 39.5068], [115.4883, 39.6387], [115.4004, 39.9463],
-                   [115.9277, 40.2539], [115.752, 40.5615], [116.1035, 40.6055], [116.1914, 40.7813],
-                   [116.4551, 40.7813], [116.3672, 40.9131], [116.6309, 41.0449], [116.9824, 40.6934],
-                   [117.4219, 40.6494], [117.2461, 40.5176], [117.4219, 40.21]]
-    polygon = Polygon(coordinates)  # 使用地理坐标定义Polygon对象
-    polygon = mapping(polygon)  # 将Polygon对象转为GeoJSON格式
-    feature = &#123;&#39;geometry&#39;: polygon,
-               &#39;properties&#39;: &#123;&#39;id&#39;: 1, &#39;name&#39;: &#39;北京市&#39;&#125;&#125;
-    # 写入文件
-    layer.write(feature)
-</code></pre>
 
     </div>
 

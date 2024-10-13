@@ -167,15 +167,15 @@
 
     <div class="content">
         <h1 id="GDAL简介"><a href="#GDAL简介" class="headerlink" title="GDAL简介"></a>GDAL简介</h1><p>作者：阿振</p>
-<p>邮箱：<a href="mailto:&#116;&#x61;&#x6e;&#122;&#x68;&#x65;&#x6e;&#x79;&#117;&#103;&#105;&#115;&#64;&#49;&#54;&#x33;&#46;&#99;&#x6f;&#x6d;">&#116;&#x61;&#x6e;&#122;&#x68;&#x65;&#x6e;&#x79;&#117;&#103;&#105;&#115;&#64;&#49;&#54;&#x33;&#46;&#99;&#x6f;&#x6d;</a></p>
+<p>邮箱：<a href="mailto:&#116;&#97;&#110;&#122;&#104;&#x65;&#110;&#x79;&#x75;&#103;&#x69;&#x73;&#x40;&#49;&#54;&#x33;&#x2e;&#99;&#111;&#x6d;">&#116;&#97;&#110;&#122;&#104;&#x65;&#110;&#x79;&#x75;&#103;&#x69;&#x73;&#x40;&#49;&#54;&#x33;&#x2e;&#99;&#111;&#x6d;</a></p>
 <p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a></p>
 <p>修改时间：2018-05-13</p>
 <p>声明：本文为博主原创文章，转载请注明原文出处</p>
 <hr>
-<p>Geospatial Data Abstraction Library （<a target="_blank" rel="noopener" href="http://www.gdal.org/">GDAL</a>）是使用C/C++语言编写的用于读写空间数据的一套跨平台开源库。现有的大部分GIS或者遥感平台，不论是商业软件ArcGIS，ENVI还是开源软件GRASS，QGIS，都使用了GDAL作为底层构建库。</p>
+<p>Geospatial Data Abstraction Library （<a target="_blank" rel="noopener" href="http://www.gdal.org/">GDAL</a>）是使用C&#x2F;C++语言编写的用于读写空间数据的一套跨平台开源库。现有的大部分GIS或者遥感平台，不论是商业软件ArcGIS，ENVI还是开源软件GRASS，QGIS，都使用了GDAL作为底层构建库。</p>
 <p>GDAL库由OGR和GDAL项目合并而来，OGR主要用于空间要素矢量矢量数据的解析，GDAL主要用于空间栅格数据的读写。此外，空间参考及其投影转换使用开源库 <a target="_blank" rel="noopener" href="https://proj4.org/">PROJ.4</a>进行。</p>
 <p>目前，GDAL主要提供了三大类数据的支持：栅格数据，矢量数据以及空间网络数据（Geographic Network Model）。</p>
-<p>GDAL提供了C/C++借口，并且通过<a target="_blank" rel="noopener" href="http://www.swig.org/">SWIG</a>提供了Python，Java，C#等的调用借口。当我们在Python中调用GDAL的API函数时，其实底层执行的是C/C++编译的二进制文件。</p>
+<p>GDAL提供了C&#x2F;C++借口，并且通过<a target="_blank" rel="noopener" href="http://www.swig.org/">SWIG</a>提供了Python，Java，C#等的调用借口。当我们在Python中调用GDAL的API函数时，其实底层执行的是C&#x2F;C++编译的二进制文件。</p>
 <p>GDAL不但提供了API借口方便开发人员自定义自己的功能，而且还提供了一系列实用工具（Command Line Tools）可以实现方便快速的空间数据处理。我们可以使用这些实用工具，结合Linux Shell脚本或者Windows批处理脚本进行大批量空间数据的批量处理。</p>
 <p>GDAL 1.x版本以前，对于栅格和矢量数据的读写API借口设计是相对分离的，从2.x版本开始，栅格和矢量数据的API进行了集成，对开发者更加友好。我们这里的示例都是以2.x版本为例。</p>
 <h2 id="栅格数据组织"><a href="#栅格数据组织" class="headerlink" title="栅格数据组织"></a>栅格数据组织</h2><p>GDAL中使用dataset表示一个栅格数据（使用抽象类<a target="_blank" rel="noopener" href="http://www.gdal.org/classGDALDataset.html">GDALDataset</a>表示），一个dataset包含了对于栅格数据的波段，空间参考以及元数据等信息。一张GeoTIFF遥感影像，一张DEM影像，或者一张土地利用图，在GDAL中都是一个GDALDataset。</p>
@@ -187,7 +187,7 @@
 <li>栅格波段（使用<a target="_blank" rel="noopener" href="http://www.gdal.org/classGDALRasterBand.html">GDALRasterBand</a>类表示，真正用于存储影像栅格值，一个栅格数据可以有多个波段）</li>
 <li>颜色表（Color Table用于图像显示）</li>
 </ul>
-<h3 id="地理放射变换"><a href="#地理放射变换" class="headerlink" title="地理放射变换"></a>地理放射变换</h3><p>放射变换使用如下的公式表示栅格图上坐标和地理坐标的关系：<br>$$<br>\begin{matrix}<br>X_{geo} = GT(0) + X_{pixel} * GT(1) + Y_{line} * GT(2) \<br>Y_{geo} = GT(3) + X_{pixel} * GT(4) + Y_{line} * GT(5)<br>\end{matrix}<br>$$<br>（$X_{ge0}$, $Y_{ge0}$）表示对应于图上坐标（$X_{pixel}$, $Y_{line}$）的实际地理坐标。对一个上北下南的图像，GT(2)和GT(4)等于0， GT(1)是像元的宽度, GT(5)是像元的高度。（GT(0),GT(3)）坐标对表示左上角像元的左上角坐标。</p>
+<h3 id="地理放射变换"><a href="#地理放射变换" class="headerlink" title="地理放射变换"></a>地理放射变换</h3><p>放射变换使用如下的公式表示栅格图上坐标和地理坐标的关系：<br>$$<br>\begin{matrix}<br>X_{geo} &#x3D; GT(0) + X_{pixel} * GT(1) + Y_{line} * GT(2) \<br>Y_{geo} &#x3D; GT(3) + X_{pixel} * GT(4) + Y_{line} * GT(5)<br>\end{matrix}<br>$$<br>（$X_{ge0}$, $Y_{ge0}$）表示对应于图上坐标（$X_{pixel}$, $Y_{line}$）的实际地理坐标。对一个上北下南的图像，GT(2)和GT(4)等于0， GT(1)是像元的宽度, GT(5)是像元的高度。（GT(0),GT(3)）坐标对表示左上角像元的左上角坐标。</p>
 <p> 通过这个放射变换，我们可以得到图上所有像元对应的地理坐标。</p>
 <p>参考资料：<a target="_blank" rel="noopener" href="http://www.gdal.org/gdal_datamodel.html">GDAL Data Model</a></p>
 <h2 id="矢量数据组织"><a href="#矢量数据组织" class="headerlink" title="矢量数据组织"></a>矢量数据组织</h2><p>GDAL的矢量数据模型是建立在<a target="_blank" rel="noopener" href="http://www.opengeospatial.org/standards/sfa">OGC Simple Features</a>规范的基础之上的，OGC Simple Features规范规定了常用的点线面几何体类型，及其作用在这些空间要素上的操作。</p>

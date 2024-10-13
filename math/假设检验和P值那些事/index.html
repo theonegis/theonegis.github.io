@@ -183,8 +183,8 @@
 </ol>
 <p>第一步中我们的原假设$H_0$（null hypothesis）为该枚硬币是正常的，备择假设$H_1$（alternate hypothesis）为该硬币不正常。</p>
 <p>注：当原假设正确，而由于样本的随机性使得样本观测值落在拒绝域（critical region或rejection region）而拒绝原假设产生的错误称为第一类错误；当原假设错误，而样本观测值落在接受域而接受原假设产生的错误称为第二类错误。</p>
-<p>第二步中根据中心极限定理可知随机变量$\bar{X}$服从正态分布。这里我们的检验统计量选择$t=\frac{\bar{X}-\mu_0}{S/\sqrt{n}}$（这里的$t$服从自由度为$n-1$的$t$分布），所以我们使用$t$分布来估计投掷的均值（这里$\bar{X}$为样本均值，$\mu_0$为原假设中的均值（期望），$S$为样本标准差，$n$为样本个数）。</p>
-<p>$$t=\frac{\bar{X}-\mu_0}{S/\sqrt{n}} = \frac{0.55 - 0.5}{0.5104178 / \sqrt{20}} = 0.4380858$$</p>
+<p>第二步中根据中心极限定理可知随机变量$\bar{X}$服从正态分布。这里我们的检验统计量选择$t&#x3D;\frac{\bar{X}-\mu_0}{S&#x2F;\sqrt{n}}$（这里的$t$服从自由度为$n-1$的$t$分布），所以我们使用$t$分布来估计投掷的均值（这里$\bar{X}$为样本均值，$\mu_0$为原假设中的均值（期望），$S$为样本标准差，$n$为样本个数）。</p>
+<p>$$t&#x3D;\frac{\bar{X}-\mu_0}{S&#x2F;\sqrt{n}} &#x3D; \frac{0.55 - 0.5}{0.5104178 &#x2F; \sqrt{20}} &#x3D; 0.4380858$$</p>
 <p>注：$t$分布用于根据小样本来估计呈正态分布且方差未知的总体的均值，称为$t$检验。如果总体方差已知（例如在样本数量足够多时），则应该用正态分布来估计总体均值，称为$U$检验。</p>
 <p>第三步中显著性水平$\alpha$（significance level，拒绝原假设时概率阈值）我们一般采用0.05（当然，你也可以使用0.1或者其它）。这个0.05的意思是观测值落在拒绝域的概率为0.05，概率为0.05说明这是小概率事件，而在一次测试中发生了小概率事件，所以我们有足够的理由拒绝原假设。</p>
 <p>接下来我们应该计算拒绝域了。对于$t$分布求0.025和0.975的分位数分别为-2.093024和2.093024（即$t$的上下界，左右两边各是0.025，合起来就是0.05的拒绝域），我们可以反推出$\bar{X}$的上下界为0.3111171和0.7888829（这个区间就是接受域）。</p>
@@ -194,13 +194,13 @@
 <p>那么什么是$P$值呢？《Head First Statistics》给出的定义是“A p-value is the probability of getting the results in the sample, or something more extreme, in the direction of the critical region.”。我的理解就是P值是在原假设成立的情况下，出现比当前样本观测值更极端（包括当前样本观测值）情况的概率。</p>
 <p>其实这样说还是挺抽象的，我们通过计算来进行说明。</p>
 <p>我们把检验假设步骤中的第三步修改为：确定显著性水平和计算P值</p>
-<p>在我们的实验中$t=\frac{\bar{X}-\mu_0}{S/\sqrt{n}} = \frac{0.55 - 0.5}{0.5104178 / \sqrt{20}} = 0.4380858$</p>
-<p>然后我们通过查表可以得到0.4380858对应的上侧分位数为 0.3331321（和-0.4380858对应的下侧分位数相同），因为我们的实验中是双边情况，所以$P = 0.4380858\times2 = 0.6662642 \gt 0.05$</p>
-<p>在确定了显著性水平$\alpha$的情况下（$\alpha=0.05$），如果计算出的$P\le0.05$，说明观察值不合理，也就是样本均值离假设均值太远了，因此拒绝原假如果计算计算出的$P\gt0.05$，则我们不能拒绝原假设。</p>
+<p>在我们的实验中$t&#x3D;\frac{\bar{X}-\mu_0}{S&#x2F;\sqrt{n}} &#x3D; \frac{0.55 - 0.5}{0.5104178 &#x2F; \sqrt{20}} &#x3D; 0.4380858$</p>
+<p>然后我们通过查表可以得到0.4380858对应的上侧分位数为 0.3331321（和-0.4380858对应的下侧分位数相同），因为我们的实验中是双边情况，所以$P &#x3D; 0.4380858\times2 &#x3D; 0.6662642 \gt 0.05$</p>
+<p>在确定了显著性水平$\alpha$的情况下（$\alpha&#x3D;0.05$），如果计算出的$P\le0.05$，说明观察值不合理，也就是样本均值离假设均值太远了，因此拒绝原假如果计算计算出的$P\gt0.05$，则我们不能拒绝原假设。</p>
 <p>注：设连续型随机变量$X$的分布函数为$F(x)$，密度函数为$f(x)$，对于任意$\alpha (0\lt\alpha\lt1)$，假如$x_\alpha$满足条件</p>
-<p>$$F(x_\alpha) = \int_{-\infty}^{x_\alpha} f(x) dx = \alpha$$</p>
+<p>$$F(x_\alpha) &#x3D; \int_{-\infty}^{x_\alpha} f(x) dx &#x3D; \alpha$$</p>
 <p>则$x_\alpha$称为$X$分布的$\alpha$分位数，或称为$\alpha$下侧分位数。假如$x^{\prime}_\alpha$满足</p>
-<p>$$1 - F(x^{\prime}<em>\alpha) = \int</em>{-\infty}^{x_\alpha} f(x) dx = \alpha$$</p>
+<p>$$1 - F(x^{\prime}<em>\alpha) &#x3D; \int</em>{-\infty}^{x_\alpha} f(x) dx &#x3D; \alpha$$</p>
 <p>则$x^{\prime}_\alpha$称为$X$分布的$\alpha$分位数。</p>
 <p>通俗地理解分位数就是对应某个概率面积的横坐标，如果是左侧面积（概率）叫下侧分位数，如果是右侧面积（概率）叫上侧分位数。</p>
 <h2 id="R中的实践"><a href="#R中的实践" class="headerlink" title="R中的实践"></a>R中的实践</h2><p>好的，下面我们来看如何在R中重复上面的实验：</p>
@@ -210,21 +210,12 @@
 <p>使用R内置的$t$检验函数如下：</p>
 <p><code>t.test (flips, mu=0.5)</code></p>
 <p>输出结果如下：</p>
-<pre><code>    One Sample t-test
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">  <span class="attribute">One</span> Sample t-test</span><br><span class="line"></span><br><span class="line"><span class="attribute">data</span>:  flips</span><br><span class="line"><span class="attribute">t</span> = <span class="number">0</span>.<span class="number">43809</span>, df = <span class="number">19</span>, p-value = <span class="number">0</span>.<span class="number">6663</span></span><br><span class="line"><span class="attribute">alternative</span> hypothesis: true mean is not equal to <span class="number">0</span>.<span class="number">5</span></span><br><span class="line"><span class="attribute">95</span> percent confidence interval:</span><br><span class="line"> <span class="attribute">0</span>.<span class="number">3111171</span> <span class="number">0</span>.<span class="number">7888829</span></span><br><span class="line"><span class="attribute">sample</span> estimates:</span><br><span class="line"><span class="attribute">mean</span> of x </span><br><span class="line">     <span class="attribute">0</span>.<span class="number">55</span> </span><br></pre></td></tr></table></figure>
 
-data:  flips
-t = 0.43809, df = 19, p-value = 0.6663
-alternative hypothesis: true mean is not equal to 0.5
-95 percent confidence interval:
- 0.3111171 0.7888829
-sample estimates:
-mean of x 
-     0.55 
-</code></pre>
 <p>如果需要我们手动计算上面这些值，我们是否可以计算出来呢？计算的过程就是上面讲解假设减压和P值的过程。</p>
-<p>首先$t$值的计算很简单，使用公式$t=\frac{\bar{X}-\mu_0}{S/\sqrt{n}}$即可，代码如下，结果为0.4380858</p>
+<p>首先$t$值的计算很简单，使用公式$t&#x3D;\frac{\bar{X}-\mu_0}{S&#x2F;\sqrt{n}}$即可，代码如下，结果为0.4380858</p>
 <p><code>(mean(flips) - 0.5) / (sd(flips) / sqrt(length(flips)))</code></p>
-<p>$df$指代的是自由度$n-1=20-1=19$</p>
+<p>$df$指代的是自由度$n-1&#x3D;20-1&#x3D;19$</p>
 <p>接下来我们计算P值，通过计算-0.4380858的下侧分位数再乘以2可得，代码如下，结果为0.6662642</p>
 <p><code>pt(-0.4380858, 19) * 2</code></p>
 <p>在来看我们的置信区间，其实这里就是我们所要求的接受域</p>

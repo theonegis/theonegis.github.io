@@ -170,49 +170,49 @@
 <h2 id="符号说明"><a href="#符号说明" class="headerlink" title="符号说明"></a>符号说明</h2><ul>
 <li>$w^l_{jk}$表示$l-1$层的第$k$个神经元到$l$层的第$j$个神经元连接的权重.</li>
 <li>$b^l_j$表示$l$层的第$j$个神经元的偏置，$a^l_j$表示$l$层的第$j$个神经元作用于激活函数以后的取值.</li>
-<li>对于$a^l_j$的计算，我们可以使用如下公式计算：$a^l_j=\sigma (\sum_\limits{k}w^l_{jk}a^{l-1}_k + b^l_j)$，其中，$\sigma$表示的是激活函数，求和符号表示的是第$l-1$层的所有神经元与$l$层第$j$个神经元连接的加权和.</li>
-<li>上式使用矩阵表示则有：$a^l = \sigma (w^la^{l-1} + b^l)$，其中，$w^l$表示$l$层的权重矩阵，矩阵的第$j$行第$k$列的元素为$w^l_{jk}$，类似的，$b^l$和$a^l$用列向量表示第$j$层神经元的偏置和激活值. </li>
-<li>对于$z^l = w^la^{l-1} + b^l$我们称之为$l$层的加权输出.</li>
+<li>对于$a^l_j$的计算，我们可以使用如下公式计算：$a^l_j&#x3D;\sigma (\sum_\limits{k}w^l_{jk}a^{l-1}_k + b^l_j)$，其中，$\sigma$表示的是激活函数，求和符号表示的是第$l-1$层的所有神经元与$l$层第$j$个神经元连接的加权和.</li>
+<li>上式使用矩阵表示则有：$a^l &#x3D; \sigma (w^la^{l-1} + b^l)$，其中，$w^l$表示$l$层的权重矩阵，矩阵的第$j$行第$k$列的元素为$w^l_{jk}$，类似的，$b^l$和$a^l$用列向量表示第$j$层神经元的偏置和激活值. </li>
+<li>对于$z^l &#x3D; w^la^{l-1} + b^l$我们称之为$l$层的加权输出.</li>
 <li>设推导反向传播过程中的代价函数为$C$.</li>
-<li>我们使用$\odot$表示两个矩阵对应元素的乘积，即$(s\odot t)<em>{i,j} = s</em>{i,j} \cdot t_{i,j}$，称之为Hadamard乘积.</li>
+<li>我们使用$\odot$表示两个矩阵对应元素的乘积，即$(s\odot t)<em>{i,j} &#x3D; s</em>{i,j} \cdot t_{i,j}$，称之为Hadamard乘积.</li>
 </ul>
 <h2 id="反向传播的四个基本公式"><a href="#反向传播的四个基本公式" class="headerlink" title="反向传播的四个基本公式"></a>反向传播的四个基本公式</h2><p>反向传播过程中的四个基本公式：</p>
-<p>$$\delta^L = \nabla_aC\odot \sigma’(z^L) \tag{BP1}$$</p>
-<p>$$\delta^l = ((w^{l+1})^\mathrm{T}\delta^{l+1})\odot\sigma’(z^l) \tag{BP2}$$</p>
-<p>$$\frac{\partial C}{\partial b^l_j} = \delta^l_j \tag{BP3}$$</p>
-<p>$$\frac{\partial C}{\partial w^l_{jk}} = a^{l-1}_k\delta^l_j \tag{BP4}$$</p>
+<p>$$\delta^L &#x3D; \nabla_aC\odot \sigma’(z^L) \tag{BP1}$$</p>
+<p>$$\delta^l &#x3D; ((w^{l+1})^\mathrm{T}\delta^{l+1})\odot\sigma’(z^l) \tag{BP2}$$</p>
+<p>$$\frac{\partial C}{\partial b^l_j} &#x3D; \delta^l_j \tag{BP3}$$</p>
+<p>$$\frac{\partial C}{\partial w^l_{jk}} &#x3D; a^{l-1}_k\delta^l_j \tag{BP4}$$</p>
 <h2 id="反向传播算法"><a href="#反向传播算法" class="headerlink" title="反向传播算法"></a>反向传播算法</h2><ol>
 <li>输入$x$：输入层的激活值$a^1$可以假定就是其输入$x$</li>
-<li>前向传播：对于$l=2,3,\cdots,L$，依次通过$z^l = w^la^{l-1} + b^l$和$a^l = \sigma(z^l)$公式进行计算激活值</li>
+<li>前向传播：对于$l&#x3D;2,3,\cdots,L$，依次通过$z^l &#x3D; w^la^{l-1} + b^l$和$a^l &#x3D; \sigma(z^l)$公式进行计算激活值</li>
 <li>计算最终输出误差$\delta^L$：通过公式计BP1算误差向量</li>
-<li>反向误差传播：对于$l=L-1, L-2, \cdots, 2$，使用公式分BP2别计算每层神经元对应的误差</li>
+<li>反向误差传播：对于$l&#x3D;L-1, L-2, \cdots, 2$，使用公式分BP2别计算每层神经元对应的误差</li>
 <li>更新权重和增益：根据代价函数的梯度更新权重和增益，如公式BP3和BP4所示</li>
 </ol>
 <h2 id="推导过程"><a href="#推导过程" class="headerlink" title="推导过程"></a>推导过程</h2><p>下面我们来进行公式的推导</p>
 <h3 id="对于公式BP1的推导"><a href="#对于公式BP1的推导" class="headerlink" title="对于公式BP1的推导"></a>对于公式BP1的推导</h3><p>设最后一层$L$的第$j$个神经元的误差是</p>
-<p>$$\delta^L_j = \frac{\partial C}{\partial z^L_j} \tag{1}$$</p>
+<p>$$\delta^L_j &#x3D; \frac{\partial C}{\partial z^L_j} \tag{1}$$</p>
 <p>通过链式法则，我们可以得到</p>
-<p>$$\delta^L_j = \frac{\partial C}{\partial a^L_j}\frac{\partial a^L_j}{\partial z^L_j} \tag{2}$$</p>
-<p>将$a^l_j=\sigma(z^L_j)$带入可得</p>
-<p>$$\delta^L_j = \frac{\partial C}{\partial a^L_j}\sigma’(z^L_j) \tag{3}$$</p>
+<p>$$\delta^L_j &#x3D; \frac{\partial C}{\partial a^L_j}\frac{\partial a^L_j}{\partial z^L_j} \tag{2}$$</p>
+<p>将$a^l_j&#x3D;\sigma(z^L_j)$带入可得</p>
+<p>$$\delta^L_j &#x3D; \frac{\partial C}{\partial a^L_j}\sigma’(z^L_j) \tag{3}$$</p>
 <p>公式BP1即是上式的矩阵形式</p>
 <h3 id="对于公式BP2的推导"><a href="#对于公式BP2的推导" class="headerlink" title="对于公式BP2的推导"></a>对于公式BP2的推导</h3><p>对于$l$层的第$j$个神经元，我们使用链式法则有：</p>
-<p>$$\delta^l_j = \frac{\partial C}{\partial z^l_j} = \sum\limits_k\frac{\partial C}{\partial z^{l+1}_k}\frac{\partial z^{l+1}_k}{\partial z^l_j} = \sum\limits_k\frac{\partial z^{l+1}_k}{\partial z^l_j}\delta^{l+1}_k \tag{4}$$</p>
+<p>$$\delta^l_j &#x3D; \frac{\partial C}{\partial z^l_j} &#x3D; \sum\limits_k\frac{\partial C}{\partial z^{l+1}_k}\frac{\partial z^{l+1}_k}{\partial z^l_j} &#x3D; \sum\limits_k\frac{\partial z^{l+1}_k}{\partial z^l_j}\delta^{l+1}_k \tag{4}$$</p>
 <p>此外，我们有</p>
-<p>$$z^{l+1}_k = \sum\limits_jw^{l+1}_{kj}a^l_j + b^{l+1}_k = \sum\limits_jw^{l+1}_{kj}\sigma(z^l_j) + b^{l+1}_k \tag{5}$$</p>
+<p>$$z^{l+1}<em>k &#x3D; \sum\limits_jw^{l+1}</em>{kj}a^l_j + b^{l+1}<em>k &#x3D; \sum\limits_jw^{l+1}</em>{kj}\sigma(z^l_j) + b^{l+1}_k \tag{5}$$</p>
 <p>对上式微分，得</p>
-<p>$$\frac{\partial z^{l+1}_k}{\partial z^l_j} = w^{l+1}_{kj}\sigma’(z^l_j) \tag{6}$$</p>
+<p>$$\frac{\partial z^{l+1}<em>k}{\partial z^l_j} &#x3D; w^{l+1}</em>{kj}\sigma’(z^l_j) \tag{6}$$</p>
 <p>带入公式4，可得</p>
-<p>$$\delta^l_j = \sum\limits_kw^{l+1}_{kj}\delta^{l+1}_k\sigma’(z^l_j) \tag{7}$$</p>
+<p>$$\delta^l_j &#x3D; \sum\limits_kw^{l+1}_{kj}\delta^{l+1}_k\sigma’(z^l_j) \tag{7}$$</p>
 <h3 id="对于公式BP3的推导"><a href="#对于公式BP3的推导" class="headerlink" title="对于公式BP3的推导"></a>对于公式BP3的推导</h3><p>对于$l$层的第$j$个神经元，我们使用链式法则有：</p>
-<p>$$\frac{\partial C}{\partial b^L_j} = \frac{\partial C}{\partial z^l_j}\frac{\partial z^l_j}{\partial b^l_j} \tag{8}$$</p>
+<p>$$\frac{\partial C}{\partial b^L_j} &#x3D; \frac{\partial C}{\partial z^l_j}\frac{\partial z^l_j}{\partial b^l_j} \tag{8}$$</p>
 <p>由于$\frac{\partial z^l_k}{\partial b^l_j}$恒等于1，所以有</p>
-<p>$$\frac{\partial C}{\partial b^L_j} = \frac{\partial C}{\partial z^l_j} = \delta^l_j \tag{9}$$</p>
-<h3 id="对于公式BP4的推导"><a href="#对于公式BP4的推导" class="headerlink" title="对于公式BP4的推导"></a>对于公式BP4的推导</h3><p>因为$z^{l}_j = \sum\limits_kw^{l}_{jk}a^{l-1}_k + b^{l+1}_j$，取导数有</p>
-<p>$$\frac{\partial z^l_j}{\partial w^{l}_{jk}} = a^{l-1}_k \tag{10}$$</p>
+<p>$$\frac{\partial C}{\partial b^L_j} &#x3D; \frac{\partial C}{\partial z^l_j} &#x3D; \delta^l_j \tag{9}$$</p>
+<h3 id="对于公式BP4的推导"><a href="#对于公式BP4的推导" class="headerlink" title="对于公式BP4的推导"></a>对于公式BP4的推导</h3><p>因为$z^{l}<em>j &#x3D; \sum\limits_kw^{l}</em>{jk}a^{l-1}_k + b^{l+1}_j$，取导数有</p>
+<p>$$\frac{\partial z^l_j}{\partial w^{l}_{jk}} &#x3D; a^{l-1}_k \tag{10}$$</p>
 <p>对于$l​$层的第$j​$个神经元，我们使用链式法则有：</p>
-<p>$$\frac{\partial C}{\partial w^l_{jk}} = \frac{\partial C}{\partial z^l_{j}} \frac{\partial z^l_{j}}{\partial w^l_{jk}}    \tag{11}$$</p>
-<p>将$\delta^l_j = \frac{\partial C}{\partial z^l_j}$和$\frac{\partial z^l_{jk}}{\partial w^l_{jk}} = a^{l-1}<em>k$带入公式11，得<br>$$\frac{\partial C}{\partial w^l</em>{jk}} = \delta^l_ja^{l-1}_k \tag{12}$$</p>
+<p>$$\frac{\partial C}{\partial w^l_{jk}} &#x3D; \frac{\partial C}{\partial z^l_{j}} \frac{\partial z^l_{j}}{\partial w^l_{jk}}    \tag{11}$$</p>
+<p>将$\delta^l_j &#x3D; \frac{\partial C}{\partial z^l_j}$和$\frac{\partial z^l_{jk}}{\partial w^l_{jk}} &#x3D; a^{l-1}<em>k$带入公式11，得<br>$$\frac{\partial C}{\partial w^l</em>{jk}} &#x3D; \delta^l_ja^{l-1}_k \tag{12}$$</p>
 <p>终于，推导完毕！</p>
 
     </div>

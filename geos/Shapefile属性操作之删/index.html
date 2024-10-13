@@ -174,27 +174,10 @@
 <h1 id="案例介绍"><a href="#案例介绍" class="headerlink" title="案例介绍"></a>案例介绍</h1><p>这里我们要处理的数据是中国地图分省的矢量Shapefile，是一个面状数据。在上篇中我们给该数据添加了一个属性字段<code>Abbr</code>用以表示省的简称。这篇我们再把该字段给删除掉。</p>
 <p>删除的方法包括两部：首先，从属性表中找到该字段，然后删除该字段。</p>
 <h1 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h1><p>Talk is cheap. Show me the code.</p>
-<pre><code class="Python">from osgeo import ogr
-ogr.UseExceptions()
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> ogr</span><br><span class="line">ogr.UseExceptions()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 从给定图层中读取字段的定义，根据给定字段名称找到该字段的索引编号</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_field_index_by_name</span>(<span class="params">layer: ogr.Layer, name: <span class="built_in">str</span></span>):</span><br><span class="line">    defs: ogr.FeatureDefn = layer.GetLayerDefn()</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(defs.GetFieldCount()):</span><br><span class="line">        <span class="keyword">if</span> name == defs.GetFieldDefn(i).GetName():</span><br><span class="line">            <span class="keyword">return</span> i</span><br><span class="line">    <span class="keyword">raise</span> ValueError(<span class="string">f&#x27;<span class="subst">&#123;name&#125;</span> not found&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开一个Shapefile文件</span></span><br><span class="line">ds: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/省级行政区.shp&#x27;</span>, update=<span class="literal">True</span>)</span><br><span class="line">layer: ogr.Layer = ds.GetLayer()</span><br><span class="line"><span class="comment"># 删除Abbr字段</span></span><br><span class="line">index = get_field_index_by_name(layer, <span class="string">&#x27;Abbr_1&#x27;</span>)</span><br><span class="line">layer.DeleteField(index)</span><br><span class="line">ds = <span class="literal">None</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
-# 从给定图层中读取字段的定义，根据给定字段名称找到该字段的索引编号
-def get_field_index_by_name(layer: ogr.Layer, name: str):
-    defs: ogr.FeatureDefn = layer.GetLayerDefn()
-    for i in range(defs.GetFieldCount()):
-        if name == defs.GetFieldDefn(i).GetName():
-            return i
-    raise ValueError(f&#39;&#123;name&#125; not found&#39;)
 
-
-# 打开一个Shapefile文件
-ds: ogr.DataSource = ogr.Open(&#39;../data/省级行政区.shp&#39;, update=True)
-layer: ogr.Layer = ds.GetLayer()
-# 删除Abbr字段
-index = get_field_index_by_name(layer, &#39;Abbr_1&#39;)
-layer.DeleteField(index)
-ds = None
-</code></pre>
 <h1 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h1><ol>
 <li>GDAL的图层<code>ogr.Layer</code>类提供了<code>DeleteField()</code>方法用于删除字段，但是该方法传入的参数必须是要删除字段的索引编号。</li>
 <li>我们一般的业务需求是根据字段名称去进行删除操作，所以我自定义了一个<code>get_field_index_by_name()</code>函数用于从给定图层中查找给定字段名称对应的索引编号。该函数接受两个参数，第一个是图层变量，第二个是字段名称。该函数实现的逻辑是遍历传入的图层中的字段的定义，找到和给定名称相同的字段并返回其索引。有一种特殊情况是传入的字段名称在当前图层中并不存在，对于这种情况，我们直接抛出一个<code>ValueError</code>错误。</li>

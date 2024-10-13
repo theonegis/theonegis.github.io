@@ -171,15 +171,8 @@
 <p>Alex and Lee take turns, with Alex starting first.  Each turn, a player takes the entire pile of stones from either the beginning or the end of the row.  This continues until there are no more piles left, at which point the person with the most stones wins.</p>
 <p>Assuming Alex and Lee play optimally, return <code>True</code> if and only if Alex wins the game.</p>
 <p><strong>Example 1:</strong></p>
-<pre><code>Input: [5,3,4,5]
-Output: true
-Explanation: 
-Alex starts first, and can only take the first 5 or the last 5.
-Say he takes the first 5, so that the row becomes [3, 4, 5].
-If Lee takes 3, then the board is [4, 5], and Alex takes 5 to win with 10 points.
-If Lee takes the last 5, then the board is [3, 4], and Alex takes 4 to win with 9 points.
-This demonstrated that taking the first 5 was a winning move for Alex, so we return true.
-</code></pre>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Input: [<span class="number">5</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br><span class="line">Output: <span class="literal">true</span></span><br><span class="line">Explanation: </span><br><span class="line">Alex starts <span class="keyword">first</span>, <span class="keyword">and</span> can only take <span class="keyword">the</span> <span class="keyword">first</span> <span class="number">5</span> <span class="keyword">or</span> <span class="keyword">the</span> <span class="keyword">last</span> <span class="number">5.</span></span><br><span class="line">Say he takes <span class="keyword">the</span> <span class="keyword">first</span> <span class="number">5</span>, so that <span class="keyword">the</span> row becomes [<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>].</span><br><span class="line">If Lee takes <span class="number">3</span>, <span class="keyword">then</span> <span class="keyword">the</span> board is [<span class="number">4</span>, <span class="number">5</span>], <span class="keyword">and</span> Alex takes <span class="number">5</span> <span class="built_in">to</span> win <span class="keyword">with</span> <span class="number">10</span> points.</span><br><span class="line">If Lee takes <span class="keyword">the</span> <span class="keyword">last</span> <span class="number">5</span>, <span class="keyword">then</span> <span class="keyword">the</span> board is [<span class="number">3</span>, <span class="number">4</span>], <span class="keyword">and</span> Alex takes <span class="number">4</span> <span class="built_in">to</span> win <span class="keyword">with</span> <span class="number">9</span> points.</span><br><span class="line">This demonstrated that taking <span class="keyword">the</span> <span class="keyword">first</span> <span class="number">5</span> was <span class="keyword">a</span> winning move <span class="keyword">for</span> Alex, so we <span class="literal">return</span> <span class="literal">true</span>.</span><br></pre></td></tr></table></figure>
+
 <p><strong>Note:</strong></p>
 <ol>
 <li><code>2 &lt;= piles.length &lt;= 500</code></li>
@@ -190,25 +183,12 @@ This demonstrated that taking the first 5 was a winning move for Alex, so we ret
 <h2 id="算法分析"><a href="#算法分析" class="headerlink" title="算法分析"></a>算法分析</h2><p>每次都是Alex先取，从前后两个中选取最大的，然后Lee再取，Lee再从前后两个中取最大的</p>
 <p>这告诉我们什么，毫无悬念，Alex肯定会赢呀</p>
 <h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><p>直接返回<code>true</code>就好了</p>
-<pre><code class="C++">bool stoneGame(vector&lt;int&gt;&amp; piles) &#123;
-    return true;
-&#125;
-</code></pre>
-<p>模拟他们玩游戏的过程，使用两个指针分别代表指向最前面和最后面，依次移动指针</p>
-<pre><code class="C++">bool stoneGame(vector&lt;int&gt;&amp; piles) &#123;
-    const size_t count = piles.size();
-    vector&lt;int&gt; sum(count + 2, 0);
-    for (size_t i = 0, j = count - 1, k = 2; i != j ; k++) &#123;
-        if (piles[i] &gt; piles[j]) &#123;
-              sum[k] = piles[i++]  +  sum[k - 2];
-        &#125; else &#123;
-            sum[k] = piles[j--] + sum[k - 2];
-        &#125;
-    &#125;
-    return sum[count] &gt; sum[count + 1];
-&#125;
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">stoneGame</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; piles)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+
+
+<p>模拟他们玩游戏的过程，使用两个指针分别代表指向最前面和最后面，依次移动指针</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">stoneGame</span><span class="params">(vector&lt;<span class="type">int</span>&gt;&amp; piles)</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">size_t</span> count = piles.<span class="built_in">size</span>();</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">sum</span><span class="params">(count + <span class="number">2</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">size_t</span> i = <span class="number">0</span>, j = count - <span class="number">1</span>, k = <span class="number">2</span>; i != j ; k++) &#123;</span><br><span class="line">        <span class="keyword">if</span> (piles[i] &gt; piles[j]) &#123;</span><br><span class="line">              sum[k] = piles[i++]  +  sum[k - <span class="number">2</span>];</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            sum[k] = piles[j--] + sum[k - <span class="number">2</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum[count] &gt; sum[count + <span class="number">1</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
     </div>
 
     <!-- 

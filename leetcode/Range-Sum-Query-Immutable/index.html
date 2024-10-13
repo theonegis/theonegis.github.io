@@ -168,12 +168,8 @@
     <div class="content">
         <h1 id="303-Range-Sum-Query-Immutable"><a href="#303-Range-Sum-Query-Immutable" class="headerlink" title="303. Range Sum Query - Immutable"></a>303. Range Sum Query - Immutable</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>Given an integer array <em>nums</em>, find the sum of the elements between indices <em>i</em> and <em>j</em> (<em>i</em> ≤ <em>j</em>), inclusive.</p>
 <p><strong>Example:</strong></p>
-<pre><code>Given nums = [-2, 0, 3, -5, 2, -1]
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Given</span> nums =<span class="meta"> [-2, 0, 3, -5, 2, -1]</span></span><br><span class="line"></span><br><span class="line"><span class="attribute">sumRange</span>(<span class="number">0</span>, <span class="number">2</span>) -&gt; <span class="number">1</span></span><br><span class="line"><span class="attribute">sumRange</span>(<span class="number">2</span>, <span class="number">5</span>) -&gt; -<span class="number">1</span></span><br><span class="line"><span class="attribute">sumRange</span>(<span class="number">0</span>, <span class="number">5</span>) -&gt; -<span class="number">3</span></span><br></pre></td></tr></table></figure>
 
-sumRange(0, 2) -&gt; 1
-sumRange(2, 5) -&gt; -1
-sumRange(0, 5) -&gt; -3
-</code></pre>
 <p><strong>Note:</strong></p>
 <ol>
 <li>You may assume that the array does not change.</li>
@@ -183,51 +179,12 @@ sumRange(0, 5) -&gt; -3
 <p>这个就很简单了，我们计算出来当前位置元素到初始元素之间所有元素之和，并进行存储，每次需要求解给定区间元素之和的时候收尾相减即可。这样就可以大大减少调用多次<code>sumRange()</code>函数的计算时间。</p>
 <p>注意：我们的和元素组成的数组中第一个元素是0。</p>
 <p>其实，我觉得这道题并不完全能算得上一道动态规划的题目。但是LeetCode把这道题归类到动态规划中也说得过去吧。</p>
-<h2 id="C-示例"><a href="#C-示例" class="headerlink" title="C++示例"></a>C++示例</h2><pre><code class="C++">class NumArray &#123;
-private:
-    vector&lt;int&gt; sums;
-public:
-    NumArray(vector&lt;int&gt; nums) &#123;
-        sums.push_back(0);
-        for (int i = 0; i &lt; nums.size(); ++i) &#123;
-            sums.push_back(nums[i] + sums[i]);
-        &#125;
-    &#125;
+<h2 id="C-示例"><a href="#C-示例" class="headerlink" title="C++示例"></a>C++示例</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">NumArray</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; sums;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">NumArray</span>(vector&lt;<span class="type">int</span>&gt; nums) &#123;</span><br><span class="line">        sums.<span class="built_in">push_back</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; nums.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            sums.<span class="built_in">push_back</span>(nums[i] + sums[i]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">sumRange</span><span class="params">(<span class="type">int</span> i, <span class="type">int</span> j)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sums[j + <span class="number">1</span>] - sums[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; nums&#123;<span class="number">-2</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">-5</span>, <span class="number">2</span>, <span class="number">-1</span>&#125;;</span><br><span class="line">    <span class="function">NumArray <span class="title">obj</span><span class="params">(nums)</span></span>;</span><br><span class="line">    <span class="type">int</span> result = obj.<span class="built_in">sumRange</span>(<span class="number">2</span>, <span class="number">5</span>);</span><br><span class="line">    cout &lt;&lt; result &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    int sumRange(int i, int j) &#123;
-        return sums[j + 1] - sums[i];
-    &#125;
-&#125;;
 
-int main() &#123;
-    vector&lt;int&gt; nums&#123;-2, 0, 3, -5, 2, -1&#125;;
-    NumArray obj(nums);
-    int result = obj.sumRange(2, 5);
-    cout &lt;&lt; result &lt;&lt; endl;
-    return 0;
-&#125;
-</code></pre>
-<h2 id="Scala示例"><a href="#Scala示例" class="headerlink" title="Scala示例"></a>Scala示例</h2><pre><code class="Scala">object RangeSumQuery &#123;
 
-  class NumArray(nums: Array[Int]) &#123;
+<h2 id="Scala示例"><a href="#Scala示例" class="headerlink" title="Scala示例"></a>Scala示例</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">RangeSumQuery</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">NumArray</span>(<span class="params">nums: <span class="type">Array</span>[<span class="type">Int</span>]</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> sums = <span class="keyword">new</span> <span class="type">Array</span>[<span class="type">Int</span>](nums.length + <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> (i &lt;- nums.indices)</span><br><span class="line">      sums(i + <span class="number">1</span>) = sums(i) + nums(i)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sumRange</span></span>(i: <span class="type">Int</span>, j: <span class="type">Int</span>): <span class="type">Int</span> = &#123;</span><br><span class="line">      sums(j + <span class="number">1</span>) - sums(i)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> nums = <span class="type">Array</span>(<span class="number">-2</span>, <span class="number">0</span>, <span class="number">3</span>, <span class="number">-5</span>, <span class="number">2</span>, <span class="number">-1</span>)</span><br><span class="line">    <span class="keyword">val</span> obj = <span class="keyword">new</span> <span class="type">NumArray</span>(nums)</span><br><span class="line">    <span class="keyword">val</span> result = obj.sumRange(<span class="number">2</span>, <span class="number">5</span>)</span><br><span class="line">    println(result)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    private val sums = new Array[Int](nums.length + 1)
-    for (i &lt;- nums.indices)
-      sums(i + 1) = sums(i) + nums(i)
-
-    def sumRange(i: Int, j: Int): Int = &#123;
-      sums(j + 1) - sums(i)
-    &#125;
-  &#125;
-
-  def main(args: Array[String]): Unit = &#123;
-    val nums = Array(-2, 0, 3, -5, 2, -1)
-    val obj = new NumArray(nums)
-    val result = obj.sumRange(2, 5)
-    println(result)
-  &#125;
-&#125;
-</code></pre>
 
     </div>
 

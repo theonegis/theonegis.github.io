@@ -167,20 +167,12 @@
 
     <div class="content">
         <h1 id="C-17使用std-apply和fold-expression对std-tuple进行遍历"><a href="#C-17使用std-apply和fold-expression对std-tuple进行遍历" class="headerlink" title="C++17使用std::apply和fold expression对std::tuple进行遍历"></a>C++17使用std::apply和fold expression对std::tuple进行遍历</h1><h2 id="std-apply函数"><a href="#std-apply函数" class="headerlink" title="std::apply函数"></a>std::apply函数</h2><p>先来看这个<code>std::apply</code>函数，这个函数定义在<code>tuple</code>头文件中，函数签名如下：</p>
-<pre><code class="C++">template &lt;class F, class Tuple&gt;
-constexpr decltype(auto) apply(F&amp;&amp; f, Tuple&amp;&amp; t);
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> <span class="title class_">F</span>, <span class="keyword">class</span> <span class="title class_">Tuple</span>&gt;</span><br><span class="line"><span class="function"><span class="keyword">constexpr</span> <span class="keyword">decltype</span>(<span class="keyword">auto</span>) <span class="title">apply</span><span class="params">(F&amp;&amp; f, Tuple&amp;&amp; t)</span></span>;</span><br></pre></td></tr></table></figure>
+
 <p>该函数接受两个参数，第一个是一个函数对象，第二个是一个Tuple对象</p>
 <p>来看一个最简单的示例：</p>
-<pre><code class="C++">#include &lt;tuple&gt;
-#include &lt;iostream&gt;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;tuple&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 两个元素相加</span></span><br><span class="line">    std::cout &lt;&lt; std::<span class="built_in">apply</span>([](<span class="keyword">auto</span> x, <span class="keyword">auto</span> y) &#123; <span class="keyword">return</span> x + y; &#125;, </span><br><span class="line">                            std::<span class="built_in">make_tuple</span>(<span class="number">1</span>, <span class="number">2.0</span>)) &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-int main() &#123;
-    // 两个元素相加
-    std::cout &lt;&lt; std::apply([](auto x, auto y) &#123; return x + y; &#125;, 
-                            std::make_tuple(1, 2.0)) &lt;&lt; &#39;\n&#39;;
-&#125;
-</code></pre>
 <p>输出结果是3</p>
 <p>这个例子中第一个参数使用Lambda匿名函数将<code>tuple</code>中的两个元素相加，第二个使用<code>std::make_tuple</code>函数构造一个只含有两个元素的<code>tuple</code></p>
 <h2 id="fold-expression"><a href="#fold-expression" class="headerlink" title="fold expression"></a>fold expression</h2><p>这个特性是C++ 17中我觉得很有用的一个新特性，使用规则有下面四条：</p>
@@ -196,24 +188,13 @@ int main() &#123;
 </ol>
 <p>这里的$E$指的是Expression（符合C++语法的表达式），$op$指的是operator（操作符），$N$是parameter pack（可变参数）的个数，$I$是一个常数。</p>
 <p>可能看这个规则有些抽象，我们来看一些具体的例子：</p>
-<pre><code class="C+++">#include &lt;tuple&gt;
-#include &lt;iostream&gt;
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;tuple&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 多个元素相加，使用parameter pack</span><br><span class="line">    std::cout &lt;&lt; std::apply([](auto&amp;&amp; ... args) &#123; return (args + ...); &#125;,</span><br><span class="line">                            std::make_tuple(1, 2.f, 3.0)) &lt;&lt; &#x27;\n&#x27;;</span><br><span class="line">    // 遍历tuple并输出，注意逗号操作符的使用</span><br><span class="line">    std::apply([](auto&amp;&amp;... args) &#123; ((std::cout &lt;&lt; args &lt;&lt; &#x27;\n&#x27;), ...); &#125;,</span><br><span class="line">                std::make_tuple(1, 2.f, 3.0));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-int main() &#123;
-    // 多个元素相加，使用parameter pack
-    std::cout &lt;&lt; std::apply([](auto&amp;&amp; ... args) &#123; return (args + ...); &#125;,
-                            std::make_tuple(1, 2.f, 3.0)) &lt;&lt; &#39;\n&#39;;
-    // 遍历tuple并输出，注意逗号操作符的使用
-    std::apply([](auto&amp;&amp;... args) &#123; ((std::cout &lt;&lt; args &lt;&lt; &#39;\n&#39;), ...); &#125;,
-                std::make_tuple(1, 2.f, 3.0));
-&#125;
-</code></pre>
 <p>输出如下：</p>
-<pre><code>6
-1
-2
-3
-</code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">6</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+
+
 <p>第6行中，<code>std::apply</code>函数的第一个参数是一个Lambda匿名函数，函数的参数是一个可变参数<code>args</code>，函数体中只有一条语句<code>args + ...</code>，这个情况就是上面的第一种情况：这里的$E$就是<code>args</code>，$op$就是<code>+</code>，所以展开来就是$args_1 + args_2 + args_3$（因为参数的个数是3）。</p>
 <p>第9行中，Lambda匿名函数的函数体是<code>((std::cout &lt;&lt; args &lt;&lt; &#39;\n&#39;), ...)</code>这是一个逗号操作符，也属于上面四种情况中的第一种：这里的$E$就是<code>std::cout &lt;&lt; args &lt;&lt; &#39;\n&#39;)</code>，$op$就是<code>,</code>，所以这一行就打印输出了<code>tuple</code>的每一个元素。如果在C++17之前想要遍历<code>tuple</code>就比较麻烦，需要很多额外的操作。</p>
 <h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>

@@ -180,52 +180,14 @@
 <h2 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h2><p>采用动态规划进行解决，假设现在是第days[i]天，我们在该天出行旅游需要选择买票方案，现在我们有三种方案：第一，购买一天的通行票，当天出行，花费就是第days[i-1]天的花费加上一天的通行票价；第二，购买七天的通行票，而七天的通行票可以在连续的七天之内使用，所以花费是第days[i-7]天的花费加上七天的通行票价（即从第days[i-8]天到days[i]天的花费都包含在这七天的通行票中）；第三，购买三十天的通行票，同理，花费是days[i-30]天加上三十天的通行票价。然后我们在这三种方案中选择最实惠的。最后，在实现代码中注意数组越界的问题。</p>
 <p>使用dp[j]代表着我们旅行到i天为止需要的最少旅行价格，递推公式为：</p>
 <ol>
-<li>dp[j] = dp[j-1] （第j天不用旅行）</li>
-<li>dp[j] = min(dp[j-1] + costs[0], dp[j-7] + costs[1], dp[j-30] + costs[2]) （第j天需要旅行）</li>
+<li>dp[j] &#x3D; dp[j-1] （第j天不用旅行）</li>
+<li>dp[j] &#x3D; min(dp[j-1] + costs[0], dp[j-7] + costs[1], dp[j-30] + costs[2]) （第j天需要旅行）</li>
 </ol>
-<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><pre><code class="C++">class Solution &#123;
-public:
-    int mincostTickets(vector&lt;int&gt; &amp;days, vector&lt;int&gt; &amp;costs) &#123;
-        if (days.size() == 0) return 0;
-        assert(costs.size() == 3);
-        // dp[i]代表着我们旅行到i天需要的最少旅行价格, dp[0]为0，没实际含义
-        array&lt;int, 366&gt; dp = &#123;0&#125;;
-        for (int i = 1; i &lt; dp.size(); ++i) &#123;
-            // 如果这一天不旅行
-            if (find(days.begin(), days.end(), i) == days.end()) dp[i] = dp[i - 1];
-            else &#123;
-                dp[i] = min(&#123;
-                   dp[i - 1] + costs[0],
-                   dp[max(0, i - 7)] + costs[1],
-                   dp[max(0, i - 30)] + costs[2]
-                &#125;);
-            &#125;
-        &#125;
-        return dp[365];
-    &#125;
-&#125;;
-</code></pre>
+<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">mincostTickets</span><span class="params">(vector&lt;<span class="type">int</span>&gt; &amp;days, vector&lt;<span class="type">int</span>&gt; &amp;costs)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (days.<span class="built_in">size</span>() == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="built_in">assert</span>(costs.<span class="built_in">size</span>() == <span class="number">3</span>);</span><br><span class="line">        <span class="comment">// dp[i]代表着我们旅行到i天需要的最少旅行价格, dp[0]为0，没实际含义</span></span><br><span class="line">        array&lt;<span class="type">int</span>, 366&gt; dp = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt; dp.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            <span class="comment">// 如果这一天不旅行</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="built_in">find</span>(days.<span class="built_in">begin</span>(), days.<span class="built_in">end</span>(), i) == days.<span class="built_in">end</span>()) dp[i] = dp[i - <span class="number">1</span>];</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                dp[i] = <span class="built_in">min</span>(&#123;</span><br><span class="line">                   dp[i - <span class="number">1</span>] + costs[<span class="number">0</span>],</span><br><span class="line">                   dp[<span class="built_in">max</span>(<span class="number">0</span>, i - <span class="number">7</span>)] + costs[<span class="number">1</span>],</span><br><span class="line">                   dp[<span class="built_in">max</span>(<span class="number">0</span>, i - <span class="number">30</span>)] + costs[<span class="number">2</span>]</span><br><span class="line">                &#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">365</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 <h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><p>注：如果有童鞋有纯函数的实现，希望分享出来！共享！</p>
-<pre><code class="Scala">object Solution &#123;
-  def mincostTickets(days: Array[Int], costs: Array[Int]): Int = &#123;
-    if (days.length == 0) return 0
-    assert(costs.length == 3)
-    val travels = days.toSet
-    val dp = Array.fill[Int](366)(0)
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">mincostTickets</span></span>(days: <span class="type">Array</span>[<span class="type">Int</span>], costs: <span class="type">Array</span>[<span class="type">Int</span>]): <span class="type">Int</span> = &#123;</span><br><span class="line">    <span class="keyword">if</span> (days.length == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    assert(costs.length == <span class="number">3</span>)</span><br><span class="line">    <span class="keyword">val</span> travels = days.toSet</span><br><span class="line">    <span class="keyword">val</span> dp = <span class="type">Array</span>.fill[<span class="type">Int</span>](<span class="number">366</span>)(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">1</span> until <span class="number">366</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (!travels.contains(i)) dp(i) = dp(i - <span class="number">1</span>)</span><br><span class="line">      <span class="keyword">else</span> dp(i) = <span class="type">List</span>(</span><br><span class="line">        dp(i - <span class="number">1</span>) + costs(<span class="number">0</span>),</span><br><span class="line">        dp(math.max(<span class="number">0</span>, i - <span class="number">7</span>)) + costs(<span class="number">1</span>),</span><br><span class="line">        dp(math.max(<span class="number">0</span>, i - <span class="number">30</span>)) + costs(<span class="number">2</span>)</span><br><span class="line">      ).min</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    dp(<span class="number">365</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-    for (i &lt;- 1 until 366) &#123;
-      if (!travels.contains(i)) dp(i) = dp(i - 1)
-      else dp(i) = List(
-        dp(i - 1) + costs(0),
-        dp(math.max(0, i - 7)) + costs(1),
-        dp(math.max(0, i - 30)) + costs(2)
-      ).min
-    &#125;
-
-    dp(365)
-  &#125;
-&#125;
-</code></pre>
 
     </div>
 

@@ -167,7 +167,7 @@
 
     <div class="content">
         <h1 id="矢量数据投影转换"><a href="#矢量数据投影转换" class="headerlink" title="矢量数据投影转换"></a>矢量数据投影转换</h1><p>作者：阿振</p>
-<p>邮箱：<a href="mailto:&#x74;&#x61;&#x6e;&#122;&#x68;&#101;&#x6e;&#x79;&#x75;&#103;&#105;&#115;&#x40;&#49;&#54;&#51;&#x2e;&#99;&#111;&#109;">&#x74;&#x61;&#x6e;&#122;&#x68;&#101;&#x6e;&#x79;&#x75;&#103;&#105;&#115;&#x40;&#49;&#54;&#51;&#x2e;&#99;&#111;&#109;</a></p>
+<p>邮箱：<a href="mailto:&#116;&#97;&#110;&#x7a;&#104;&#101;&#110;&#x79;&#117;&#103;&#105;&#115;&#x40;&#x31;&#54;&#51;&#46;&#x63;&#111;&#109;">&#116;&#97;&#110;&#x7a;&#104;&#101;&#110;&#x79;&#117;&#103;&#105;&#115;&#x40;&#x31;&#54;&#51;&#46;&#x63;&#111;&#109;</a></p>
 <p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a></p>
 <p>修改时间：2018-06-03</p>
 <p>声明：本文为博主原创文章，转载请注明原文出处</p>
@@ -182,7 +182,7 @@
 <li><p>使用命令工具及其对应的命令行API接口进行转换（简单，准确，实践中一定要用这种方法）</p>
 <p>GDAL提供了<code>ogr2ogr</code>命令行工具进行矢量数据投影转换，命令如下：<code>ogr2ogr -t_srs &quot;+proj=aea +lat_1=25 +lat_2=47 +lat_0=30 +lon_0=105 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs &quot; China_Projected.shp China.shp</code></p>
 <p><code>-t_srs</code>选项制定输出数据投影，当然可以是ESPG，也可以是PROJ4或者OGC WKT格式的投影定义都OK</p>
-<p>GDAL对该命令的封装的C/C++函数是<code>GDALVectorTranslate()</code>,Python中是<code>gdal.VectorTranslate()</code></p>
+<p>GDAL对该命令的封装的C&#x2F;C++函数是<code>GDALVectorTranslate()</code>,Python中是<code>gdal.VectorTranslate()</code></p>
 </li>
 <li><p>使用GDAL提供的基本API进行实现</p>
 <p>如果要自己利用基本API函数实现的话，基本思路如下：</p>
@@ -197,88 +197,12 @@
 <h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><ol>
 <li>调用<code>gdal.VectorTranslate()</code>命令行工具的包装函数实现：</li>
 </ol>
-<pre><code class="python">from osgeo import gdal
-import os
-os.environ[&#39;SHAPE_ENCODING&#39;] = &quot;utf-8&quot;
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> gdal</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&#x27;SHAPE_ENCODING&#x27;</span>] = <span class="string">&quot;utf-8&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">src_file = <span class="string">&#x27;China.shp&#x27;</span></span><br><span class="line">dst_file = <span class="string">&#x27;China_Reprojected.shp&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用命令行API转换</span></span><br><span class="line"><span class="comment"># 输出数据投影定义，参考资料：http://spatialreference.org/ref/sr-org/8657</span></span><br><span class="line">srs_def = <span class="string">&quot;&quot;&quot;+proj=aea +lat_1=25 +lat_2=47 +lat_0=30 +lon_0=105 +x_0=0 +y_0=0 </span></span><br><span class="line"><span class="string">+ellps=WGS84 +datum=WGS84 +units=m +no_defs &quot;&quot;&quot;</span></span><br><span class="line">gdal.VectorTranslate(dst_file, src_file, dstSRS=srs_def, reproject=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line">src_ds = ogr.Open(src_file)</span><br><span class="line">src_layer = src_ds.GetLayer(<span class="number">0</span>)</span><br><span class="line">src_srs = src_layer.GetSpatialRef()  <span class="comment"># 输入数据投影</span></span><br></pre></td></tr></table></figure>
 
-
-src_file = &#39;China.shp&#39;
-dst_file = &#39;China_Reprojected.shp&#39;
-
-# 使用命令行API转换
-# 输出数据投影定义，参考资料：http://spatialreference.org/ref/sr-org/8657
-srs_def = &quot;&quot;&quot;+proj=aea +lat_1=25 +lat_2=47 +lat_0=30 +lon_0=105 +x_0=0 +y_0=0 
-+ellps=WGS84 +datum=WGS84 +units=m +no_defs &quot;&quot;&quot;
-gdal.VectorTranslate(dst_file, src_file, dstSRS=srs_def, reproject=True)
-
-src_ds = ogr.Open(src_file)
-src_layer = src_ds.GetLayer(0)
-src_srs = src_layer.GetSpatialRef()  # 输入数据投影
-</code></pre>
 <ol>
 <li>调用基本API函数实现</li>
 </ol>
-<pre><code class="python">from osgeo import ogr
-from osgeo import osr
-import os
-os.environ[&#39;SHAPE_ENCODING&#39;] = &quot;utf-8&quot;
-
-
-src_file = &#39;China.shp&#39;
-dst_file = &#39;China_Reprojected.shp&#39;
-
-src_ds = ogr.Open(src_file)
-src_layer = src_ds.GetLayer(0)
-src_srs = src_layer.GetSpatialRef()  # 输入数据投影
-
-# 输出数据投影定义，参考资料：http://spatialreference.org/ref/sr-org/8657
-srs_def = &quot;&quot;&quot;+proj=aea +lat_1=25 +lat_2=47 +lat_0=30 +lon_0=105 +x_0=0 +y_0=0 
-+ellps=WGS84 +datum=WGS84 +units=m +no_defs &quot;&quot;&quot;
-dst_srs = osr.SpatialReference()
-dst_srs.ImportFromProj4(srs_def)
-
-# 创建转换对象
-ctx = osr.CoordinateTransformation(src_srs, dst_srs)
-
-# 创建输出文件
-driver = ogr.GetDriverByName(&#39;ESRI Shapefile&#39;)
-dst_ds = driver.CreateDataSource(dst_file)
-dst_layer = dst_ds.CreateLayer(&#39;province&#39;, dst_srs, ogr.wkbPolygon)
-
-# 给输出文件图层添加属性定义
-layer_def = src_layer.GetLayerDefn()
-for i in range(layer_def.GetFieldCount()):
-    field_def = layer_def.GetFieldDefn(i)
-    dst_layer.CreateField(field_def)
-
-# 循环遍历源Shapefile中的几何体添加到目标文件中
-src_feature = src_layer.GetNextFeature()
-while src_feature:
-    geometry = src_feature.GetGeometryRef()
-    geometry.Transform(ctx)
-    dst_feature = ogr.Feature(layer_def)
-    dst_feature.SetGeometry(geometry)  # 设置Geometry
-    # 依次设置属性值
-    for i in range(layer_def.GetFieldCount()):
-        field_def = layer_def.GetFieldDefn(i)
-        field_name = field_def.GetName()
-        dst_feature.SetField(field_name, src_feature.GetField(field_name))
-    dst_layer.CreateFeature(dst_feature)
-    dst_feature = None
-    src_feature = None
-    src_feature = src_layer.GetNextFeature()
-dst_ds.FlushCache()
-
-del src_ds
-del dst_ds
-
-# 创建Shapefile的prj投影文件
-dst_srs.MorphToESRI()
-(dst_path, dst_name) = os.path.split(dst_file)
-with open(dst_path + os.pathsep + dst_name + &#39;.prj&#39;, &#39;w&#39;) as f:
-    f.write(dst_srs.ExportToWkt())
-</code></pre>
-
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> ogr</span><br><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> osr</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line">os.environ[<span class="string">&#x27;SHAPE_ENCODING&#x27;</span>] = <span class="string">&quot;utf-8&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">src_file = <span class="string">&#x27;China.shp&#x27;</span></span><br><span class="line">dst_file = <span class="string">&#x27;China_Reprojected.shp&#x27;</span></span><br><span class="line"></span><br><span class="line">src_ds = ogr.Open(src_file)</span><br><span class="line">src_layer = src_ds.GetLayer(<span class="number">0</span>)</span><br><span class="line">src_srs = src_layer.GetSpatialRef()  <span class="comment"># 输入数据投影</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出数据投影定义，参考资料：http://spatialreference.org/ref/sr-org/8657</span></span><br><span class="line">srs_def = <span class="string">&quot;&quot;&quot;+proj=aea +lat_1=25 +lat_2=47 +lat_0=30 +lon_0=105 +x_0=0 +y_0=0 </span></span><br><span class="line"><span class="string">+ellps=WGS84 +datum=WGS84 +units=m +no_defs &quot;&quot;&quot;</span></span><br><span class="line">dst_srs = osr.SpatialReference()</span><br><span class="line">dst_srs.ImportFromProj4(srs_def)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建转换对象</span></span><br><span class="line">ctx = osr.CoordinateTransformation(src_srs, dst_srs)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建输出文件</span></span><br><span class="line">driver = ogr.GetDriverByName(<span class="string">&#x27;ESRI Shapefile&#x27;</span>)</span><br><span class="line">dst_ds = driver.CreateDataSource(dst_file)</span><br><span class="line">dst_layer = dst_ds.CreateLayer(<span class="string">&#x27;province&#x27;</span>, dst_srs, ogr.wkbPolygon)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 给输出文件图层添加属性定义</span></span><br><span class="line">layer_def = src_layer.GetLayerDefn()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(layer_def.GetFieldCount()):</span><br><span class="line">    field_def = layer_def.GetFieldDefn(i)</span><br><span class="line">    dst_layer.CreateField(field_def)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 循环遍历源Shapefile中的几何体添加到目标文件中</span></span><br><span class="line">src_feature = src_layer.GetNextFeature()</span><br><span class="line"><span class="keyword">while</span> src_feature:</span><br><span class="line">    geometry = src_feature.GetGeometryRef()</span><br><span class="line">    geometry.Transform(ctx)</span><br><span class="line">    dst_feature = ogr.Feature(layer_def)</span><br><span class="line">    dst_feature.SetGeometry(geometry)  <span class="comment"># 设置Geometry</span></span><br><span class="line">    <span class="comment"># 依次设置属性值</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(layer_def.GetFieldCount()):</span><br><span class="line">        field_def = layer_def.GetFieldDefn(i)</span><br><span class="line">        field_name = field_def.GetName()</span><br><span class="line">        dst_feature.SetField(field_name, src_feature.GetField(field_name))</span><br><span class="line">    dst_layer.CreateFeature(dst_feature)</span><br><span class="line">    dst_feature = <span class="literal">None</span></span><br><span class="line">    src_feature = <span class="literal">None</span></span><br><span class="line">    src_feature = src_layer.GetNextFeature()</span><br><span class="line">dst_ds.FlushCache()</span><br><span class="line"></span><br><span class="line"><span class="keyword">del</span> src_ds</span><br><span class="line"><span class="keyword">del</span> dst_ds</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建Shapefile的prj投影文件</span></span><br><span class="line">dst_srs.MorphToESRI()</span><br><span class="line">(dst_path, dst_name) = os.path.split(dst_file)</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(dst_path + os.pathsep + dst_name + <span class="string">&#x27;.prj&#x27;</span>, <span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    f.write(dst_srs.ExportToWkt())</span><br></pre></td></tr></table></figure>
     </div>
 
     <!-- 

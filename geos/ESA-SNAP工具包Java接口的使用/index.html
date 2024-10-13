@@ -177,38 +177,13 @@
 <p>但是我使用官方提供的安装包安装好以后，Python接口用不了，所以我想着还不如就用原生的Java接口。</p>
 <p>首先，从<a target="_blank" rel="noopener" href="https://github.com/senbox-org">GitHub</a>下载SNAP的源码进行编译，主要下载了<a target="_blank" rel="noopener" href="https://github.com/senbox-org/snap-engine">snap-engine</a>，<a target="_blank" rel="noopener" href="https://github.com/senbox-org/snap-desktop">snap-desktop</a>，<a target="_blank" rel="noopener" href="https://github.com/senbox-org/s1tbx">s1tbx</a>和<a target="_blank" rel="noopener" href="https://github.com/senbox-org/s2tbx">s2tbx</a>这四个工程，依次进行编译（最新版本为8.0.0-SNAPSHOT）。</p>
 <p>例如对snap-engine的编译命令如下：</p>
-<pre><code class="Shell">cd snap
-git clone https://github.com/senbox-org/snap-engine.git
-cd snap-engine
-mvn clean install -DskipTests=true
-</code></pre>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd snap</span><br><span class="line">git clone https://github.com/senbox-org/snap-engine.git</span><br><span class="line">cd snap-engine</span><br><span class="line">mvn clean install -DskipTests=true</span><br></pre></td></tr></table></figure>
+
 <p>编译中主要问题是一些第三方库下载特别慢或者根本下载不下来，这时候你需要科学上网手动下载需要的依赖包，再次进行编译。</p>
 <p>编译完这四个包以后，我们新建Maven工程进行代码测试。下面代码使用Better Java （Kotlin）进行示范，我把注释加进了代码中方便理解。</p>
-<pre><code>package cn.demo
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths</span><br><span class="line"><span class="keyword">import</span> org.esa.snap.core.dataio.ProductIO</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> path = Paths.<span class="keyword">get</span>(<span class="string">&quot;S2B_MSIL1C_20200304T032629_N0209_R018_T48SYC_20200304T075000.zip&quot;</span>)</span><br><span class="line">    <span class="comment">// 通过文件获得读取数据的Reader</span></span><br><span class="line">    <span class="keyword">val</span> reader = ProductIO.getProductReaderForInput(path.toFile())</span><br><span class="line">    <span class="comment">// 通过这个Reader对象来读取Sentinel数据产品Product</span></span><br><span class="line">    <span class="keyword">val</span> product = reader.readProductNodes(path.toFile(), <span class="literal">null</span>)</span><br><span class="line">    <span class="comment">// 通过这个Product对象来读取波段中存储的数据</span></span><br><span class="line">    <span class="keyword">val</span> band = product.getBand(<span class="string">&quot;B1&quot;</span>)</span><br><span class="line">    <span class="comment">// 数据不是自动加载的，需要手动加载一下</span></span><br><span class="line">    <span class="keyword">if</span> (!band.hasRasterData()) &#123;</span><br><span class="line">        band.loadRasterData()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 获取波段数据，数据是以一维数组的形式存储的，主要使用PixelInterleavedSampleModel这类进行控制像素交替方式存储</span></span><br><span class="line">    <span class="comment">// 有兴趣的可以参考java.awt.image.PixelInterleavedSampleModel</span></span><br><span class="line">    <span class="keyword">val</span> <span class="keyword">data</span> = band.rasterData</span><br><span class="line">    assert(band.rasterHeight * band.rasterWidth == <span class="keyword">data</span>.numElems)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-import java.nio.file.Paths
-import org.esa.snap.core.dataio.ProductIO
-
-
-fun main(args: Array&lt;String&gt;) &#123;
-    val path = Paths.get(&quot;S2B_MSIL1C_20200304T032629_N0209_R018_T48SYC_20200304T075000.zip&quot;)
-    // 通过文件获得读取数据的Reader
-    val reader = ProductIO.getProductReaderForInput(path.toFile())
-    // 通过这个Reader对象来读取Sentinel数据产品Product
-    val product = reader.readProductNodes(path.toFile(), null)
-    // 通过这个Product对象来读取波段中存储的数据
-    val band = product.getBand(&quot;B1&quot;)
-    // 数据不是自动加载的，需要手动加载一下
-    if (!band.hasRasterData()) &#123;
-        band.loadRasterData()
-    &#125;
-    // 获取波段数据，数据是以一维数组的形式存储的，主要使用PixelInterleavedSampleModel这类进行控制像素交替方式存储
-    // 有兴趣的可以参考java.awt.image.PixelInterleavedSampleModel
-    val data = band.rasterData
-    assert(band.rasterHeight * band.rasterWidth == data.numElems)
-&#125;
-</code></pre>
-<p>代码运行过程中，提示找不到OpenJPEG的库（Sentinel-2 SAFE格式的文件中是以JPG图像格式保存各个波段的观测数据的），最后我通过代码调试发现，SNAP中对OpenJPEG库的路径定义在<code>~/.snap/auxdata/openjpeg/8.0.0-SNAPSHOT/</code>目录下，而我的本地没有该目录（虽然<code>/usr/local/bin</code>    目录中有OpenJPEG库，但是SNAP不是在这个目录中寻找的），所以程序会报错。</p>
+<p>代码运行过程中，提示找不到OpenJPEG的库（Sentinel-2 SAFE格式的文件中是以JPG图像格式保存各个波段的观测数据的），最后我通过代码调试发现，SNAP中对OpenJPEG库的路径定义在<code>~/.snap/auxdata/openjpeg/8.0.0-SNAPSHOT/</code>目录下，而我的本地没有该目录（虽然<code>/usr/local/bin</code>	目录中有OpenJPEG库，但是SNAP不是在这个目录中寻找的），所以程序会报错。</p>
 <p>解决的方案是我由于本来安装的SNAP桌面版（7.0.0），该版本在<code>~/.snap/auxdata/openjpeg/7.0.0/</code>目录下存放了OpenJPEG库，所以拷贝该版本的库修改名称为<code>8.0.0-SNAPSHOT</code>即可，程序正常运行。</p>
 <p>总得来说，SNAP提供的参考资料不多，有问题只能取Forum中提问。所以我觉得还是使用GDAL读取Sentinel数据，然后再进行进一步操作方便些。</p>
 

@@ -168,13 +168,11 @@
     <div class="content">
         <h1 id="338-Counting-Bits"><a href="#338-Counting-Bits" class="headerlink" title="338. Counting Bits"></a>338. Counting Bits</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>Given a non negative integer number <strong>num</strong>. For every numbers <strong>i</strong> in the range <strong>0 ≤ i ≤ num</strong> calculate the number of 1’s in their binary representation and return them as an array.</p>
 <p><strong>Example 1:</strong></p>
-<pre><code>Input: 2
-Output: [0,1,1]
-</code></pre>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Input</span>: <span class="number">2</span></span><br><span class="line"><span class="attribute">Output</span>:<span class="meta"> [0,1,1]</span></span><br></pre></td></tr></table></figure>
+
 <p><strong>Example 2:</strong></p>
-<pre><code>Input: 5
-Output: [0,1,1,2,1,2]
-</code></pre>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Input</span>: <span class="number">5</span></span><br><span class="line"><span class="attribute">Output</span>:<span class="meta"> [0,1,1,2,1,2]</span></span><br></pre></td></tr></table></figure>
+
 <p><strong>Follow up:</strong></p>
 <ul>
 <li>It is very easy to come up with a solution with run time <strong>O(n*sizeof(integer))</strong>. But can you do it in linear time <strong>O(n)</strong> possibly in a single pass?</li>
@@ -241,73 +239,47 @@ Output: [0,1,1,2,1,2]
 </tr>
 </tbody></table>
 <p>如果用动态规划思路求解的话，我们有如下规律：</p>
-<p>dp[0] = 0;</p>
-<p>dp[1] = dp[0] + 1;</p>
-<p>dp[2] = dp[0] + 1;</p>
-<p>dp[3] = dp[1] +1;</p>
-<p>dp[4] = dp[0] + 1;</p>
-<p>dp[5] = dp[1] + 1;</p>
-<p>dp[6] = dp[2] + 1;</p>
-<p>dp[7] = dp[3] + 1;</p>
-<p>dp[8] = dp[0] + 1;</p>
-<p>dp[9] = dp[1] + 1;</p>
+<p>dp[0] &#x3D; 0;</p>
+<p>dp[1] &#x3D; dp[0] + 1;</p>
+<p>dp[2] &#x3D; dp[0] + 1;</p>
+<p>dp[3] &#x3D; dp[1] +1;</p>
+<p>dp[4] &#x3D; dp[0] + 1;</p>
+<p>dp[5] &#x3D; dp[1] + 1;</p>
+<p>dp[6] &#x3D; dp[2] + 1;</p>
+<p>dp[7] &#x3D; dp[3] + 1;</p>
+<p>dp[8] &#x3D; dp[0] + 1;</p>
+<p>dp[9] &#x3D; dp[1] + 1;</p>
 <p>…</p>
 <p>进一步一般化这个规律：</p>
-<p>dp[0] = 0;</p>
-<p>dp[1] = dp[1-1] + 1;</p>
-<p>dp[2] = dp[2-2] + 1;</p>
-<p>dp[3] = dp[3-2] +1;</p>
-<p>dp[4] = dp[4-4] + 1;</p>
-<p>dp[5] = dp[5-4] + 1;</p>
-<p>dp[6] = dp[6-4] + 1;</p>
-<p>dp[7] = dp[7-4] + 1;</p>
-<p>dp[8] = dp[8-8] + 1;</p>
-<p>dp[9] = dp[9-8] + 1;</p>
+<p>dp[0] &#x3D; 0;</p>
+<p>dp[1] &#x3D; dp[1-1] + 1;</p>
+<p>dp[2] &#x3D; dp[2-2] + 1;</p>
+<p>dp[3] &#x3D; dp[3-2] +1;</p>
+<p>dp[4] &#x3D; dp[4-4] + 1;</p>
+<p>dp[5] &#x3D; dp[5-4] + 1;</p>
+<p>dp[6] &#x3D; dp[6-4] + 1;</p>
+<p>dp[7] &#x3D; dp[7-4] + 1;</p>
+<p>dp[8] &#x3D; dp[8-8] + 1;</p>
+<p>dp[9] &#x3D; dp[9-8] + 1;</p>
 <p>…</p>
 <p>所以使用动态规划解决的思路如下：</p>
-<p>dp[0] = 0 </p>
-<p>dp[index] = dp[index - offset] + 1</p>
+<p>dp[0] &#x3D; 0 </p>
+<p>dp[index] &#x3D; dp[index - offset] + 1</p>
 <p>这个offset是2的倍数</p>
 <h3 id="思路二"><a href="#思路二" class="headerlink" title="思路二"></a>思路二</h3><p>第二个思路比较奇妙，有这样一个规律：对于一个整数i, i&amp;(i-1)这个操作会去掉以二进制表示的i的最后一个1</p>
-<p>比如：10=1010，11=1011，则11&amp;10=1010；13=1101，14=1110，则14&amp;13=1100</p>
+<p>比如：10&#x3D;1010，11&#x3D;1011，则11&amp;10&#x3D;1010；13&#x3D;1101，14&#x3D;1110，则14&amp;13&#x3D;1100</p>
 <p>这样的话，使用动态规划进行解决的思路如下：</p>
-<p>dp[0] = 1</p>
-<p>dp[i] = dp[i &amp; (i-1)] + 1</p>
+<p>dp[0] &#x3D; 1</p>
+<p>dp[i] &#x3D; dp[i &amp; (i-1)] + 1</p>
 <p>i&amp;{i-1}去掉了一个1，我们再给加上，则可以得到i中包含的1的总个数</p>
-<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><h3 id="思路一-1"><a href="#思路一-1" class="headerlink" title="思路一"></a>思路一</h3><pre><code class="C++">class Solution &#123;
-public:
-    vector&lt;int&gt; countBits(int num) &#123;
-        vector&lt;int&gt; bits(num + 1, 0);
-        int offset = 1;
-        for (int i = 1; i &lt;= num; ++i) &#123;
-            offset = i == offset * 2 ?  i : offset;
-            bits[i] = bits[i - offset] +  1;
-        &#125;
-        return bits;
-    &#125;
-&#125;;
-</code></pre>
-<h3 id="思路二-1"><a href="#思路二-1" class="headerlink" title="思路二"></a>思路二</h3><pre><code class="C++">class Solution &#123;
-public:
-    vector&lt;int&gt; countBits(int num) &#123;
-        vector&lt;int&gt; bits(num + 1, 0);
-        for (int i = 1; i &lt;= num; ++i) &#123;
-            bits[i] = bits[i &amp; (i - 1)] + 1;
-        &#125;
-        return bits;
-    &#125;
-&#125;;
-</code></pre>
-<h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><pre><code class="Scala">object CountingBits &#123;
-  def countBits(num: Int): Array[Int] = &#123;
-    val bits = Array.ofDim[Int](num + 1)
-    for (i &lt;- 1 to num) &#123;
-      bits(i) = bits(i &amp; (i - 1)) + 1
-    &#125;
-    bits
-  &#125;
-&#125;
-</code></pre>
+<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><h3 id="思路一-1"><a href="#思路一-1" class="headerlink" title="思路一"></a>思路一</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">countBits</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">bits</span><span class="params">(num + <span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="type">int</span> offset = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= num; ++i) &#123;</span><br><span class="line">            offset = i == offset * <span class="number">2</span> ?  i : offset;</span><br><span class="line">            bits[i] = bits[i - offset] +  <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> bits;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="思路二-1"><a href="#思路二-1" class="headerlink" title="思路二"></a>思路二</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">countBits</span><span class="params">(<span class="type">int</span> num)</span> </span>&#123;</span><br><span class="line">        <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">bits</span><span class="params">(num + <span class="number">1</span>, <span class="number">0</span>)</span></span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= num; ++i) &#123;</span><br><span class="line">            bits[i] = bits[i &amp; (i - <span class="number">1</span>)] + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> bits;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">CountingBits</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">countBits</span></span>(num: <span class="type">Int</span>): <span class="type">Array</span>[<span class="type">Int</span>] = &#123;</span><br><span class="line">    <span class="keyword">val</span> bits = <span class="type">Array</span>.ofDim[<span class="type">Int</span>](num + <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">1</span> to num) &#123;</span><br><span class="line">      bits(i) = bits(i &amp; (i - <span class="number">1</span>)) + <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">    bits</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>注意：使用Scala版本在LeetCode提交会报Time Limit Exceeded错误，而使用Java相同的代码就不会。我觉得是Scala中使用Java原生数组实现的，而且还有装箱拆箱的操作，所以效率比较低，就导致了超时了。</p>
 
     </div>

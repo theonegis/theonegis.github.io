@@ -178,36 +178,8 @@
 <h1 id="案例介绍"><a href="#案例介绍" class="headerlink" title="案例介绍"></a>案例介绍</h1><p>本文我们将使用缓冲区分析工具Buffer制作中国地图的晕线。中国地图边界的晕线就是我们经常看到的国界外面的突出色浅色部分。</p>
 <p>那么我们如何制作晕线呢？一个解决方案是我们给国界做一个缓冲区，然后将缓冲区图层放置在边界图层的上面就可以形成这样的效果。</p>
 <h1 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h1><p>下面的代码展示了如何制作面状地物的缓冲区。</p>
-<pre><code class="Python">from pathlib import Path
-import ogr
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="keyword">import</span> ogr</span><br><span class="line"></span><br><span class="line">ogr.UseExceptions()</span><br><span class="line"></span><br><span class="line">in_ds: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/China.shp&#x27;</span>)</span><br><span class="line">in_lyr: ogr.Layer = in_ds.GetLayer()</span><br><span class="line"></span><br><span class="line">fname: <span class="built_in">str</span> = <span class="string">&#x27;Buffer.shp&#x27;</span></span><br><span class="line"><span class="comment"># 创建输出Buffer文件</span></span><br><span class="line">driver: ogr.Driver = ogr.GetDriverByName(<span class="string">&#x27;ESRI Shapefile&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> Path(fname).exists():</span><br><span class="line">    driver.DeleteDataSource(fname)</span><br><span class="line"><span class="comment"># 新建DataSource，Layer</span></span><br><span class="line">out_ds: ogr.DataSource = driver.CreateDataSource(fname)</span><br><span class="line">out_lyr: ogr.Layer = out_ds.CreateLayer(fname,</span><br><span class="line">                                        in_lyr.GetSpatialRef(), ogr.wkbPolygon)</span><br><span class="line">def_feature: ogr.FeatureDefn = out_lyr.GetLayerDefn()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 遍历原始的Shapefile文件给每个Geometry做Buffer操作</span></span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> in_lyr:</span><br><span class="line">    geometry = feature.GetGeometryRef()</span><br><span class="line">    buffer = geometry.Buffer(<span class="number">20000.0</span>)</span><br><span class="line">    out_feature = ogr.Feature(def_feature)</span><br><span class="line">    out_feature.SetGeometry(buffer)</span><br><span class="line">    out_lyr.CreateFeature(out_feature)</span><br><span class="line">    out_feature = <span class="literal">None</span></span><br><span class="line">out_ds.FlushCache()</span><br><span class="line"><span class="keyword">del</span> in_ds, out_ds</span><br></pre></td></tr></table></figure>
 
-ogr.UseExceptions()
-
-in_ds: ogr.DataSource = ogr.Open(&#39;../data/China.shp&#39;)
-in_lyr: ogr.Layer = in_ds.GetLayer()
-
-fname: str = &#39;Buffer.shp&#39;
-# 创建输出Buffer文件
-driver: ogr.Driver = ogr.GetDriverByName(&#39;ESRI Shapefile&#39;)
-if Path(fname).exists():
-    driver.DeleteDataSource(fname)
-# 新建DataSource，Layer
-out_ds: ogr.DataSource = driver.CreateDataSource(fname)
-out_lyr: ogr.Layer = out_ds.CreateLayer(fname,
-                                        in_lyr.GetSpatialRef(), ogr.wkbPolygon)
-def_feature: ogr.FeatureDefn = out_lyr.GetLayerDefn()
-
-# 遍历原始的Shapefile文件给每个Geometry做Buffer操作
-for feature in in_lyr:
-    geometry = feature.GetGeometryRef()
-    buffer = geometry.Buffer(20000.0)
-    out_feature = ogr.Feature(def_feature)
-    out_feature.SetGeometry(buffer)
-    out_lyr.CreateFeature(out_feature)
-    out_feature = None
-out_ds.FlushCache()
-del in_ds, out_ds
-</code></pre>
 <p>结果展示（紫色部分就是我们的缓冲区）：</p>
 <p><img src="/images/geos/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-06-14%E4%B8%8B%E5%8D%8810.07.31.png" alt="缓冲区分析"></p>
 <h1 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h1><ol>

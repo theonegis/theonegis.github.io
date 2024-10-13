@@ -168,16 +168,15 @@
     <div class="content">
         <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
 <p>作者：阿振</p>
-<p>写作时间：</p>
+<p>写作时间：2021年12月8日晚</p>
 <hr>
 <h1 id="R包安装过程中开启C-11支持"><a href="#R包安装过程中开启C-11支持" class="headerlink" title="R包安装过程中开启C++11支持"></a>R包安装过程中开启C++11支持</h1><p>自打工作以后，就很少有闲余时间写写博客，分享自己学习的点点滴滴了。也许这就是上学和工作的区别吧。</p>
-<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>打算利用R读取ASD光谱文件，需要安装<code>prospectr</code>包，使用常规命令<code>install.packages(&quot;prospectr&quot;)</code>死活安装不上，提示需要编译器支持C++11。</p>
+<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>打算利用R读取ASD光谱文件，需要安装 <code>prospectr</code>包，使用常规命令 <code>install.packages(&quot;prospectr&quot;)</code>死活安装不上，提示需要编译器支持C++11。</p>
 <p>报错信息如下：<br>“*** C++11 compiler required; enable C++11 mode in your compiler, or use an earlier version of Armadillo”</p>
 <p>可是我的编译器是支持C++11的呀，这就是如何开启支持的问题了，经过千方百计搜索，得到了如下圆满的解决方案。</p>
-<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><p>使用R的<code>withr</code>包设置编译环境：</p>
-<pre><code>library(withr)
-with_makevars(c(PKG_CFLAGS = &quot;-std=c++11&quot;), install.packages(&quot;prospectr&quot;), assignment = &quot;+=&quot;)
-</code></pre>
+<h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><p>使用R的 <code>withr</code>包设置编译环境：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">library</span><span class="params">(withr)</span></span></span><br><span class="line"><span class="function"><span class="title">with_makevars</span><span class="params">(c(PKG_CFLAGS = <span class="string">&quot;-std=c++11&quot;</span>)</span></span>, install<span class="selector-class">.packages</span>(<span class="string">&quot;prospectr&quot;</span>), assignment = <span class="string">&quot;+=&quot;</span>)</span><br></pre></td></tr></table></figure>
+
 <p>其中，<code>PKG_CFLAGS</code>指示了编译器的附加参数。</p>
 
     </div>

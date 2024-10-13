@@ -175,87 +175,8 @@
 <li>本文中的模型使用了卷积层和线性连接层。Linear层的输入大小为（<code>*</code>，<code>num_input_feature</code>），所以在卷积层输出流入线性层的时候，需要转化一下张量的尺寸大小</li>
 <li>综合使用<code>MaxPooling</code>层和<code>Dropout</code>层可以提高识别准确率</li>
 </ul>
-<h2 id="PyTorch实现"><a href="#PyTorch实现" class="headerlink" title="PyTorch实现"></a>PyTorch实现</h2><pre><code class="Python">import torch
-from torch import nn
-import torchvision.datasets as datasets
-import torchvision.transforms as transforms
+<h2 id="PyTorch实现"><a href="#PyTorch实现" class="headerlink" title="PyTorch实现"></a>PyTorch实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">import</span> torchvision.datasets <span class="keyword">as</span> datasets</span><br><span class="line"><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">2019</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 超参设置</span></span><br><span class="line">EPOCH = <span class="number">1</span>  <span class="comment"># 训练EPOCH次，这里为了测试方便只跑一次</span></span><br><span class="line">BATCH_SIZE = <span class="number">32</span></span><br><span class="line">INIT_LR = <span class="number">1e-3</span>  <span class="comment"># 初始学习率</span></span><br><span class="line">DOWNLOAD_MNIST = <span class="literal">True</span>  <span class="comment"># 设置是否需要下载数据集</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用DataLoader加载训练数据，为了演示方便，对于测试数据只取出2000个样本进行测试</span></span><br><span class="line">train_data = datasets.MNIST(root=<span class="string">&#x27;mnist&#x27;</span>, train=<span class="literal">True</span>, transform=transforms.ToTensor(), download=DOWNLOAD_MNIST)</span><br><span class="line">train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=<span class="literal">True</span>)</span><br><span class="line">test_data = datasets.MNIST(root=<span class="string">&#x27;mnist&#x27;</span>, train=<span class="literal">False</span>)</span><br><span class="line">test_x = test_data.test_data.<span class="built_in">type</span>(torch.FloatTensor)[:<span class="number">2000</span>] / <span class="number">255.</span></span><br><span class="line">test_x.unsqueeze_(<span class="number">1</span>)  <span class="comment"># 调整test_x的尺寸为四维，添加了一个channel维度</span></span><br><span class="line">test_y = test_data.test_labels.numpy()[:<span class="number">2000</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ConvNet</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(ConvNet, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.conv = nn.Sequential(</span><br><span class="line">            nn.Conv2d(<span class="number">1</span>, <span class="number">32</span>, <span class="number">5</span>),  <span class="comment"># 图像输出大小为24*24</span></span><br><span class="line">            nn.MaxPool2d(<span class="number">2</span>),  <span class="comment"># 图像输出大小为12*12</span></span><br><span class="line">            nn.ReLU(<span class="literal">True</span>),</span><br><span class="line">            nn.Conv2d(<span class="number">32</span>, <span class="number">64</span>, <span class="number">5</span>),  <span class="comment"># 图像输出大小为8*8</span></span><br><span class="line">            nn.Dropout2d(),</span><br><span class="line">            nn.MaxPool2d(<span class="number">2</span>),  <span class="comment"># 图像输出大小为4*4</span></span><br><span class="line">            nn.ReLU(<span class="literal">True</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">self</span>.linear = nn.Sequential(</span><br><span class="line">            nn.Linear(<span class="number">4</span> * <span class="number">4</span> * <span class="number">64</span>, <span class="number">128</span>),</span><br><span class="line">            nn.ReLU(<span class="literal">True</span>),</span><br><span class="line">            nn.Dropout2d(),</span><br><span class="line">            nn.Linear(<span class="number">128</span>, <span class="number">10</span>),</span><br><span class="line">            nn.Softmax(<span class="number">1</span>)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        x = <span class="variable language_">self</span>.conv(x)</span><br><span class="line">        x = x.view(-<span class="number">1</span>, <span class="number">4</span> * <span class="number">4</span> * <span class="number">64</span>)</span><br><span class="line">        out = <span class="variable language_">self</span>.linear(x)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">model = ConvNet()</span><br><span class="line"><span class="built_in">print</span>(model)</span><br><span class="line"></span><br><span class="line">optimizer = torch.optim.Adam(model.parameters(), lr=INIT_LR)</span><br><span class="line">loss_func = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line"><span class="comment"># RNN训练</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(EPOCH):</span><br><span class="line">    <span class="keyword">for</span> index, (b_x, b_y) <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_loader):</span><br><span class="line">        model.train()</span><br><span class="line">        <span class="comment"># 输入尺寸为(batch_size, channels, height, width)</span></span><br><span class="line">        output = model(b_x)  <span class="comment"># (64, 1, 28, 28)</span></span><br><span class="line">        loss = loss_func(output, b_y)</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> index % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">            model.<span class="built_in">eval</span>()</span><br><span class="line">            prediction = model(test_x)  <span class="comment"># 输出为(2000, 10)</span></span><br><span class="line">            pred_y = torch.<span class="built_in">max</span>(prediction, <span class="number">1</span>)[<span class="number">1</span>].data.numpy()</span><br><span class="line">            accuracy = (pred_y == test_y).<span class="built_in">sum</span>() / <span class="built_in">float</span>(test_y.size)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;Epoch: [<span class="subst">&#123;index&#125;</span>/<span class="subst">&#123;epoch&#125;</span>]&#x27;</span>, <span class="string">f&#x27;| train loss: <span class="subst">&#123;loss.item()&#125;</span>&#x27;</span>, <span class="string">f&#x27;| test accuracy: <span class="subst">&#123;accuracy&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印测试数据集中的后20个结果</span></span><br><span class="line">model.<span class="built_in">eval</span>()</span><br><span class="line">prediction = model(test_x[:<span class="number">20</span>])</span><br><span class="line">pred_y = torch.<span class="built_in">max</span>(prediction, <span class="number">1</span>)[<span class="number">1</span>].data.numpy()</span><br><span class="line"><span class="built_in">print</span>(pred_y, <span class="string">&#x27;prediction number&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(test_y[:<span class="number">20</span>], <span class="string">&#x27;real number&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-torch.manual_seed(2019)
-
-# 超参设置
-EPOCH = 1  # 训练EPOCH次，这里为了测试方便只跑一次
-BATCH_SIZE = 32
-INIT_LR = 1e-3  # 初始学习率
-DOWNLOAD_MNIST = True  # 设置是否需要下载数据集
-
-# 使用DataLoader加载训练数据，为了演示方便，对于测试数据只取出2000个样本进行测试
-train_data = datasets.MNIST(root=&#39;mnist&#39;, train=True, transform=transforms.ToTensor(), download=DOWNLOAD_MNIST)
-train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True)
-test_data = datasets.MNIST(root=&#39;mnist&#39;, train=False)
-test_x = test_data.test_data.type(torch.FloatTensor)[:2000] / 255.
-test_x.unsqueeze_(1)  # 调整test_x的尺寸为四维，添加了一个channel维度
-test_y = test_data.test_labels.numpy()[:2000]
-
-
-class ConvNet(nn.Module):
-    def __init__(self):
-        super(ConvNet, self).__init__()
-        self.conv = nn.Sequential(
-            nn.Conv2d(1, 32, 5),  # 图像输出大小为24*24
-            nn.MaxPool2d(2),  # 图像输出大小为12*12
-            nn.ReLU(True),
-            nn.Conv2d(32, 64, 5),  # 图像输出大小为8*8
-            nn.Dropout2d(),
-            nn.MaxPool2d(2),  # 图像输出大小为4*4
-            nn.ReLU(True)
-        )
-
-        self.linear = nn.Sequential(
-            nn.Linear(4 * 4 * 64, 128),
-            nn.ReLU(True),
-            nn.Dropout2d(),
-            nn.Linear(128, 10),
-            nn.Softmax(1)
-        )
-
-    def forward(self, x):
-        x = self.conv(x)
-        x = x.view(-1, 4 * 4 * 64)
-        out = self.linear(x)
-        return out
-
-
-model = ConvNet()
-print(model)
-
-optimizer = torch.optim.Adam(model.parameters(), lr=INIT_LR)
-loss_func = nn.CrossEntropyLoss()
-
-# RNN训练
-for epoch in range(EPOCH):
-    for index, (b_x, b_y) in enumerate(train_loader):
-        model.train()
-        # 输入尺寸为(batch_size, channels, height, width)
-        output = model(b_x)  # (64, 1, 28, 28)
-        loss = loss_func(output, b_y)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        if index % 50 == 0:
-            model.eval()
-            prediction = model(test_x)  # 输出为(2000, 10)
-            pred_y = torch.max(prediction, 1)[1].data.numpy()
-            accuracy = (pred_y == test_y).sum() / float(test_y.size)
-            print(f&#39;Epoch: [&#123;index&#125;/&#123;epoch&#125;]&#39;, f&#39;| train loss: &#123;loss.item()&#125;&#39;, f&#39;| test accuracy: &#123;accuracy&#125;&#39;)
-
-# 打印测试数据集中的后20个结果
-model.eval()
-prediction = model(test_x[:20])
-pred_y = torch.max(prediction, 1)[1].data.numpy()
-print(pred_y, &#39;prediction number&#39;)
-print(test_y[:20], &#39;real number&#39;)
-</code></pre>
 <p>训练结果如下，可以看到对于这种不太复杂的问题，CNN和RNN都可以得到比较高的精度。</p>
 <p><img src="/images/ml/CNN-MNIST.png" alt="使用卷积网络做手写数字识别"></p>
 

@@ -175,80 +175,8 @@
 <li>下面的实现中使用一个LSTM+Linear层组合实现（不要使用经典RNN，效果不好），损失函数使用CrossEntropyLoss。</li>
 <li>在实践中设置<code>batch_first=True</code>可以减少一些额外的维度变换和尺寸转换的代码，推荐使用</li>
 </ol>
-<h2 id="PyTorch实现"><a href="#PyTorch实现" class="headerlink" title="PyTorch实现"></a>PyTorch实现</h2><pre><code class="Python">import torch
-from torch import nn
-import torchvision.datasets as datasets
-import torchvision.transforms as transforms
+<h2 id="PyTorch实现"><a href="#PyTorch实现" class="headerlink" title="PyTorch实现"></a>PyTorch实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">import</span> torchvision.datasets <span class="keyword">as</span> datasets</span><br><span class="line"><span class="keyword">import</span> torchvision.transforms <span class="keyword">as</span> transforms</span><br><span class="line"></span><br><span class="line">torch.manual_seed(<span class="number">2019</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 超参设置</span></span><br><span class="line">EPOCH = <span class="number">1</span>  <span class="comment"># 训练EPOCH次，这里为了测试方便只跑一次</span></span><br><span class="line">BATCH_SIZE = <span class="number">32</span></span><br><span class="line">TIME_STEP = <span class="number">28</span>  <span class="comment"># RNN时间跨度（图片高度）</span></span><br><span class="line">INPUT_SIZE = <span class="number">28</span>  <span class="comment"># RNN输入尺寸（图片宽度）</span></span><br><span class="line">INIT_LR = <span class="number">0.01</span>  <span class="comment"># 初始学习率</span></span><br><span class="line">DOWNLOAD_MNIST = <span class="literal">True</span>  <span class="comment"># 设置是否需要下载数据集</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用DataLoader加载训练数据，为了演示方便，对于测试数据只取出2000个样本进行测试</span></span><br><span class="line">train_data = datasets.MNIST(root=<span class="string">&#x27;mnist&#x27;</span>, train=<span class="literal">True</span>, transform=transforms.ToTensor(), download=DOWNLOAD_MNIST)</span><br><span class="line">train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=<span class="literal">True</span>)</span><br><span class="line">test_data = datasets.MNIST(root=<span class="string">&#x27;mnist&#x27;</span>, train=<span class="literal">False</span>)</span><br><span class="line">test_x = test_data.test_data.<span class="built_in">type</span>(torch.FloatTensor)[:<span class="number">2000</span>] / <span class="number">255.</span></span><br><span class="line">test_y = test_data.test_labels.numpy()[:<span class="number">2000</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RNN</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">super</span>(RNN, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        <span class="variable language_">self</span>.rnn = nn.LSTM(</span><br><span class="line">            input_size=INPUT_SIZE,</span><br><span class="line">            hidden_size=<span class="number">64</span>,</span><br><span class="line">            num_layers=<span class="number">1</span>,</span><br><span class="line">            batch_first=<span class="literal">True</span></span><br><span class="line">        )</span><br><span class="line">        <span class="variable language_">self</span>.out = nn.Linear(<span class="number">64</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        <span class="comment"># x shape (batch_size, time_step, input_size)</span></span><br><span class="line">        <span class="comment"># r_out shape (batch_size, time_step, output_size)</span></span><br><span class="line">        <span class="comment"># h_n shape (n_layers, batch_size, hidden_size)</span></span><br><span class="line">        <span class="comment"># h_c shape (n_layers, batch_size, hidden_size)</span></span><br><span class="line">        r_out, (h_n, h_c) = <span class="variable language_">self</span>.rnn(x)</span><br><span class="line">        <span class="comment"># 取出最后一次循环的r_out传递到全连接层</span></span><br><span class="line">        out = <span class="variable language_">self</span>.out(r_out[:, -<span class="number">1</span>, :])</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">rnn = RNN()</span><br><span class="line"><span class="built_in">print</span>(rnn)</span><br><span class="line"></span><br><span class="line">optimizer = torch.optim.Adam(rnn.parameters(), lr=INIT_LR)</span><br><span class="line">loss_func = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line"><span class="comment"># RNN训练</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(EPOCH):</span><br><span class="line">    <span class="keyword">for</span> step, (b_x, b_y) <span class="keyword">in</span> <span class="built_in">enumerate</span>(train_loader):</span><br><span class="line">        <span class="comment"># 数据的输入为(batch_size, time_step, input_size)</span></span><br><span class="line">        b_x = b_x.view(-<span class="number">1</span>, TIME_STEP, INPUT_SIZE)</span><br><span class="line">        output = rnn(b_x)</span><br><span class="line">        loss = loss_func(output, b_y)</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> step % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">            prediction = rnn(test_x)  <span class="comment"># 输出为(2000, 10)</span></span><br><span class="line">            pred_y = torch.<span class="built_in">max</span>(prediction, <span class="number">1</span>)[<span class="number">1</span>].data.numpy()</span><br><span class="line">            accuracy = (pred_y == test_y).<span class="built_in">sum</span>() / <span class="built_in">float</span>(test_y.size)</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;Epoch: [<span class="subst">&#123;step&#125;</span>/<span class="subst">&#123;epoch&#125;</span>]&#x27;</span>, <span class="string">f&#x27;| train loss: <span class="subst">&#123;loss.item()&#125;</span>&#x27;</span>, <span class="string">f&#x27;| test accuracy: <span class="subst">&#123;accuracy&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印测试数据集中的后20个结果</span></span><br><span class="line">prediction = rnn(test_x[:<span class="number">20</span>].view(-<span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>))</span><br><span class="line">pred_y = torch.<span class="built_in">max</span>(prediction, <span class="number">1</span>)[<span class="number">1</span>].data.numpy()</span><br><span class="line"><span class="built_in">print</span>(pred_y, <span class="string">&#x27;prediction number&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(test_y[:<span class="number">20</span>], <span class="string">&#x27;real number&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
-torch.manual_seed(2019)
-
-# 超参设置
-EPOCH = 1  # 训练EPOCH次，这里为了测试方便只跑一次
-BATCH_SIZE = 32
-TIME_STEP = 28  # RNN时间跨度（图片高度）
-INPUT_SIZE = 28  # RNN输入尺寸（图片宽度）
-INIT_LR = 0.01  # 初始学习率
-DOWNLOAD_MNIST = True  # 设置是否需要下载数据集
-
-# 使用DataLoader加载训练数据，为了演示方便，对于测试数据只取出2000个样本进行测试
-train_data = datasets.MNIST(root=&#39;mnist&#39;, train=True, transform=transforms.ToTensor(), download=DOWNLOAD_MNIST)
-train_loader = torch.utils.data.DataLoader(dataset=train_data, batch_size=BATCH_SIZE, shuffle=True)
-test_data = datasets.MNIST(root=&#39;mnist&#39;, train=False)
-test_x = test_data.test_data.type(torch.FloatTensor)[:2000] / 255.
-test_y = test_data.test_labels.numpy()[:2000]
-
-
-class RNN(nn.Module):
-    def __init__(self):
-        super(RNN, self).__init__()
-        self.rnn = nn.LSTM(
-            input_size=INPUT_SIZE,
-            hidden_size=64,
-            num_layers=1,
-            batch_first=True
-        )
-        self.out = nn.Linear(64, 10)
-
-    def forward(self, x):
-        # x shape (batch_size, time_step, input_size)
-        # r_out shape (batch_size, time_step, output_size)
-        # h_n shape (n_layers, batch_size, hidden_size)
-        # h_c shape (n_layers, batch_size, hidden_size)
-        r_out, (h_n, h_c) = self.rnn(x)
-        # 取出最后一次循环的r_out传递到全连接层
-        out = self.out(r_out[:, -1, :])
-        return out
-
-
-rnn = RNN()
-print(rnn)
-
-optimizer = torch.optim.Adam(rnn.parameters(), lr=INIT_LR)
-loss_func = nn.CrossEntropyLoss()
-
-# RNN训练
-for epoch in range(EPOCH):
-    for step, (b_x, b_y) in enumerate(train_loader):
-        # 数据的输入为(batch_size, time_step, input_size)
-        b_x = b_x.view(-1, TIME_STEP, INPUT_SIZE)
-        output = rnn(b_x)
-        loss = loss_func(output, b_y)
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        if step % 50 == 0:
-            prediction = rnn(test_x)  # 输出为(2000, 10)
-            pred_y = torch.max(prediction, 1)[1].data.numpy()
-            accuracy = (pred_y == test_y).sum() / float(test_y.size)
-            print(f&#39;Epoch: [&#123;step&#125;/&#123;epoch&#125;]&#39;, f&#39;| train loss: &#123;loss.item()&#125;&#39;, f&#39;| test accuracy: &#123;accuracy&#125;&#39;)
-
-# 打印测试数据集中的后20个结果
-prediction = rnn(test_x[:20].view(-1, 28, 28))
-pred_y = torch.max(prediction, 1)[1].data.numpy()
-print(pred_y, &#39;prediction number&#39;)
-print(test_y[:20], &#39;real number&#39;)
-</code></pre>
 <p>下面是训练结果的截图，可以看到效果还不错！</p>
 <p><img src="/images/ml/LSTM-MNIST.png" alt="使用循环神经网络做手写数字识别"></p>
 

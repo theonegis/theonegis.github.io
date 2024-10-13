@@ -167,7 +167,7 @@
 
     <div class="content">
         <h1 id="使用Rasterio做投影变换"><a href="#使用Rasterio做投影变换" class="headerlink" title="使用Rasterio做投影变换"></a>使用Rasterio做投影变换</h1><p>作者：阿振</p>
-<p>邮箱：<a href="mailto:&#116;&#97;&#110;&#x7a;&#104;&#101;&#x6e;&#x79;&#117;&#103;&#x69;&#115;&#64;&#49;&#54;&#x33;&#x2e;&#99;&#x6f;&#x6d;">&#116;&#97;&#110;&#x7a;&#104;&#101;&#x6e;&#x79;&#117;&#103;&#x69;&#115;&#64;&#49;&#54;&#x33;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+<p>邮箱：<a href="mailto:&#x74;&#97;&#x6e;&#122;&#x68;&#101;&#110;&#121;&#x75;&#x67;&#105;&#x73;&#64;&#49;&#54;&#51;&#46;&#99;&#x6f;&#x6d;">&#x74;&#97;&#x6e;&#122;&#x68;&#101;&#110;&#121;&#x75;&#x67;&#105;&#x73;&#64;&#49;&#54;&#51;&#46;&#99;&#x6f;&#x6d;</a></p>
 <p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a></p>
 <p>修改时间：2018-06-11</p>
 <p>声明：本文为博主原创文章，转载请注明原文出处</p>
@@ -175,55 +175,8 @@
 <h2 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h2><p>在之前GDAL系列文章中的《<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80543988">栅格数据投影转换</a>》提到过，做投影转换最重要的是计算数据在目标空间参考系统中的放射变换参数（GeoTransform）和图像的尺寸（行数和列数）。而且我们使用GDAL基本库自己写代码进行了计算。</p>
 <p>在rasterio中提供了<code>calculate_default_transform</code>，可以直接计算目标系统中的放射变换参数和图像尺寸。</p>
 <p>这样我们直接根据计算的结果更新目标文件的元信息即可。</p>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><pre><code class="python">import numpy as np
-import rasterio
-from rasterio.warp import calculate_default_transform, reproject, Resampling
-from rasterio import crs
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> rasterio</span><br><span class="line"><span class="keyword">from</span> rasterio.warp <span class="keyword">import</span> calculate_default_transform, reproject, Resampling</span><br><span class="line"><span class="keyword">from</span> rasterio <span class="keyword">import</span> crs</span><br><span class="line"></span><br><span class="line">src_img = <span class="string">&#x27;example.tif&#x27;</span></span><br><span class="line">dst_img = <span class="string">&#x27;reproject.tif&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 转为地理坐标系WGS84</span></span><br><span class="line">dst_crs = crs.CRS.from_epsg(<span class="string">&#x27;4326&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> rasterio.<span class="built_in">open</span>(src_img) <span class="keyword">as</span> src_ds:</span><br><span class="line">    profile = src_ds.profile</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 计算在新空间参考系下的仿射变换参数，图像尺寸</span></span><br><span class="line">    dst_transform, dst_width, dst_height = calculate_default_transform(</span><br><span class="line">        src_ds.crs, dst_crs, src_ds.width, src_ds.height, *src_ds.bounds)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 更新数据集的元数据信息</span></span><br><span class="line">    profile.update(&#123;</span><br><span class="line">        <span class="string">&#x27;crs&#x27;</span>: dst_crs,</span><br><span class="line">        <span class="string">&#x27;transform&#x27;</span>: dst_transform,</span><br><span class="line">        <span class="string">&#x27;width&#x27;</span>: dst_width,</span><br><span class="line">        <span class="string">&#x27;height&#x27;</span>: dst_height,</span><br><span class="line">        <span class="string">&#x27;nodata&#x27;</span>: <span class="number">0</span></span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 重投影并写入数据</span></span><br><span class="line">    <span class="keyword">with</span> rasterio.<span class="built_in">open</span>(dst_img, <span class="string">&#x27;w&#x27;</span>, **profile) <span class="keyword">as</span> dst_ds:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, src_ds.count + <span class="number">1</span>):</span><br><span class="line">            src_array = src_ds.read(i)</span><br><span class="line">            dst_array = np.empty((dst_height, dst_width), dtype=profile[<span class="string">&#x27;dtype&#x27;</span>])</span><br><span class="line"></span><br><span class="line">            reproject(</span><br><span class="line">                <span class="comment"># 源文件参数</span></span><br><span class="line">                source=src_array,</span><br><span class="line">                src_crs=src_ds.crs,</span><br><span class="line">                src_transform=src_ds.transform,</span><br><span class="line">                <span class="comment"># 目标文件参数</span></span><br><span class="line">                destination=dst_array,</span><br><span class="line">                dst_transform=dst_transform,</span><br><span class="line">                dst_crs=dst_crs,</span><br><span class="line">                <span class="comment"># 其它配置</span></span><br><span class="line">                resampling=Resampling.cubic,</span><br><span class="line">                num_threads=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">            dst_ds.write(dst_array, i)</span><br></pre></td></tr></table></figure>
 
-src_img = &#39;example.tif&#39;
-dst_img = &#39;reproject.tif&#39;
-
-# 转为地理坐标系WGS84
-dst_crs = crs.CRS.from_epsg(&#39;4326&#39;)
-
-
-with rasterio.open(src_img) as src_ds:
-    profile = src_ds.profile
-
-    # 计算在新空间参考系下的仿射变换参数，图像尺寸
-    dst_transform, dst_width, dst_height = calculate_default_transform(
-        src_ds.crs, dst_crs, src_ds.width, src_ds.height, *src_ds.bounds)
-
-    # 更新数据集的元数据信息
-    profile.update(&#123;
-        &#39;crs&#39;: dst_crs,
-        &#39;transform&#39;: dst_transform,
-        &#39;width&#39;: dst_width,
-        &#39;height&#39;: dst_height,
-        &#39;nodata&#39;: 0
-    &#125;)
-
-    # 重投影并写入数据
-    with rasterio.open(dst_img, &#39;w&#39;, **profile) as dst_ds:
-        for i in range(1, src_ds.count + 1):
-            src_array = src_ds.read(i)
-            dst_array = np.empty((dst_height, dst_width), dtype=profile[&#39;dtype&#39;])
-
-            reproject(
-                # 源文件参数
-                source=src_array,
-                src_crs=src_ds.crs,
-                src_transform=src_ds.transform,
-                # 目标文件参数
-                destination=dst_array,
-                dst_transform=dst_transform,
-                dst_crs=dst_crs,
-                # 其它配置
-                resampling=Resampling.cubic,
-                num_threads=2)
-
-            dst_ds.write(dst_array, i)
-</code></pre>
 
     </div>
 

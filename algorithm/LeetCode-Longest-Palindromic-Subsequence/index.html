@@ -170,18 +170,18 @@
 <h1 id="Longest-Palindromic-Subsequence"><a href="#Longest-Palindromic-Subsequence" class="headerlink" title="Longest Palindromic Subsequence"></a>Longest Palindromic Subsequence</h1><h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><p>这是LeetCode的第516道题目：<a target="_blank" rel="noopener" href="https://leetcode.com/problems/longest-palindromic-subsequence/">516. Longest Palindromic Subsequence</a>。</p>
 <p>Given a string s, find the longest palindromic subsequence’s length in s. You may assume that the maximum length of s is 1000.</p>
 <p><strong>Example 1:</strong><br>Input:</p>
-<pre><code>&quot;bbbab&quot;
-</code></pre>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;bbbab&quot;</span></span><br></pre></td></tr></table></figure>
+
 <p>Output:</p>
-<pre><code>4
-</code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4</span><br></pre></td></tr></table></figure>
+
 <p>One possible longest palindromic subsequence is “bbbb”.</p>
 <p><strong>Example 2:</strong><br>Input:</p>
-<pre><code>&quot;cbbd&quot;
-</code></pre>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;cbbd&quot;</span></span><br></pre></td></tr></table></figure>
+
 <p>Output:</p>
-<pre><code>2
-</code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
+
 <p>One possible longest palindromic subsequence is “bb”.</p>
 <p>题目要求我们计算出给定字符串中的最长回文序列（这里的序列不是一定要在给定字符串中连续排列的，就是挑出的单个字符按其在给定字符串中的顺序排列以后是回文即可）</p>
 <h2 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h2><p>其实，思路跟第647道题目<a target="_blank" rel="noopener" href="https://leetcode.com/problems/palindromic-substrings/">Palindromic Substrings</a>是类似的，可以采用动态规划进行。但是因为回文序列不是给定字符串的连续子串，貌似不能使用中心扩散法求解。</p>
@@ -190,39 +190,11 @@
 <li>当<code>s[i] == s[j]</code>时，<code>dp[i][j] = dp[i+1][j-1] + 2</code></li>
 <li>当<code>s[i] != s[j]</code>时，<code>dp[i][j] = max(dp[i+1][j], dp[i][j-1])</code></li>
 </ol>
-<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><pre><code class="C++">class Solution &#123;
-public:
-    int longestPalindromeSubseq(string s) &#123;
-        const int length = s.length();
-        vector&lt;vector&lt;int&gt;&gt; dp(length, vector&lt;int&gt;(length));
-        for (auto i = length - 1; i &gt;= 0; --i) &#123;
-            dp[i][i] = 1;
-            for (auto j = i + 1; j &lt; length; ++j) &#123;
-                dp[i][j] = s[i] == s[j] ?
-                        dp[i + 1][j - 1] + 2 :
-                        max(dp[i + 1][j], dp[i][j - 1]);
-            &#125;
-        &#125;
-        return dp[0][length - 1];
-    &#125;
-&#125;;
-</code></pre>
+<h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">longestPalindromeSubseq</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">const</span> <span class="type">int</span> length = s.<span class="built_in">length</span>();</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">dp</span>(length, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(length));</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> i = length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">            dp[i][i] = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> j = i + <span class="number">1</span>; j &lt; length; ++j) &#123;</span><br><span class="line">                dp[i][j] = s[i] == s[j] ?</span><br><span class="line">                        dp[i + <span class="number">1</span>][j - <span class="number">1</span>] + <span class="number">2</span> :</span><br><span class="line">                        <span class="built_in">max</span>(dp[i + <span class="number">1</span>][j], dp[i][j - <span class="number">1</span>]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> dp[<span class="number">0</span>][length - <span class="number">1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
 <h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><p>Scala版本是对C++版本的翻译</p>
-<pre><code class="Scala">object Solution &#123;
-  def longestPalindromeSubseq(s: String): Int = &#123;
-    val length = s.length
-    val dp = Array.ofDim[Int](length, length)
-    for (i &lt;- length - 1 to 0 by -1) &#123;
-      dp(i)(i) = 1
-      for (j &lt;- i + 1 until length) &#123;
-        dp(i)(j) = if (s(i) == s(j)) dp(i + 1)(j - 1) + 2
-        else math.max(dp(i + 1)(j), dp(i)(j - 1))
-      &#125;
-    &#125;
-    return dp(0)(length - 1)
-  &#125;
-&#125;
-</code></pre>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">longestPalindromeSubseq</span></span>(s: <span class="type">String</span>): <span class="type">Int</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> length = s.length</span><br><span class="line">    <span class="keyword">val</span> dp = <span class="type">Array</span>.ofDim[<span class="type">Int</span>](length, length)</span><br><span class="line">    <span class="keyword">for</span> (i &lt;- length - <span class="number">1</span> to <span class="number">0</span> by <span class="number">-1</span>) &#123;</span><br><span class="line">      dp(i)(i) = <span class="number">1</span></span><br><span class="line">      <span class="keyword">for</span> (j &lt;- i + <span class="number">1</span> until length) &#123;</span><br><span class="line">        dp(i)(j) = <span class="keyword">if</span> (s(i) == s(j)) dp(i + <span class="number">1</span>)(j - <span class="number">1</span>) + <span class="number">2</span></span><br><span class="line">        <span class="keyword">else</span> math.max(dp(i + <span class="number">1</span>)(j), dp(i)(j - <span class="number">1</span>))</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> dp(<span class="number">0</span>)(length - <span class="number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
     </div>
 

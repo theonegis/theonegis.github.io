@@ -172,26 +172,14 @@
 <h1 id="Morton码的计算"><a href="#Morton码的计算" class="headerlink" title="Morton码的计算"></a>Morton码的计算</h1><p>Morton码是对栅格格网进行编码的一种算法，在Google中搜索Morton，搜索结果第一位是Wikipedia的Z-order Curve，这是因为Morton码编码结果展现为一种Z形的填充曲线。下面简要说一下如何计算四进制和十进制的Morton码。</p>
 <p><img src="/images/geos/z-curve.png" alt="Morton码二进制"></p>
 <h2 id="四进制Morton码计算"><a href="#四进制Morton码计算" class="headerlink" title="四进制Morton码计算"></a>四进制Morton码计算</h2><p>四进制编码对左上，右上，左下，右下的顺序对四个格网单元分布编码为0，1，2，3。</p>
-<p>其计算方式为：二进制的行列号$r$、$l$（从第0行0列开始），四进制编码$M=2<em>l+ r$；那么这里就是：第5行（101）第7列（111）：$M=2</em>101+111=313$（313对应的十进制是55）</p>
+<p>其计算方式为：二进制的行列号$r$、$l$（从第0行0列开始），四进制编码$M&#x3D;2<em>l+ r$；那么这里就是：第5行（101）第7列（111）：$M&#x3D;2</em>101+111&#x3D;313$（313对应的十进制是55）</p>
 <h2 id="十进制Morton码计算"><a href="#十进制Morton码计算" class="headerlink" title="十进制Morton码计算"></a>十进制Morton码计算</h2><p>十进制的编码规则：首先，行列号转为二进制（从第0行0列开始）；然后行列号交叉排列；最后将二进制结果转为十进制。十进制Morton编码是按左上，右上，左下，右下的顺序从0开始对每个格网进行自然编码的。</p>
 <p>对于第5行（101）第7列（111），交叉排列得到110111，然后转为十进制就是55。和四进制的编码结果是一样的。</p>
 <p>下面给出十进制Morton码的C++实现：</p>
-<pre><code class="C++">#include &lt;iostream&gt;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">uint32_t</span> row = <span class="number">5</span>;</span><br><span class="line">    <span class="type">uint32_t</span> col = <span class="number">7</span>;</span><br><span class="line">    <span class="type">uint64_t</span> morton = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="built_in">sizeof</span>(row) * <span class="number">8</span>; i++) &#123;</span><br><span class="line">        morton |= (row &amp; (<span class="type">uint64_t</span>)<span class="number">1</span> &lt;&lt; i) &lt;&lt; i | (col &amp; (<span class="type">uint64_t</span>)<span class="number">1</span> &lt;&lt; i) &lt;&lt; (i + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; morton &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-using std::cout;
 
-int main() &#123;
-    uint32_t row = 5;
-    uint32_t col = 7;
-    uint64_t morton = 0;
 
-    for (int i = 0; i &lt; sizeof(row) * 8; i++) &#123;
-        morton |= (row &amp; (uint64_t)1 &lt;&lt; i) &lt;&lt; i | (col &amp; (uint64_t)1 &lt;&lt; i) &lt;&lt; (i + 1);
-    &#125;
-    cout &lt;&lt; morton &lt;&lt; &#39;\n&#39;;
-    return 0;
-&#125;
-</code></pre>
 
     </div>
 

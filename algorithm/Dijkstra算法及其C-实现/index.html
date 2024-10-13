@@ -167,7 +167,7 @@
 
     <div class="content">
         <h1 id="Dijkstra算法及其C-实现"><a href="#Dijkstra算法及其C-实现" class="headerlink" title="Dijkstra算法及其C++实现"></a>Dijkstra算法及其C++实现</h1><h2 id="什么是最短路径问题"><a href="#什么是最短路径问题" class="headerlink" title="什么是最短路径问题"></a>什么是最短路径问题</h2><p>如果从图中某一顶点（称为源点）到达另一顶点（称为终点）的路径可能不止一条，如何找到一条路径使得沿此路径上各边上的权值总和达到最小。</p>
-<p>单源最短路径问题是指对于给定的图$G=(V, E)$，求源点$v_0$到其它顶点$v_t$的最短路径。</p>
+<p>单源最短路径问题是指对于给定的图$G&#x3D;(V, E)$，求源点$v_0$到其它顶点$v_t$的最短路径。</p>
 <h2 id="Dijkstra算法"><a href="#Dijkstra算法" class="headerlink" title="Dijkstra算法"></a>Dijkstra算法</h2><p>Dijkstra算法用于计算一个节点到其他节点的最短路径。Dijkstra是一种按路径长度递增的顺序逐步产生最短路径的方法，是一种贪婪算法。</p>
 <p>Dijkstra算法的核心思想是首先求出长度最短的一条最短路径，再参照它求出长度次短的一条最短路径，依次类推，直到从源点$v_0$到其它各顶点的最短路径全部求出为止。</p>
 <p>具体来说：图中所有顶点分成两组，第一组是已确定最短路径的顶点，初始只包含一个源点，记为集合$S$；第二组是尚未确定最短路径的顶点，记为集合$U$。</p>
@@ -180,136 +180,15 @@
 </ol>
 <h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p><img src="/images/algorithm/Dijkstra.png" alt="Dijkstra"></p>
 <h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>使用了部分C++11特性，注释丰富，读起来应该不会太困难！</p>
-<pre><code class="C++">#include &lt;cstdio&gt;
-#include &lt;iostream&gt;
-#include &lt;vector&gt;
-#include &lt;list&gt;
-#include &lt;stack&gt;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;list&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stack&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">using</span> Matrix = vector&lt;vector&lt;uint&gt;&gt;;                <span class="comment">// 连接矩阵（使用嵌套的vector表示）</span></span><br><span class="line"><span class="keyword">using</span> SNodes = vector&lt;tuple&lt;uint, uint, uint&gt;&gt;;     <span class="comment">// 已计算出最短路径的顶点集合S（类似一个动态数组）</span></span><br><span class="line"><span class="keyword">using</span> UNodes = list&lt;tuple&lt;uint, uint, uint&gt;&gt;;       <span class="comment">// 未进行遍历的顶点集合U（使用list主要是方便元素删除操作）</span></span><br><span class="line"><span class="keyword">using</span> ENode = tuple&lt;uint, uint, uint&gt;;              <span class="comment">// 每个节点包含（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）信息</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/***</span></span><br><span class="line"><span class="comment"> * 从未遍历的U顶点集合中找到下一个离起始顶点距离最短的顶点</span></span><br><span class="line"><span class="comment"> * @param unvisitedNodes 未遍历的U顶点集合</span></span><br><span class="line"><span class="comment"> * 每个元素是（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）的tuple</span></span><br><span class="line"><span class="comment"> * @return 下一个离起始顶点距离最短的顶点</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function">ENode <span class="title">searchNearest</span><span class="params">(<span class="type">const</span> UNodes &amp;unvisitedNodes)</span> </span>&#123;</span><br><span class="line">    uint minDistance = UINT_MAX;</span><br><span class="line">    ENode nearest;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span> &amp;node: unvisitedNodes) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(node) &lt;= minDistance) &#123;</span><br><span class="line">            minDistance = <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(node);</span><br><span class="line">            nearest = node;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> nearest;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/***</span></span><br><span class="line"><span class="comment"> * 迪克斯特拉算法的实现</span></span><br><span class="line"><span class="comment"> * @param graph 连接矩阵（使用嵌套的vector表示）</span></span><br><span class="line"><span class="comment"> * @param startNodeIndex 起始点编码（从0开始）</span></span><br><span class="line"><span class="comment"> * @return 返回一个vector，每个元素是到起始顶点的距离排列的包含（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）的tuple</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function">SNodes <span class="title">dijkstra</span><span class="params">(<span class="type">const</span> Matrix &amp;graph, uint startNodeIndex)</span> </span>&#123;</span><br><span class="line">    <span class="type">const</span> uint numOfNodes = graph.<span class="built_in">size</span>();   <span class="comment">// 图中顶点的个数</span></span><br><span class="line">    <span class="comment">// S是已计算出最短路径的顶点的集合（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）</span></span><br><span class="line">    SNodes visitedNodes;</span><br><span class="line">    <span class="comment">// U是未计算出最短路径的顶点的集合（其中的key为顶点编号，value为到起始顶点最短距离和最短路径中上一个节点编号组成的pair）</span></span><br><span class="line">    UNodes unvisitedNodes;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对S和U集合进行初始化，起始顶点的距离为0，其他顶点的距离为无穷大</span></span><br><span class="line">    <span class="comment">// 最短路径中当前顶点的上一个顶点初始化为起始顶点，后面会逐步进行修正</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">0</span>; i &lt; numOfNodes; ++i) &#123;</span><br><span class="line">        <span class="keyword">if</span> (i == startNodeIndex) visitedNodes.<span class="built_in">emplace_back</span>(i, <span class="number">0</span>, startNodeIndex);</span><br><span class="line">        <span class="keyword">else</span> unvisitedNodes.<span class="built_in">emplace_back</span>(i, graph[startNodeIndex][i], startNodeIndex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (!unvisitedNodes.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="comment">// 从U中找到距离起始顶点距离最短的顶点，加入S，同时从U中删除</span></span><br><span class="line">        <span class="keyword">auto</span> nextNode = <span class="built_in">searchNearest</span>(unvisitedNodes);</span><br><span class="line">        unvisitedNodes.<span class="built_in">erase</span>(<span class="built_in">find</span>(unvisitedNodes.<span class="built_in">begin</span>(), unvisitedNodes.<span class="built_in">end</span>(), nextNode));</span><br><span class="line">        visitedNodes.<span class="built_in">emplace_back</span>(nextNode);</span><br><span class="line">        <span class="comment">// 更新U集合中各个顶点的最短距离以及最短路径中的上一个顶点</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;node: unvisitedNodes) &#123;</span><br><span class="line">            <span class="comment">// 更新的判断依据就是起始顶点到当前顶点（nextNode）距离加上当前顶点到U集合中顶点的距离小于原来起始顶点到U集合中顶点的距离</span></span><br><span class="line">            <span class="comment">// 更新最短距离的时候同时需要更新最短路径中的上一个顶点为nextNode</span></span><br><span class="line">            <span class="keyword">if</span> (graph[<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(nextNode)][<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(node)] != UINT_MAX &amp;&amp;</span><br><span class="line">                graph[<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(nextNode)][<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(node)] + <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(nextNode) &lt; <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(node)) &#123;</span><br><span class="line">                <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(node) = graph[<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(nextNode)][<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(node)] + <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(nextNode);</span><br><span class="line">                <span class="built_in">get</span>&lt;<span class="number">2</span>&gt;(node) = <span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(nextNode);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> visitedNodes;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/***</span></span><br><span class="line"><span class="comment"> * 对使用迪克斯特拉算法求解的最短路径进行打印输出</span></span><br><span class="line"><span class="comment"> * @param paths vector表示的最短路径集合</span></span><br><span class="line"><span class="comment"> * 每个元素是到起始顶点的距离排列的包含（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）的tuple</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print</span><span class="params">(<span class="type">const</span> SNodes &amp;paths)</span> </span>&#123;</span><br><span class="line">    stack&lt;<span class="type">int</span>&gt; tracks;  <span class="comment">//从尾部出发，使用stack将每个顶点的最短路径中的前一个顶点入栈，然后出栈的顺序就是最短路径顺序</span></span><br><span class="line">    <span class="comment">// 第一个元素是起始点，从第二个元素进行打印输出</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> it = ++paths.<span class="built_in">begin</span>(); it != paths.<span class="built_in">end</span>(); ++it) &#123;</span><br><span class="line">        <span class="comment">// 打印头部信息</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%c -&gt; %c:\t Length: %d\t Paths: %c&quot;</span>,</span><br><span class="line">               <span class="built_in">char</span>(<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(paths[<span class="number">0</span>]) + <span class="number">65</span>),</span><br><span class="line">               <span class="built_in">char</span>(<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(*it) + <span class="number">65</span>),</span><br><span class="line">               <span class="built_in">get</span>&lt;<span class="number">1</span>&gt;(*it),</span><br><span class="line">               <span class="built_in">char</span>(<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(paths[<span class="number">0</span>]) + <span class="number">65</span>));</span><br><span class="line">        <span class="keyword">auto</span> pointer = *it;</span><br><span class="line">        <span class="comment">// 如果当前指针pointer指向的节点有中途节点（判断的条件是最短路径中的前一个节点不是起始点）</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="built_in">get</span>&lt;<span class="number">2</span>&gt;(pointer) != <span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(paths[<span class="number">0</span>])) &#123;</span><br><span class="line">            tracks.<span class="built_in">push</span>(<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(pointer));</span><br><span class="line">            <span class="comment">// Lambda表达式，使用find_if函数把当前顶点的前一个顶点从paths中找出来继续进行循环直到前一个节点就是起始点</span></span><br><span class="line">            <span class="keyword">auto</span> condition = [pointer](tuple&lt;uint, uint, uint&gt; x) &#123; <span class="keyword">return</span> <span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(x) == <span class="built_in">get</span>&lt;<span class="number">2</span>&gt;(pointer); &#125;;</span><br><span class="line">            pointer = *<span class="built_in">find_if</span>(paths.<span class="built_in">begin</span>(), paths.<span class="built_in">end</span>(), condition);</span><br><span class="line">        &#125;</span><br><span class="line">        tracks.<span class="built_in">push</span>(<span class="built_in">get</span>&lt;<span class="number">0</span>&gt;(pointer));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 以出栈的顺序进行打印输出</span></span><br><span class="line">        <span class="keyword">while</span> (!tracks.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot; -&gt; %c&quot;</span>, <span class="built_in">char</span>(tracks.<span class="built_in">top</span>() + <span class="number">65</span>));</span><br><span class="line">            tracks.<span class="built_in">pop</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Matrix graph = &#123;</span><br><span class="line">            &#123;<span class="number">0</span>,        <span class="number">12</span>,       UINT_MAX, UINT_MAX, UINT_MAX, <span class="number">16</span>, <span class="number">14</span>&#125;,</span><br><span class="line">            &#123;<span class="number">12</span>,       <span class="number">0</span>,        <span class="number">10</span>,       UINT_MAX, UINT_MAX, <span class="number">7</span>, UINT_MAX&#125;,</span><br><span class="line">            &#123;UINT_MAX, <span class="number">10</span>,       <span class="number">0</span>, <span class="number">3</span>,               <span class="number">5</span>,        <span class="number">6</span>, UINT_MAX&#125;,</span><br><span class="line">            &#123;UINT_MAX, UINT_MAX, <span class="number">3</span>, <span class="number">0</span>,               <span class="number">4</span>, UINT_MAX, UINT_MAX&#125;,</span><br><span class="line">            &#123;UINT_MAX, UINT_MAX, <span class="number">5</span>, <span class="number">4</span>,               <span class="number">0</span>,        <span class="number">2</span>,  <span class="number">8</span>&#125;,</span><br><span class="line">            &#123;<span class="number">16</span>,       <span class="number">7</span>,        <span class="number">6</span>,        UINT_MAX, <span class="number">2</span>,        <span class="number">9</span>,  <span class="number">9</span>&#125;,</span><br><span class="line">            &#123;<span class="number">14</span>,       UINT_MAX, UINT_MAX, UINT_MAX, <span class="number">8</span>,        <span class="number">9</span>,  <span class="number">0</span>&#125;</span><br><span class="line">    &#125;;  <span class="comment">// 图对应的连接矩阵</span></span><br><span class="line">    <span class="keyword">auto</span> results = <span class="built_in">dijkstra</span>(graph, <span class="built_in">uint</span>(<span class="string">&#x27;D&#x27;</span> - <span class="number">65</span>));          <span class="comment">// 选取顶点C（大写字母A的ASCII编码是65）</span></span><br><span class="line">    <span class="built_in">print</span>(results);     <span class="comment">// 打印输出结果</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-using namespace std;
-using Matrix = vector&lt;vector&lt;uint&gt;&gt;;                // 连接矩阵（使用嵌套的vector表示）
-using SNodes = vector&lt;tuple&lt;uint, uint, uint&gt;&gt;;     // 已计算出最短路径的顶点集合S（类似一个动态数组）
-using UNodes = list&lt;tuple&lt;uint, uint, uint&gt;&gt;;       // 未进行遍历的顶点集合U（使用list主要是方便元素删除操作）
-using ENode = tuple&lt;uint, uint, uint&gt;;              // 每个节点包含（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）信息
-
-
-/***
- * 从未遍历的U顶点集合中找到下一个离起始顶点距离最短的顶点
- * @param unvisitedNodes 未遍历的U顶点集合
- * 每个元素是（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）的tuple
- * @return 下一个离起始顶点距离最短的顶点
- */
-ENode searchNearest(const UNodes &amp;unvisitedNodes) &#123;
-    uint minDistance = UINT_MAX;
-    ENode nearest;
-    for (const auto &amp;node: unvisitedNodes) &#123;
-        if (get&lt;1&gt;(node) &lt;= minDistance) &#123;
-            minDistance = get&lt;1&gt;(node);
-            nearest = node;
-        &#125;
-    &#125;
-    return nearest;
-&#125;
-
-
-/***
- * 迪克斯特拉算法的实现
- * @param graph 连接矩阵（使用嵌套的vector表示）
- * @param startNodeIndex 起始点编码（从0开始）
- * @return 返回一个vector，每个元素是到起始顶点的距离排列的包含（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）的tuple
- */
-SNodes dijkstra(const Matrix &amp;graph, uint startNodeIndex) &#123;
-    const uint numOfNodes = graph.size();   // 图中顶点的个数
-    // S是已计算出最短路径的顶点的集合（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）
-    SNodes visitedNodes;
-    // U是未计算出最短路径的顶点的集合（其中的key为顶点编号，value为到起始顶点最短距离和最短路径中上一个节点编号组成的pair）
-    UNodes unvisitedNodes;
-
-    // 对S和U集合进行初始化，起始顶点的距离为0，其他顶点的距离为无穷大
-    // 最短路径中当前顶点的上一个顶点初始化为起始顶点，后面会逐步进行修正
-    for (auto i = 0; i &lt; numOfNodes; ++i) &#123;
-        if (i == startNodeIndex) visitedNodes.emplace_back(i, 0, startNodeIndex);
-        else unvisitedNodes.emplace_back(i, graph[startNodeIndex][i], startNodeIndex);
-    &#125;
-
-    while (!unvisitedNodes.empty()) &#123;
-        // 从U中找到距离起始顶点距离最短的顶点，加入S，同时从U中删除
-        auto nextNode = searchNearest(unvisitedNodes);
-        unvisitedNodes.erase(find(unvisitedNodes.begin(), unvisitedNodes.end(), nextNode));
-        visitedNodes.emplace_back(nextNode);
-        // 更新U集合中各个顶点的最短距离以及最短路径中的上一个顶点
-        for (auto &amp;node: unvisitedNodes) &#123;
-            // 更新的判断依据就是起始顶点到当前顶点（nextNode）距离加上当前顶点到U集合中顶点的距离小于原来起始顶点到U集合中顶点的距离
-            // 更新最短距离的时候同时需要更新最短路径中的上一个顶点为nextNode
-            if (graph[get&lt;0&gt;(nextNode)][get&lt;0&gt;(node)] != UINT_MAX &amp;&amp;
-                graph[get&lt;0&gt;(nextNode)][get&lt;0&gt;(node)] + get&lt;1&gt;(nextNode) &lt; get&lt;1&gt;(node)) &#123;
-                get&lt;1&gt;(node) = graph[get&lt;0&gt;(nextNode)][get&lt;0&gt;(node)] + get&lt;1&gt;(nextNode);
-                get&lt;2&gt;(node) = get&lt;0&gt;(nextNode);
-            &#125;
-        &#125;
-    &#125;
-
-    return visitedNodes;
-&#125;
-
-
-/***
- * 对使用迪克斯特拉算法求解的最短路径进行打印输出
- * @param paths vector表示的最短路径集合
- * 每个元素是到起始顶点的距离排列的包含（顶点编号，当前顶点到起始点最短距离，最短路径中当前顶点的上一个顶点）的tuple
- */
-void print(const SNodes &amp;paths) &#123;
-    stack&lt;int&gt; tracks;  //从尾部出发，使用stack将每个顶点的最短路径中的前一个顶点入栈，然后出栈的顺序就是最短路径顺序
-    // 第一个元素是起始点，从第二个元素进行打印输出
-    for (auto it = ++paths.begin(); it != paths.end(); ++it) &#123;
-        // 打印头部信息
-        printf(&quot;%c -&gt; %c:\t Length: %d\t Paths: %c&quot;,
-               char(get&lt;0&gt;(paths[0]) + 65),
-               char(get&lt;0&gt;(*it) + 65),
-               get&lt;1&gt;(*it),
-               char(get&lt;0&gt;(paths[0]) + 65));
-        auto pointer = *it;
-        // 如果当前指针pointer指向的节点有中途节点（判断的条件是最短路径中的前一个节点不是起始点）
-        while (get&lt;2&gt;(pointer) != get&lt;0&gt;(paths[0])) &#123;
-            tracks.push(get&lt;0&gt;(pointer));
-            // Lambda表达式，使用find_if函数把当前顶点的前一个顶点从paths中找出来继续进行循环直到前一个节点就是起始点
-            auto condition = [pointer](tuple&lt;uint, uint, uint&gt; x) &#123; return get&lt;0&gt;(x) == get&lt;2&gt;(pointer); &#125;;
-            pointer = *find_if(paths.begin(), paths.end(), condition);
-        &#125;
-        tracks.push(get&lt;0&gt;(pointer));
-
-        // 以出栈的顺序进行打印输出
-        while (!tracks.empty()) &#123;
-            printf(&quot; -&gt; %c&quot;, char(tracks.top() + 65));
-            tracks.pop();
-        &#125;
-        printf(&quot;\n&quot;);
-    &#125;
-&#125;
-
-int main() &#123;
-    Matrix graph = &#123;
-            &#123;0,        12,       UINT_MAX, UINT_MAX, UINT_MAX, 16, 14&#125;,
-            &#123;12,       0,        10,       UINT_MAX, UINT_MAX, 7, UINT_MAX&#125;,
-            &#123;UINT_MAX, 10,       0, 3,               5,        6, UINT_MAX&#125;,
-            &#123;UINT_MAX, UINT_MAX, 3, 0,               4, UINT_MAX, UINT_MAX&#125;,
-            &#123;UINT_MAX, UINT_MAX, 5, 4,               0,        2,  8&#125;,
-            &#123;16,       7,        6,        UINT_MAX, 2,        9,  9&#125;,
-            &#123;14,       UINT_MAX, UINT_MAX, UINT_MAX, 8,        9,  0&#125;
-    &#125;;  // 图对应的连接矩阵
-    auto results = dijkstra(graph, uint(&#39;D&#39; - 65));          // 选取顶点C（大写字母A的ASCII编码是65）
-    print(results);     // 打印输出结果
-    return 0;
-&#125;
-</code></pre>
 <p>运行结果：</p>
-<pre><code>D -&gt; C:     Length: 3     Paths: D -&gt; C
-D -&gt; E:     Length: 4     Paths: D -&gt; E
-D -&gt; F:     Length: 6     Paths: D -&gt; E -&gt; F
-D -&gt; G:     Length: 12     Paths: D -&gt; E -&gt; G
-D -&gt; B:     Length: 13     Paths: D -&gt; C -&gt; B
-D -&gt; A:     Length: 22     Paths: D -&gt; E -&gt; F -&gt; A
-</code></pre>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="built_in">C</span><span class="operator">:</span>   <span class="built_in">Length</span><span class="operator">:</span> <span class="number">3</span>	 <span class="variable">Paths</span><span class="operator">:</span> <span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="built_in">C</span></span><br><span class="line"><span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="built_in">E</span><span class="operator">:</span>   <span class="built_in">Length</span><span class="operator">:</span> <span class="number">4</span>	 <span class="variable">Paths</span><span class="operator">:</span> <span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="built_in">E</span></span><br><span class="line"><span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="variable">F</span><span class="operator">:</span>   <span class="built_in">Length</span><span class="operator">:</span> <span class="number">6</span>	 <span class="variable">Paths</span><span class="operator">:</span> <span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="built_in">E</span> <span class="operator">-&gt;</span> <span class="variable">F</span></span><br><span class="line"><span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="variable">G</span><span class="operator">:</span>   <span class="built_in">Length</span><span class="operator">:</span> <span class="number">12</span>	 <span class="variable">Paths</span><span class="operator">:</span> <span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="built_in">E</span> <span class="operator">-&gt;</span> <span class="variable">G</span></span><br><span class="line"><span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="variable">B</span><span class="operator">:</span>   <span class="built_in">Length</span><span class="operator">:</span> <span class="number">13</span>	 <span class="variable">Paths</span><span class="operator">:</span> <span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="built_in">C</span> <span class="operator">-&gt;</span> <span class="variable">B</span></span><br><span class="line"><span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="variable">A</span><span class="operator">:</span>   <span class="built_in">Length</span><span class="operator">:</span> <span class="number">22</span>	 <span class="variable">Paths</span><span class="operator">:</span> <span class="built_in">D</span> <span class="operator">-&gt;</span> <span class="built_in">E</span> <span class="operator">-&gt;</span> <span class="variable">F</span> <span class="operator">-&gt;</span> <span class="variable">A</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <h2 id=""><a href="#" class="headerlink" title=""></a></h2>
     </div>
 

@@ -170,22 +170,18 @@
 <p>Given a string, your task is to count how many palindromic substrings in this string.</p>
 <p>The substrings with different start indexes or end indexes are counted as different substrings even they consist of same characters.</p>
 <p><strong>Example 1:</strong></p>
-<pre><code>Input: &quot;abc&quot;
-Output: 3
-Explanation: Three palindromic strings: &quot;a&quot;, &quot;b&quot;, &quot;c&quot;.
-</code></pre>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">Input:</span> <span class="string">&quot;abc&quot;</span></span><br><span class="line"><span class="symbol">Output:</span> <span class="number">3</span></span><br><span class="line"><span class="symbol">Explanation:</span> Three palindromic strings: <span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>, <span class="string">&quot;c&quot;</span>.</span><br></pre></td></tr></table></figure>
+
 <p><strong>Example 2:</strong></p>
-<pre><code>Input: &quot;aaa&quot;
-Output: 6
-Explanation: Six palindromic strings: &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;aa&quot;, &quot;aa&quot;, &quot;aaa&quot;.
-</code></pre>
+<figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">Input:</span> <span class="string">&quot;aaa&quot;</span></span><br><span class="line"><span class="symbol">Output:</span> <span class="number">6</span></span><br><span class="line"><span class="symbol">Explanation:</span> Six palindromic strings: <span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;a&quot;</span>, <span class="string">&quot;aa&quot;</span>, <span class="string">&quot;aa&quot;</span>, <span class="string">&quot;aaa&quot;</span>.</span><br></pre></td></tr></table></figure>
+
 <p>题目要求是需要计算出给定字符串中所有回文子串的个数（单个字符也算一个回文子串，不同索引位置的相同内容的回文子串也算不同的回文）</p>
 <h2 id="思路分析"><a href="#思路分析" class="headerlink" title="思路分析"></a>思路分析</h2><p>有两种思路：一种是采用动态规划的方法；另一种是采用中心扩散的方法。</p>
 <ol>
 <li><p>动态规划</p>
 <p>如果用<code>dp[i][j]</code>表示从第<code>i</code>个字符到第<code>j</code>个字符是不是回文子串，<code>s</code>表示给定字符串，则有</p>
-<p><code>dp[i][j]</code>= (<code>s[i]</code> == <code>s[j]</code>) &amp;&amp; (<code>i</code> - <code>j</code> &lt; 2) （这里表示的是子串是一个字符，两个字符的情形）</p>
-<p><code>dp[i][j]</code>= (<code>s[i]</code> == <code>s[j]</code>) &amp;&amp; (<code>dp[i + 1][j -1]</code> ) （这里表示的是除了前面两种情形之外的情形）</p>
+<p><code>dp[i][j]</code>&#x3D; (<code>s[i]</code> &#x3D;&#x3D; <code>s[j]</code>) &amp;&amp; (<code>i</code> - <code>j</code> &lt; 2) （这里表示的是子串是一个字符，两个字符的情形）</p>
+<p><code>dp[i][j]</code>&#x3D; (<code>s[i]</code> &#x3D;&#x3D; <code>s[j]</code>) &amp;&amp; (<code>dp[i + 1][j -1]</code> ) （这里表示的是除了前面两种情形之外的情形）</p>
 <p>注：三个字符串的情形既可以归类到第一种情况（如果归类到第一种情况，则条件需要变为<code>i</code> - <code>j</code> &lt; 3），也可以归类到第二种情形</p>
 </li>
 <li><p>中心扩散</p>
@@ -195,26 +191,8 @@ Explanation: Six palindromic strings: &quot;a&quot;, &quot;a&quot;, &quot;a&quot
 </ol>
 <h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><ol>
 <li><p>动态规划</p>
-<pre><code class="C++">class Solution &#123;
-public:
-    int countSubstrings(string s) &#123;
-        const int N = static_cast&lt;int&gt;(s.size());   // 如果不强转就会超时，好奇怪
-        int count = 0;
-        // 下面这一行换成原生数组也是可以的int dp[N][N]
-        vector&lt;vector&lt;bool&gt;&gt; dp(N, vector&lt;bool&gt;(N));
-        // 从后面遍历是为了让求dp[i][j]的时候dp[i + 1][j - 1]是已经计算过的
-        for (auto i = N - 1; i &gt;= 0; --i) &#123;
-            for (auto j = i; j &lt; N; ++j) &#123;
-                // (j - i &lt; 2)包含了两种情况，使得dp[i + 1][j - 1]可以包含剩下的所有情况
-                dp[i][j] = (s[i] == s[j]) &amp;&amp; ((j - i &lt; 2) || dp[i + 1][j - 1]);
-                if (dp[i][j]) count++;
-            &#125;
-        &#125;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">countSubstrings</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="type">const</span> <span class="type">int</span> N = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(s.<span class="built_in">size</span>());   <span class="comment">// 如果不强转就会超时，好奇怪</span></span><br><span class="line">        <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 下面这一行换成原生数组也是可以的int dp[N][N]</span></span><br><span class="line">        vector&lt;vector&lt;<span class="type">bool</span>&gt;&gt; <span class="built_in">dp</span>(N, <span class="built_in">vector</span>&lt;<span class="type">bool</span>&gt;(N));</span><br><span class="line">        <span class="comment">// 从后面遍历是为了让求dp[i][j]的时候dp[i + 1][j - 1]是已经计算过的</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> i = N - <span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> j = i; j &lt; N; ++j) &#123;</span><br><span class="line">                <span class="comment">// (j - i &lt; 2)包含了两种情况，使得dp[i + 1][j - 1]可以包含剩下的所有情况</span></span><br><span class="line">                dp[i][j] = (s[i] == s[j]) &amp;&amp; ((j - i &lt; <span class="number">2</span>) || dp[i + <span class="number">1</span>][j - <span class="number">1</span>]);</span><br><span class="line">                <span class="keyword">if</span> (dp[i][j]) count++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-        return count;
-    &#125;
-&#125;;
-</code></pre>
 <p>在使用C++实现的时候，我发现一些有意思的现象：</p>
 <ol>
 <li>在第四行<code>s.size()</code>的返回类型本来是<code>size_t</code>，但是如果直接使用<code>size_t</code>的话，运行直接超时。我强制转换为<code>int</code>以后就可以通过测试。有童鞋能帮我解答一下疑惑吗？🙏</li>
@@ -222,40 +200,11 @@ public:
 </ol>
 </li>
 <li><p>中心扩散</p>
-<pre><code class="C++">class Solution &#123;
-private:
-    int count = 0;
-    void extendPalindrome(const string&amp; s, int left, int right) &#123;
-        while ((left &gt;= 0) &amp;&amp; (right &lt; s.size()) &amp;&amp; (s[left] == s[right])) &#123;
-            --left;
-            ++right;
-            ++count;
-        &#125;
-    &#125;
-
-public:
-    int countSubstrings(string s) &#123;
-        for (int i = 0; i &lt; s.size(); ++i) &#123;
-            extendPalindrome(s, i, i);      // 对于奇数个字符的回文
-            extendPalindrome(s, i, i + 1);  // 对于偶数个字符的回文
-        &#125;
-        return count;
-    &#125;
-&#125;;
-</code></pre>
-</li>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">extendPalindrome</span><span class="params">(<span class="type">const</span> string&amp; s, <span class="type">int</span> left, <span class="type">int</span> right)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> ((left &gt;= <span class="number">0</span>) &amp;&amp; (right &lt; s.<span class="built_in">size</span>()) &amp;&amp; (s[left] == s[right])) &#123;</span><br><span class="line">            --left;</span><br><span class="line">            ++right;</span><br><span class="line">            ++count;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">countSubstrings</span><span class="params">(string s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; s.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            <span class="built_in">extendPalindrome</span>(s, i, i);      <span class="comment">// 对于奇数个字符的回文</span></span><br><span class="line">            <span class="built_in">extendPalindrome</span>(s, i, i + <span class="number">1</span>);  <span class="comment">// 对于偶数个字符的回文</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
 </ol>
 <h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><p>Scala的实现是在LeetCode上看到一个大神的答案，使用纯函数实现，写得很美妙，拿过来与大家分享！</p>
-<pre><code class="Scala">object Solution &#123;
-    def countSubstrings(s: String): Int = &#123;
-        (for &#123;
-            i &lt;- 0 until s.length
-            j &lt;- List(i, i + 1)
-            _ &lt;- (i to 0 by -1).zip(j until s.length).takeWhile(p =&gt; s(p._1) == s(p._2))
-        &#125; yield true).length
-    &#125;
-&#125;
-</code></pre>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">countSubstrings</span></span>(s: <span class="type">String</span>): <span class="type">Int</span> = &#123;</span><br><span class="line">        (<span class="keyword">for</span> &#123;</span><br><span class="line">            i &lt;- <span class="number">0</span> until s.length</span><br><span class="line">            j &lt;- <span class="type">List</span>(i, i + <span class="number">1</span>)</span><br><span class="line">            _ &lt;- (i to <span class="number">0</span> by <span class="number">-1</span>).zip(j until s.length).takeWhile(p =&gt; s(p._1) == s(p._2))</span><br><span class="line">        &#125; <span class="keyword">yield</span> <span class="literal">true</span>).length</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>这也是采用中心扩散法实现的。</p>
 <p><code>for</code>循环中的<code>i</code>从左到右依次遍历给定字符串，<code>j</code>控制的是奇数个数的子串情况和偶数个数的子串情况，<code>for</code>循环中的第三个匿名变量其实相当于一个条件判断。整个<code>for</code>循环返回一个<code>vector</code>（里面都是<code>true</code>），最后统计这个<code>vector</code>个中包含元素的个数即可。</p>
 <p>这里重点说一下<code>for</code>循环中的第三个匿名循环控制语句。<code>(i to 0 by -1).zip(j until s.length)</code>生成一个从中间向两边扩散的<code>List</code>（其实是<code>List</code>的子类<code>::</code>非空链表），这个<code>List</code>中的每个元素是一个<code>Tuple2</code>包含的是左指针<code>i</code>和右指针<code>j</code>。<code>takeWhile</code>方法是起到一个过滤作用，将左指针和右指针指向的值相等的这<code>Tuple2</code>返回（其实返回类型是<code>::</code>,只是里面只有一个元素）。如果左指针和右指针指向的值不相等，则返回<code>Nil（一个空的List）</code>。如果返回的是<code>Nil</code>的话，则不会生成一个<code>true</code>。这样子，其实第三个循环控制语句起到的是判断的作用。</p>

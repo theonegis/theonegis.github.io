@@ -181,50 +181,23 @@
 <p>我这里从官网下载了最新的2.4.4版本（3.X版本也发布了，但是还是先用稳定一点的吧）的源码进行编译安装。GDAL依赖的库都可以使用HomeBrew安装，我的方法是直接使用Brew安装GDAL，然后再卸载掉GDAL，这样GDAL依赖的第三方库都就自动安装了。</p>
 <p>此外，还需要系统中安装了Java JDK和SWIG以及Ant编译工具。</p>
 <p>下面进行GDAL源码编译并安装到<code>/usr/local</code>目录中。注意配置系统中Java的路径，我这里使用的是JDK11。</p>
-<pre><code>cd gdal-2.4.4
-./configure --with-threads --disable-static --without-grass --with-jasper=/usr/local/lib --with-libtiff=/usr/local/lib --with-jpeg=/usr/local/lib --with-gif=/usr/local/lib --with-png=/usr/local/lib --with-geotiff=/usr/local/lib --with-pcraster=internal --with-geos=/usr/local/lib --with-static-proj4=/usr/local/lib --with-expat=/usr/local/lib --with-curl=/usr/local/lib --with-netcdf=/usr/local/lib --with-hdf5=/usr/local/lib --with-opencl --with-libz=internal --without-python --with-java --with-jvm-lib=/Library/Java/JavaVirtualMachines/openjdk-11.0.2.jdk/Contents/Home 
-make
-sudo make install
-</code></pre>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd gdal-2.4.4</span><br><span class="line">./configure --with-threads --disable-static --without-grass <span class="attribute">--with-jasper</span>=/usr/local/lib <span class="attribute">--with-libtiff</span>=/usr/local/lib <span class="attribute">--with-jpeg</span>=/usr/local/lib <span class="attribute">--with-gif</span>=/usr/local/lib <span class="attribute">--with-png</span>=/usr/local/lib <span class="attribute">--with-geotiff</span>=/usr/local/lib <span class="attribute">--with-pcraster</span>=internal <span class="attribute">--with-geos</span>=/usr/local/lib <span class="attribute">--with-static-proj4</span>=/usr/local/lib <span class="attribute">--with-expat</span>=/usr/local/lib <span class="attribute">--with-curl</span>=/usr/local/lib <span class="attribute">--with-netcdf</span>=/usr/local/lib <span class="attribute">--with-hdf5</span>=/usr/local/lib --with-opencl <span class="attribute">--with-libz</span>=internal --without-python --with-java <span class="attribute">--with-jvm-lib</span>=/Library/Java/JavaVirtualMachines/openjdk-11.0.2.jdk/Contents/Home </span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
 <p>然后接下来我们编译Java接口需要的相关文件。<code>make install</code>命令会将动态链接库<code> libgdalalljni.20.dylib</code>和<code>libgdalalljni.dylib</code>拷贝到<code>/usr/local/lib</code>目录中。</p>
-<pre><code>cd swig/java
-make CFLAGS=&quot;-I/Library/Java/JavaVirtualMachines/openjdk-11.0.2.jdk/Contents/Home/include -I//Library/Java/JavaVirtualMachines/openjdk-11.0.2.jdk/Contents/Home/include/darwin&quot;
-sudo make install
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> swig/java</span><br><span class="line">make CFLAGS=<span class="string">&quot;-I/Library/Java/JavaVirtualMachines/openjdk-11.0.2.jdk/Contents/Home/include -I//Library/Java/JavaVirtualMachines/openjdk-11.0.2.jdk/Contents/Home/include/darwin&quot;</span></span><br><span class="line"><span class="built_in">sudo</span> make install</span><br></pre></td></tr></table></figure>
+
 <p><code>make</code>命令会生成我们需要的<code>gdal.jar</code>包，是我们做Java开发需要的依赖包，必须添加到工程中。</p>
 <p>我以为这样就可以了，但是当我在工程中调用GDAL的时候，提示找不到Native Library，然后我就把<code> libgdalalljni.20.dylib</code>和<code>libgdalalljni.dylib</code>又拷贝到了<code>/Library/Java/Extensions</code>目录中，问题才得以解决。</p>
 <h2 id="Maven安装本地JAR"><a href="#Maven安装本地JAR" class="headerlink" title="Maven安装本地JAR"></a>Maven安装本地JAR</h2><p>我习惯使用Maven管理依赖，但是Maven中央仓库中没有提供GDAL 2.4.4版本的JAR包。所以需要把刚才生成的<code>gdal.jar</code>文件安装到本地Maven仓库中，这样才能在Maven工程中使用。</p>
 <p>使用如下命令进行安装以后，我们就可以在工程中开心的使用了！</p>
-<pre><code>mvn install:install-file -Dfile=/Users/TheOneGIS/Development/gdal-2.4.4/swig/java/gdal.jar -DgroupId=org.gdal -DartifactId=gdal -Dversion=2.4.4 -Dpackaging=jar
-</code></pre>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn install:install-file <span class="attribute">-Dfile</span>=/Users/TheOneGIS/Development/gdal-2.4.4/swig/java/gdal.jar <span class="attribute">-DgroupId</span>=org.gdal <span class="attribute">-DartifactId</span>=gdal <span class="attribute">-Dversion</span>=2.4.4 <span class="attribute">-Dpackaging</span>=jar</span><br></pre></td></tr></table></figure>
+
 <h2 id="使用Java版GDAL示例"><a href="#使用Java版GDAL示例" class="headerlink" title="使用Java版GDAL示例"></a>使用Java版GDAL示例</h2><p>这里使用Better Java（Kotlin）语言进行一个简单的Shapefile文件读取的示例。首先，新建Maven Kotlin工程；然后在POM文件中添加GDAL依赖，最后书写我们的HelloWorld示例。</p>
-<pre><code class="XML">&lt;dependency&gt;
-  &lt;groupId&gt;org.gdal&lt;/groupId&gt;
-  &lt;artifactId&gt;gdal&lt;/artifactId&gt;
-  &lt;version&gt;2.4.4&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.gdal<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>gdal<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.4.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
 <p>示例代码如下：</p>
-<pre><code class="Kotlin">package cn.demo
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.gdal.gdal.*</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">(args: <span class="type">Array</span>&lt;<span class="type">String</span>&gt;)</span></span> &#123;</span><br><span class="line">    <span class="comment">// 初始化GDAL环境</span></span><br><span class="line">    gdal.UseExceptions()</span><br><span class="line">    gdal.AllRegister()</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 读取数据，输出数据信息</span></span><br><span class="line">    <span class="keyword">val</span> path = <span class="string">&quot;China.shp&quot;</span></span><br><span class="line">    <span class="keyword">val</span> ds = gdal.OpenEx(path)</span><br><span class="line">    <span class="keyword">val</span> layer = ds.GetLayer(<span class="number">0</span>)</span><br><span class="line">    println(layer.GetName())</span><br><span class="line">    <span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">0</span> until layer.GetFeatureCount()) &#123;</span><br><span class="line">        print(layer.GetNextFeature().GetFieldAsString(<span class="string">&quot;NAME&quot;</span>))</span><br><span class="line">    &#125;</span><br><span class="line">    ds.delete()</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-import org.gdal.gdal.*
-
-fun main(args: Array&lt;String&gt;) &#123;
-    // 初始化GDAL环境
-    gdal.UseExceptions()
-    gdal.AllRegister()
-    
-        // 读取数据，输出数据信息
-    val path = &quot;China.shp&quot;
-    val ds = gdal.OpenEx(path)
-    val layer = ds.GetLayer(0)
-    println(layer.GetName())
-    for (i in 0 until layer.GetFeatureCount()) &#123;
-        print(layer.GetNextFeature().GetFieldAsString(&quot;NAME&quot;))
-    &#125;
-    ds.delete()
-&#125;
-</code></pre>
 
     </div>
 

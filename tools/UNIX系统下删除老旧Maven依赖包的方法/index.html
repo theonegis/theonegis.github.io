@@ -172,12 +172,12 @@
 <h1 id="UNIX系统下删除老旧Maven依赖包的方法"><a href="#UNIX系统下删除老旧Maven依赖包的方法" class="headerlink" title="UNIX系统下删除老旧Maven依赖包的方法"></a>UNIX系统下删除老旧Maven依赖包的方法</h1><p>笔记本是macOS，磁盘只有256，Maven下载的依赖包，特别是老旧的JAR很占空间，如何使用一行命令删除这些依赖包呢？</p>
 <p>基本思想是使用<code>find</code>命令找出来给定时间段没有使用过的JAR包（通过POM文件的时间戳判断），然后使用<code>rm</code>命令进行删除。</p>
 <p>下面的命令通过遍历<code>~/.m2</code>文件夹下修改时间大于5天的以<code>.pom</code>为扩展名的文件，然后删除该POM文件所在的父文件夹。</p>
-<pre><code>find ~/.m2 -ctime +5d -iname &#39;*.pom&#39; | while read pom; do parent=`dirname &quot;$pom&quot;`; rm -rf &quot;$parent&quot;
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ~/.m2 -ctime +5d -iname <span class="string">&#x27;*.pom&#x27;</span> | <span class="keyword">while</span> <span class="built_in">read</span> pom; <span class="keyword">do</span> parent=`<span class="built_in">dirname</span> <span class="string">&quot;<span class="variable">$pom</span>&quot;</span>`; <span class="built_in">rm</span> -rf <span class="string">&quot;<span class="variable">$parent</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
 <p>下面稍微看一下<code>find</code>命令，我们可以通过<code>-atime</code>和<code>-ctime</code>分别给出查找文件的最后访问时间获最后修改时间到当前的时间间隔（时间单位可以是s，m，h，d，w，分别代表秒，分钟，小时，天和周）。此外，我们可以直接通过<code>-amin</code>和<code>-cmin</code>分别指定以分钟为单位的时常。具体命令的使用可以使用<code>man find</code>进行查看。</p>
 <p>最后要说的是，在进行正式删除之前建议通过Dry Run查看一下那些文件要删除，不要删错了以后后悔莫及！<br>所以在正式删除之前，先试试下面的命令吧！</p>
-<pre><code>find ~/.m2 -ctime +5d -iname &#39;*.pom&#39; | while read pom; do parent=`dirname &quot;$pom&quot;`; echo &quot;$parent&quot;; done &gt; output.txt
-</code></pre>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find ~/.m2 -ctime +5d -iname <span class="string">&#x27;*.pom&#x27;</span> | <span class="keyword">while</span> <span class="built_in">read</span> pom; <span class="keyword">do</span> parent=`<span class="built_in">dirname</span> <span class="string">&quot;<span class="variable">$pom</span>&quot;</span>`; <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$parent</span>&quot;</span>; <span class="keyword">done</span> &gt; output.txt</span><br></pre></td></tr></table></figure>
+
 <p>Windows下的删除没有试过，不过应该可以使用对应的BAT批处理相关命令进行操作。如果对于Windows 10，我们可以采用Linux子系统（WSL）进行操作。</p>
 
     </div>

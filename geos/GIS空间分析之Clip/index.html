@@ -177,34 +177,8 @@
 <p>对于矢量数据的操作，有的是通过Geometry类的方法实现的，有的是通过Layer类的方法实现的。</p>
 <p>下面来看一下我们的数据，红色区块是黄河流域，红色的线表示的是各个县的边界。</p>
 <p><img src="/images/geos/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-06-16%E4%B8%8A%E5%8D%888.34.13.png"></p>
-<h1 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h1><pre><code class="Python">from pathlib import Path
-import ogr
+<h1 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"><span class="keyword">import</span> ogr</span><br><span class="line"></span><br><span class="line">ogr.UseExceptions()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取被裁剪的数据</span></span><br><span class="line">in_ds: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/County.shp&#x27;</span>)</span><br><span class="line">in_lyr: ogr.Layer = in_ds.GetLayer()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 读取裁剪范围数据</span></span><br><span class="line">method_ds: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/YellowRiver.shp&#x27;</span>)</span><br><span class="line">method_lyr: ogr.Layer = method_ds.GetLayer()</span><br><span class="line"></span><br><span class="line">fname: <span class="built_in">str</span> = <span class="string">&#x27;Clipped.shp&#x27;</span></span><br><span class="line"><span class="comment"># 创建被裁剪以后的输出文件</span></span><br><span class="line">driver: ogr.Driver = ogr.GetDriverByName(<span class="string">&#x27;ESRI Shapefile&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> Path(fname).exists():</span><br><span class="line">    driver.DeleteDataSource(fname)</span><br><span class="line"><span class="comment"># 新建DataSource，Layer</span></span><br><span class="line">out_ds: ogr.DataSource = driver.CreateDataSource(fname)</span><br><span class="line">out_lyr: ogr.Layer = out_ds.CreateLayer(fname,</span><br><span class="line">                                        in_lyr.GetSpatialRef(),</span><br><span class="line">                                        in_lyr.GetGeomType())</span><br><span class="line"><span class="comment"># 开始进行裁剪</span></span><br><span class="line">in_lyr.Clip(method_lyr, out_lyr)</span><br><span class="line">out_ds.FlushCache()</span><br><span class="line"><span class="keyword">del</span> in_ds, method_ds, out_ds</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-ogr.UseExceptions()
-
-# 读取被裁剪的数据
-in_ds: ogr.DataSource = ogr.Open(&#39;../data/County.shp&#39;)
-in_lyr: ogr.Layer = in_ds.GetLayer()
-
-# 读取裁剪范围数据
-method_ds: ogr.DataSource = ogr.Open(&#39;../data/YellowRiver.shp&#39;)
-method_lyr: ogr.Layer = method_ds.GetLayer()
-
-fname: str = &#39;Clipped.shp&#39;
-# 创建被裁剪以后的输出文件
-driver: ogr.Driver = ogr.GetDriverByName(&#39;ESRI Shapefile&#39;)
-if Path(fname).exists():
-    driver.DeleteDataSource(fname)
-# 新建DataSource，Layer
-out_ds: ogr.DataSource = driver.CreateDataSource(fname)
-out_lyr: ogr.Layer = out_ds.CreateLayer(fname,
-                                        in_lyr.GetSpatialRef(),
-                                        in_lyr.GetGeomType())
-# 开始进行裁剪
-in_lyr.Clip(method_lyr, out_lyr)
-out_ds.FlushCache()
-del in_ds, method_ds, out_ds
-</code></pre>
 <p>裁剪的结果如下：</p>
 <p><img src="/images/geos/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A72020-06-16%E4%B8%8A%E5%8D%888.34.55.png"></p>
 <h1 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h1><ol>

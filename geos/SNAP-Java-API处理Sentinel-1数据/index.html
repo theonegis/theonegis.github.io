@@ -177,64 +177,8 @@
 <p>预处理的流程包括：首先对GRD各个极化波进行段辐射校正输出后向散射系数（Sigma nought），然后进行数据裁剪，最后进行地形校正的。</p>
 <p>下面是使用Better Java （Kotlin）进行entinel-1 GRD数据处理的源码。其中，<code>GPF.createProduct</code>方法需要传入Operation的名称和参数，这些信息都可以通过查看Java源代码的方式找到。</p>
 <p>代码运行过程中需要下载DEM数据，可能会比较耗时。如果不对数据裁剪，由于原始数据太大，可能会造成内存溢出。我的笔记本根本跑不动。</p>
-<pre><code class="Kotlin">package cn.demo
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.demo</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.io.FilenameUtils</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> kotlin.collections.HashMap</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.esa.snap.core.dataio.ProductIO</span><br><span class="line"><span class="keyword">import</span> org.esa.snap.core.gpf.GPF</span><br><span class="line"><span class="keyword">import</span> com.bc.ceres.core.PrintWriterConciseProgressMonitor</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.locationtech.jts.io.WKTReader</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">val</span> srcPath =</span><br><span class="line">    Paths.<span class="keyword">get</span>(<span class="string">&quot;/Users/Demo/Desktop/S1A_IW_GRDH_1SDV_20200301T104455_20200301T104520_031481_03A00B_0A9F.zip&quot;</span>)</span><br><span class="line">    <span class="keyword">val</span> srcProduct = ProductIO.readProduct(srcPath.toFile())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> outDir = <span class="string">&quot;/Users/Demo/Desktop&quot;</span></span><br><span class="line">    <span class="keyword">val</span> baseName = FilenameUtils.getBaseName(srcPath.toString())</span><br><span class="line">    GPF.getDefaultInstance().operatorSpiRegistry.loadOperatorSpis()</span><br><span class="line">    <span class="keyword">for</span> (polar <span class="keyword">in</span> arrayOf(<span class="string">&quot;VV&quot;</span>, <span class="string">&quot;VH&quot;</span>)) &#123;</span><br><span class="line">        <span class="comment">// 首先进行辐射校正（CALIBRATION）</span></span><br><span class="line">        <span class="comment">// 对应是的org.esa.s1tbx.calibration.gpf.CalibrationOp类</span></span><br><span class="line">        <span class="keyword">var</span> parameters = HashMap&lt;String, Any&gt;()</span><br><span class="line">        parameters[<span class="string">&quot;outputSigmaBand&quot;</span>] = <span class="literal">true</span></span><br><span class="line">        parameters[<span class="string">&quot;selectedPolarisations&quot;</span>] = polar</span><br><span class="line">        <span class="keyword">val</span> caliProduct = GPF.createProduct(<span class="string">&quot;Calibration&quot;</span>, parameters, srcProduct)</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 然后进行裁剪，如果不裁剪，图像太大，容易OutOfMemory</span></span><br><span class="line">        <span class="comment">// 对应的是org.esa.snap.core.gpf.common.SubsetOp类</span></span><br><span class="line">        <span class="keyword">val</span> wktRect = <span class="string">&quot;POLYGON((108.175 33.873,108.782 33.873,108.782 33.129,108.175 33.129,108.175 33.873))&quot;</span></span><br><span class="line">        parameters[<span class="string">&quot;geoRegion&quot;</span>] = WKTReader().read(wktRect)</span><br><span class="line">        parameters[<span class="string">&quot;bandNames&quot;</span>] = <span class="string">&quot;Sigma0_<span class="subst">$&#123;polar&#125;</span>&quot;</span></span><br><span class="line">        <span class="keyword">val</span> subsetProduct = GPF.createProduct(<span class="string">&quot;Subset&quot;</span>, parameters, caliProduct)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 然后进行地形校正（TERRAIN CORRECTION）</span></span><br><span class="line">        <span class="comment">// 对应的是org.esa.s1tbx.sar.gpf.geometric.RangeDopplerGeocodingOp</span></span><br><span class="line">        <span class="keyword">val</span> corrPath = <span class="string">&quot;<span class="subst">$&#123;outDir&#125;</span>/<span class="subst">$&#123;baseName&#125;</span>_Corrected_<span class="subst">$&#123;polar&#125;</span>&quot;</span></span><br><span class="line">        parameters.clear()</span><br><span class="line">        parameters[<span class="string">&quot;pixelSpacingInMeter&quot;</span>] = <span class="number">10.0</span></span><br><span class="line">        parameters[<span class="string">&quot;sourceBands&quot;</span>] = <span class="string">&quot;Sigma0_<span class="subst">$&#123;polar&#125;</span>&quot;</span></span><br><span class="line">        <span class="keyword">val</span> corrProduct = GPF.createProduct(<span class="string">&quot;Terrain-Correction&quot;</span>, parameters, subsetProduct)</span><br><span class="line">        ProductIO.writeProduct(</span><br><span class="line">            corrProduct, corrPath, <span class="string">&quot;GeoTIFF&quot;</span>,</span><br><span class="line">            PrintWriterConciseProgressMonitor(System.<span class="keyword">out</span>)</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 最后进行对象销毁，释放内存空间</span></span><br><span class="line">        caliProduct.dispose()</span><br><span class="line">        subsetProduct.dispose()</span><br><span class="line">        corrProduct.dispose()</span><br><span class="line">    &#125;</span><br><span class="line">    srcProduct.dispose()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-import java.nio.file.Paths
-import org.apache.commons.io.FilenameUtils
-
-import kotlin.collections.HashMap
-
-import org.esa.snap.core.dataio.ProductIO
-import org.esa.snap.core.gpf.GPF
-import com.bc.ceres.core.PrintWriterConciseProgressMonitor
-
-import org.locationtech.jts.io.WKTReader
-
-
-fun main() &#123;
-    val srcPath =
-    Paths.get(&quot;/Users/Demo/Desktop/S1A_IW_GRDH_1SDV_20200301T104455_20200301T104520_031481_03A00B_0A9F.zip&quot;)
-    val srcProduct = ProductIO.readProduct(srcPath.toFile())
-
-    val outDir = &quot;/Users/Demo/Desktop&quot;
-    val baseName = FilenameUtils.getBaseName(srcPath.toString())
-    GPF.getDefaultInstance().operatorSpiRegistry.loadOperatorSpis()
-    for (polar in arrayOf(&quot;VV&quot;, &quot;VH&quot;)) &#123;
-        // 首先进行辐射校正（CALIBRATION）
-        // 对应是的org.esa.s1tbx.calibration.gpf.CalibrationOp类
-        var parameters = HashMap&lt;String, Any&gt;()
-        parameters[&quot;outputSigmaBand&quot;] = true
-        parameters[&quot;selectedPolarisations&quot;] = polar
-        val caliProduct = GPF.createProduct(&quot;Calibration&quot;, parameters, srcProduct)
-
-        // 然后进行裁剪，如果不裁剪，图像太大，容易OutOfMemory
-        // 对应的是org.esa.snap.core.gpf.common.SubsetOp类
-        val wktRect = &quot;POLYGON((108.175 33.873,108.782 33.873,108.782 33.129,108.175 33.129,108.175 33.873))&quot;
-        parameters[&quot;geoRegion&quot;] = WKTReader().read(wktRect)
-        parameters[&quot;bandNames&quot;] = &quot;Sigma0_$&#123;polar&#125;&quot;
-        val subsetProduct = GPF.createProduct(&quot;Subset&quot;, parameters, caliProduct)
-
-
-        // 然后进行地形校正（TERRAIN CORRECTION）
-        // 对应的是org.esa.s1tbx.sar.gpf.geometric.RangeDopplerGeocodingOp
-        val corrPath = &quot;$&#123;outDir&#125;/$&#123;baseName&#125;_Corrected_$&#123;polar&#125;&quot;
-        parameters.clear()
-        parameters[&quot;pixelSpacingInMeter&quot;] = 10.0
-        parameters[&quot;sourceBands&quot;] = &quot;Sigma0_$&#123;polar&#125;&quot;
-        val corrProduct = GPF.createProduct(&quot;Terrain-Correction&quot;, parameters, subsetProduct)
-        ProductIO.writeProduct(
-            corrProduct, corrPath, &quot;GeoTIFF&quot;,
-            PrintWriterConciseProgressMonitor(System.out)
-        )
-                
-          // 最后进行对象销毁，释放内存空间
-        caliProduct.dispose()
-        subsetProduct.dispose()
-        corrProduct.dispose()
-    &#125;
-    srcProduct.dispose()
-&#125;
-</code></pre>
 
     </div>
 

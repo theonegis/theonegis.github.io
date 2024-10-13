@@ -166,7 +166,7 @@
     <div class="divider"></div>
 
     <div class="content">
-        <h1 id="使用Rasterio读取栅格数据"><a href="#使用Rasterio读取栅格数据" class="headerlink" title="使用Rasterio读取栅格数据"></a>使用Rasterio读取栅格数据</h1><p>作者：阿振 邮箱：<a href="mailto:&#x74;&#x61;&#x6e;&#x7a;&#x68;&#x65;&#x6e;&#121;&#x75;&#x67;&#105;&#x73;&#64;&#49;&#x36;&#x33;&#46;&#99;&#x6f;&#109;">&#x74;&#x61;&#x6e;&#x7a;&#x68;&#x65;&#x6e;&#121;&#x75;&#x67;&#105;&#x73;&#64;&#49;&#x36;&#x33;&#46;&#99;&#x6f;&#109;</a> </p>
+        <h1 id="使用Rasterio读取栅格数据"><a href="#使用Rasterio读取栅格数据" class="headerlink" title="使用Rasterio读取栅格数据"></a>使用Rasterio读取栅格数据</h1><p>作者：阿振 邮箱：<a href="mailto:&#x74;&#97;&#x6e;&#122;&#104;&#x65;&#x6e;&#x79;&#x75;&#x67;&#x69;&#115;&#x40;&#x31;&#54;&#51;&#46;&#x63;&#x6f;&#109;">&#x74;&#97;&#x6e;&#122;&#104;&#x65;&#x6e;&#x79;&#x75;&#x67;&#x69;&#115;&#x40;&#x31;&#54;&#51;&#46;&#x63;&#x6f;&#109;</a> </p>
 <p>博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/80089375">https://blog.csdn.net/theonegis/article/details/80089375</a> </p>
 <p>修改时间：2018-06-06 </p>
 <p>声明：本文为博主原创文章，转载请注明原文出处</p>
@@ -176,9 +176,8 @@
 <p>Rasterio中栅格数据模型基本和GDAL类似，需要注意的是：</p>
 <p>在Rasterio 1.0以后，对于GeoTransform的表示弃用了GDAL风格的放射变换，而使用了Python放射变换的第三方库<a target="_blank" rel="noopener" href="https://github.com/sgillies/affine">affine</a>库的风格。</p>
 <p>对于放射变换</p>
-<pre><code>affine.Affine(a, b, c,
-              d, e, f)
-</code></pre>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">affine<span class="selector-class">.Affine</span>(<span class="selector-tag">a</span>, <span class="selector-tag">b</span>, c,</span><br><span class="line">              d, e, f)</span><br></pre></td></tr></table></figure>
+
 <p>GDAL中对应的参数顺序是：<code>(c, a, b, f, d, e)</code></p>
 <p>采用新的放射变换模型的好处是，如果你需要计算某个行列号的地理坐标，直接使用行列号跟给放射变换对象相乘即可，完全符合数学上矩阵乘法的操作，更加直观和方便。</p>
 <h1 id="栅格数据读取代码示例"><a href="#栅格数据读取代码示例" class="headerlink" title="栅格数据读取代码示例"></a>栅格数据读取代码示例</h1><p>下面的示例程序中演示了如何读取一个GeoTIFF文件并获取相关信息，需要注意的是：</p>
@@ -187,53 +186,11 @@
 <li>rasterio使用<code>read()</code>函数可以将数据集转为<code>numpy.ndarray</code>，该函数如果不带参数，将把数据的所有波段做转换（第一维是波段数），如果指定波段，则只取得指定波段对应的数据（波段索引从1开始）</li>
 <li>数据的很多元信息都是以数据集的属性进行表示的</li>
 </ol>
-<pre><code class="python">import rasterio
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> rasterio</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> rasterio.<span class="built_in">open</span>(<span class="string">&#x27;example.tif&#x27;</span>) <span class="keyword">as</span> ds:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;该栅格数据的基本数据集信息（这些信息都是以数据集属性的形式表示的）：&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;数据格式：<span class="subst">&#123;ds.driver&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;波段数目：<span class="subst">&#123;ds.count&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;影像宽度：<span class="subst">&#123;ds.width&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;影像高度：<span class="subst">&#123;ds.height&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;地理范围：<span class="subst">&#123;ds.bounds&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;反射变换参数（六参数模型）：\n <span class="subst">&#123;ds.transform&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;投影定义：<span class="subst">&#123;ds.crs&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="comment"># 获取第一个波段数据，跟GDAL一样索引从1开始</span></span><br><span class="line">    <span class="comment"># 直接获得numpy.ndarray类型的二维数组表示，如果read()函数不加参数，则得到所有波段（第一个维度是波段）</span></span><br><span class="line">    band1 = ds.read(<span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;第一波段的最大值：<span class="subst">&#123;band1.<span class="built_in">max</span>()&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;第一波段的最小值：<span class="subst">&#123;band1.<span class="built_in">min</span>()&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;第一波段的平均值：<span class="subst">&#123;band1.mean()&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="comment"># 根据地理坐标得到行列号</span></span><br><span class="line">    x, y = (ds.bounds.left + <span class="number">300</span>, ds.bounds.top - <span class="number">300</span>)  <span class="comment"># 距离左上角东300米，南300米的投影坐标</span></span><br><span class="line">    row, col = ds.index(x, y)  <span class="comment"># 对应的行列号</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;(投影坐标<span class="subst">&#123;x&#125;</span>, <span class="subst">&#123;y&#125;</span>)对应的行列号是(<span class="subst">&#123;row&#125;</span>, <span class="subst">&#123;col&#125;</span>)&#x27;</span>)</span><br><span class="line">    <span class="comment"># 根据行列号得到地理坐标</span></span><br><span class="line">    x, y = ds.xy(row, col)  <span class="comment"># 中心点的坐标</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;行列号(<span class="subst">&#123;row&#125;</span>, <span class="subst">&#123;col&#125;</span>)对应的中心投影坐标是(<span class="subst">&#123;x&#125;</span>, <span class="subst">&#123;y&#125;</span>)&#x27;</span>)</span><br><span class="line">    <span class="comment"># 那么如何得到对应点左上角的信息</span></span><br><span class="line">    x, y = (row, col) * ds.transform</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;行列号(<span class="subst">&#123;row&#125;</span>, <span class="subst">&#123;col&#125;</span>)对应的左上角投影坐标是(<span class="subst">&#123;x&#125;</span>, <span class="subst">&#123;y&#125;</span>)&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
-with rasterio.open(&#39;example.tif&#39;) as ds:
-    print(&#39;该栅格数据的基本数据集信息（这些信息都是以数据集属性的形式表示的）：&#39;)
-    print(f&#39;数据格式：&#123;ds.driver&#125;&#39;)
-    print(f&#39;波段数目：&#123;ds.count&#125;&#39;)
-    print(f&#39;影像宽度：&#123;ds.width&#125;&#39;)
-    print(f&#39;影像高度：&#123;ds.height&#125;&#39;)
-    print(f&#39;地理范围：&#123;ds.bounds&#125;&#39;)
-    print(f&#39;反射变换参数（六参数模型）：\n &#123;ds.transform&#125;&#39;)
-    print(f&#39;投影定义：&#123;ds.crs&#125;&#39;)
-    # 获取第一个波段数据，跟GDAL一样索引从1开始
-    # 直接获得numpy.ndarray类型的二维数组表示，如果read()函数不加参数，则得到所有波段（第一个维度是波段）
-    band1 = ds.read(1)
-    print(f&#39;第一波段的最大值：&#123;band1.max()&#125;&#39;)
-    print(f&#39;第一波段的最小值：&#123;band1.min()&#125;&#39;)
-    print(f&#39;第一波段的平均值：&#123;band1.mean()&#125;&#39;)
-    # 根据地理坐标得到行列号
-    x, y = (ds.bounds.left + 300, ds.bounds.top - 300)  # 距离左上角东300米，南300米的投影坐标
-    row, col = ds.index(x, y)  # 对应的行列号
-    print(f&#39;(投影坐标&#123;x&#125;, &#123;y&#125;)对应的行列号是(&#123;row&#125;, &#123;col&#125;)&#39;)
-    # 根据行列号得到地理坐标
-    x, y = ds.xy(row, col)  # 中心点的坐标
-    print(f&#39;行列号(&#123;row&#125;, &#123;col&#125;)对应的中心投影坐标是(&#123;x&#125;, &#123;y&#125;)&#39;)
-    # 那么如何得到对应点左上角的信息
-    x, y = (row, col) * ds.transform
-    print(f&#39;行列号(&#123;row&#125;, &#123;col&#125;)对应的左上角投影坐标是(&#123;x&#125;, &#123;y&#125;)&#39;)
-</code></pre>
 <p>输出如下：</p>
-<pre><code>该栅格数据的基本数据集信息（这些信息都是以数据集属性的形式表示的）：
-数据格式：GTiff
-波段数目：3
-影像宽度：4800
-影像高度：4800
-地理范围：BoundingBox(left=725385.0, bottom=2648415.0, right=869385.0, top=2792415.0)
-反射变换参数（六参数模型）：
- | 30.00, 0.00, 725385.00|
-| 0.00,-30.00, 2792415.00|
-| 0.00, 0.00, 1.00|
-投影定义：CRS(&#123;&#39;init&#39;: &#39;epsg:32649&#39;&#125;)
-第一波段的最大值：5459
-第一波段的最小值：-313
-第一波段的平均值：489.80300625
-(投影坐标725685.0, 2792115.0)对应的行列号是(10, 10)
-行列号(10, 10)对应的中心投影坐标是(725700.0, 2792100.0)
-行列号(10, 10)对应的左上角投影坐标是(725685.0, 2792115.0)
-</code></pre>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">该栅格数据的基本数据集信息（这些信息都是以数据集属性的形式表示的）：</span><br><span class="line">数据格式：GTiff</span><br><span class="line">波段数目：<span class="number">3</span></span><br><span class="line">影像宽度：<span class="number">4800</span></span><br><span class="line">影像高度：<span class="number">4800</span></span><br><span class="line">地理范围：BoundingBox(left=<span class="number">725385.0</span>, bottom=<span class="number">2648415.0</span>, right=<span class="number">869385.0</span>, top=<span class="number">2792415.0</span>)</span><br><span class="line">反射变换参数（六参数模型）：</span><br><span class="line"> | <span class="number">30</span>.<span class="number">00</span>, <span class="number">0</span>.<span class="number">00</span>, <span class="number">725385.00</span>|</span><br><span class="line">| <span class="number">0</span>.<span class="number">00</span>,-<span class="number">30</span>.<span class="number">00</span>, <span class="number">2792415.00</span>|</span><br><span class="line">| <span class="number">0</span>.<span class="number">00</span>, <span class="number">0</span>.<span class="number">00</span>, <span class="number">1</span>.<span class="number">00</span>|</span><br><span class="line">投影定义：CRS(&#123;&#x27;init&#x27;: &#x27;epsg:<span class="number">32649</span>&#x27;&#125;)</span><br><span class="line">第一波段的最大值：<span class="number">5459</span></span><br><span class="line">第一波段的最小值：-<span class="number">313</span></span><br><span class="line">第一波段的平均值：<span class="number">489</span>.<span class="number">80300625</span></span><br><span class="line">(投影坐标<span class="number">725685.0</span>, <span class="number">2792115.0</span>)对应的行列号是(<span class="number">10</span>, <span class="number">10</span>)</span><br><span class="line">行列号(<span class="number">10</span>, <span class="number">10</span>)对应的中心投影坐标是(<span class="number">725700.0</span>, <span class="number">2792100.0</span>)</span><br><span class="line">行列号(<span class="number">10</span>, <span class="number">10</span>)对应的左上角投影坐标是(<span class="number">725685.0</span>, <span class="number">2792115.0</span>)</span><br></pre></td></tr></table></figure>
+
 
     </div>
 

@@ -170,41 +170,16 @@
 <p>Pyplot封装了底层的绘图函数提供了一种绘图环境，使得我们可以直接像在MATLAB那样绘制图形。当我们使用<code>import matplotlib.pyplot as plt</code>语句导入<code>pyplot</code>模块，并使用<code>plt.plot()</code>绘制图形的时候，默认的<code>Figure</code>以及<code>Axes</code>等对象会自动创建以支持图形的绘制。Pyplot一来使得对MATLAB绘图熟悉的童鞋更加容易上手，二来屏蔽了一些底层通用的绘图对象的创建细节，使用更加简洁。</p>
 <p>在使用面向对象的编程接口时候，我们需要自己创建画布（FigureCanvas），自己创建图对象（Figure），自己创建Axes（一个Figure可以包含一个或者多个Axes，一个Axes可以理解为一个子图，使用一次<code>plot()</code>绘图函数便会创建一个Axes），所有对象一起才能完成一次完整的绘图。使用面向对象编程接口有利于我们对于图形绘制的完整控制，但是相对于Pyplot接口可能需要书写更多的代码。</p>
 <p>在Matplotlib官方文档中，虽然说推荐大家使用面向对象接口进行绘图，但是其中提供的例子大部分都是基于Pyplot接口的。下面我们以一个简单例子（绘制一条直线）体验一下使用两种编程接口编程的异同。</p>
-<h2 id="PyPlot接口"><a href="#PyPlot接口" class="headerlink" title="PyPlot接口"></a>PyPlot接口</h2><pre><code class="Python">import matplotlib.pyplot as plt
-plt.plot([1,2,3,4])
-plt.title(&#39;Title&#39;)
-plt.grid(True)
-plt.xlabel(&#39;X Axis&#39;)
-plt.ylabel(&#39;Y Axis&#39;)
-plt.show()
-</code></pre>
+<h2 id="PyPlot接口"><a href="#PyPlot接口" class="headerlink" title="PyPlot接口"></a>PyPlot接口</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">plt.plot([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>])</span><br><span class="line">plt.title(<span class="string">&#x27;Title&#x27;</span>)</span><br><span class="line">plt.grid(<span class="literal">True</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;X Axis&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;Y Axis&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
 <p>输出结果如下：</p>
 <p><img src="/images/tools/Simple-Matplotlib-Example.png" alt="Matplotlib绘制直线"></p>
-<h2 id="面向对象接口"><a href="#面向对象接口" class="headerlink" title="面向对象接口"></a>面向对象接口</h2><pre><code class="Python">from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
+<h2 id="面向对象接口"><a href="#面向对象接口" class="headerlink" title="面向对象接口"></a>面向对象接口</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> matplotlib.backends.backend_agg <span class="keyword">import</span> FigureCanvasAgg <span class="keyword">as</span> FigureCanvas</span><br><span class="line"><span class="keyword">from</span> matplotlib.figure <span class="keyword">import</span> Figure</span><br><span class="line"></span><br><span class="line">fig = Figure()</span><br><span class="line">FigureCanvas(fig)</span><br><span class="line">ax = fig.add_subplot(<span class="number">111</span>)  <span class="comment"># add_subplot()方法中的111表示的是1×1格网，第1个子图</span></span><br><span class="line">ax.plot([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">ax.set_title(<span class="string">&#x27;Title&#x27;</span>)</span><br><span class="line">ax.grid(<span class="literal">True</span>)</span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;X Axis&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;Y Axis&#x27;</span>)</span><br><span class="line">fig.savefig(<span class="string">&#x27;test.png&#x27;</span>, dpi=<span class="number">120</span>)</span><br></pre></td></tr></table></figure>
 
-fig = Figure()
-FigureCanvas(fig)
-ax = fig.add_subplot(111)  # add_subplot()方法中的111表示的是1×1格网，第1个子图
-ax.plot([1, 2, 3, 4])
-ax.set_title(&#39;Title&#39;)
-ax.grid(True)
-ax.set_xlabel(&#39;X Axis&#39;)
-ax.set_ylabel(&#39;Y Axis&#39;)
-fig.savefig(&#39;test.png&#39;, dpi=120)
-</code></pre>
 <p>同样的例子，我们使用面向对象接口用了更多代码，但是其绘制过程也更加明了。另外，提一点，使用面向对象接口不能使用交互式的<code>show()</code>方法对图像直接进行显示。</p>
 <p>面向对象的接口需要我们对绘图的backends也有所了解，提供对应的FigureCanvas，这是很不方便的，不利于代码的跨平台移植。所以，我在编程过程中，进程使用两个接口折中的一种方案：</p>
-<pre><code class="Python">import matplotlib.pyplot as plt
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">ax = plt.subplot(<span class="number">111</span>)</span><br><span class="line">ax.plot([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line">ax.set_title(<span class="string">&#x27;Title&#x27;</span>)</span><br><span class="line">ax.grid(<span class="literal">True</span>)</span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;X Axis&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;Y Axis&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 
-ax = plt.subplot(111)
-ax.plot([1, 2, 3, 4])
-ax.set_title(&#39;Title&#39;)
-ax.grid(True)
-ax.set_xlabel(&#39;X Axis&#39;)
-ax.set_ylabel(&#39;Y Axis&#39;)
-plt.show()
-</code></pre>
 <p>我推荐大家平时也多多使用这种方案，自己创建<code>Axes</code>对象，然后使用面向对象接口做图形绘制。</p>
 
     </div>

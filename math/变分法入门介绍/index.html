@@ -168,27 +168,27 @@
     <div class="content">
         <h1 id="变分法入门介绍"><a href="#变分法入门介绍" class="headerlink" title="变分法入门介绍"></a>变分法入门介绍</h1><p>读完这篇博文你可以了解变分的基本概念，以及使用变分法求解最简泛函的极值。本文没有严密的数学证明，只是感性地对变分法做一个初步了解。</p>
 <h2 id="泛函和变分法"><a href="#泛函和变分法" class="headerlink" title="泛函和变分法"></a>泛函和变分法</h2><p>给定两点$A(x_0, y_0)$和$B(x_1, y_1)$，求AB两点之间的最短距离。两点之间直线最短，这还用球吗？可是为什么是直线最短呢，而不是其它曲线？</p>
-<p>设链接AB两点的曲线为$f(x)$,则AB之间的距离可以表示为在区间$[x_0, x_1]$上求$\Delta{S}=\sqrt{(\Delta{x})^2 + (\Delta{y})^2}$线段的累积长度（积分的思想）：</p>
-<p>$$S=\int_{x_0}^{x_1}\sqrt{1+f’(x)^2}dx$$</p>
+<p>设链接AB两点的曲线为$f(x)$,则AB之间的距离可以表示为在区间$[x_0, x_1]$上求$\Delta{S}&#x3D;\sqrt{(\Delta{x})^2 + (\Delta{y})^2}$线段的累积长度（积分的思想）：</p>
+<p>$$S&#x3D;\int_{x_0}^{x_1}\sqrt{1+f’(x)^2}dx$$</p>
 <p>在这里该函数的变量是$f$，即函数的变量为函数，我们需要求解出合适的$f$使得$S$最小。我们把这样的函数$S$称为泛函数。</p>
 <p>定义：<strong>泛函是以函数为变量的函数。</strong></p>
 <p>那么什么是变分法呢？<strong>求泛函极值的方法称为变分法。</strong></p>
-<h2 id="变分法求泛函极值"><a href="#变分法求泛函极值" class="headerlink" title="变分法求泛函极值"></a>变分法求泛函极值</h2><h3 id="变分的定义"><a href="#变分的定义" class="headerlink" title="变分的定义"></a>变分的定义</h3><p>下面给出变分的定义：对于任意定值$x\in [x_0, x_1]$，可取函数$y(x)$与另一可取函数$y_0(x)$之差$y(x) - y_0(x)$称为函数$y(x)$在$y_0(x)$处的变分或函数的变分，记做$\delta{y}$，这时有$\delta{y}=y(x) - y_0(x)=\epsilon\eta(x)$，$\epsilon$是一个很小的数，$\eta(x)$是$x$的任意参数</p>
-<p>对于泛函$J[y(x)]$的增量$\Delta{J}=J[y(x)+\delta{y}] - J[y(x)] = \delta{J} + \mathcal{o}(\delta{y})$</p>
+<h2 id="变分法求泛函极值"><a href="#变分法求泛函极值" class="headerlink" title="变分法求泛函极值"></a>变分法求泛函极值</h2><h3 id="变分的定义"><a href="#变分的定义" class="headerlink" title="变分的定义"></a>变分的定义</h3><p>下面给出变分的定义：对于任意定值$x\in [x_0, x_1]$，可取函数$y(x)$与另一可取函数$y_0(x)$之差$y(x) - y_0(x)$称为函数$y(x)$在$y_0(x)$处的变分或函数的变分，记做$\delta{y}$，这时有$\delta{y}&#x3D;y(x) - y_0(x)&#x3D;\epsilon\eta(x)$，$\epsilon$是一个很小的数，$\eta(x)$是$x$的任意参数</p>
+<p>对于泛函$J[y(x)]$的增量$\Delta{J}&#x3D;J[y(x)+\delta{y}] - J[y(x)] &#x3D; \delta{J} + \mathcal{o}(\delta{y})$</p>
 <p>泛函的增量$\Delta{J}$与变分$\delta{J}$之差是一个比一阶距离更高阶的无穷小，泛函的变分是泛函增量的线性主要部分。</p>
-<p>变分的定义是不是跟微分很像（微分的定义$\Delta{y}=A\Delta{x}+\mathcal{o}(\Delta{x})=dy+\mathcal{o}(\Delta(x)$，$A$是该点的导数）。类比一下，我们在高等数学中学习到的函数极值的必要条件是函数导数等于0，而泛函极值的必要条件也是泛函的变分等于0。</p>
-<p>所以有如下定理：若泛函$J[y(x)]$在$y=y(x)$上达到极值，则它在$y=y(x)$上的变分$\delta{J}$等于零。这就是变分原理。</p>
+<p>变分的定义是不是跟微分很像（微分的定义$\Delta{y}&#x3D;A\Delta{x}+\mathcal{o}(\Delta{x})&#x3D;dy+\mathcal{o}(\Delta(x)$，$A$是该点的导数）。类比一下，我们在高等数学中学习到的函数极值的必要条件是函数导数等于0，而泛函极值的必要条件也是泛函的变分等于0。</p>
+<p>所以有如下定理：若泛函$J[y(x)]$在$y&#x3D;y(x)$上达到极值，则它在$y&#x3D;y(x)$上的变分$\delta{J}$等于零。这就是变分原理。</p>
 <h3 id="拉格朗日函数"><a href="#拉格朗日函数" class="headerlink" title="拉格朗日函数"></a>拉格朗日函数</h3><p>设$F(x, y(x), y’(x))$是三个独立变量$x$，$y(x)$，$y’(x)$在区间$[x_0, x_1]$上的已知函数，且二阶连续可微，其中$y(x)$和$y’(x)$是$x$的未知函数，则泛函</p>
-<p>$$J[y(x)]=\int_{x_0}^{x_1}F(x, y(x), y’(x))dx$$</p>
+<p>$$J[y(x)]&#x3D;\int_{x_0}^{x_1}F(x, y(x), y’(x))dx$$</p>
 <p>称为最简单的积分形泛函，简称最简泛函，被积函数$F$称为拉格朗日函数。</p>
 <p>对于拉格朗日函数，其泛函的变分为</p>
-<p>$$\delta{J} = \int_{x_0}^{x_1}(F_y\delta{y} +F_{y’}\delta{y’})dx = \int_{x_0}^{x_1}(F_y\delta{y})dx + (F_{y’}\delta_{y}|<em>{x_0}^{x_1} - \int</em>{x_0}^{x_1}(\delta_{y}\frac{d}{dx}F_{y’}d{x})=\int_{x_0}^{x_1}(F_y-\frac{d}{dx}F_{y’})\delta{y}dx$$</p>
-<h3 id="欧拉方程"><a href="#欧拉方程" class="headerlink" title="欧拉方程"></a>欧拉方程</h3><p>利用变分原理，使最简泛函$J[y(x)]=\int_{x_0}^{x_1}F(x, y(x), y’(x))dx$取得极值且满足固定边界条件$y(x_0)=y_0$，$y(x_1)=y_1$的极值曲线$y=y(x)$应满足必要条件</p>
-<p>$$F_y-\frac{d}{dx}F_{y’}=0$$</p>
+<p>$$\delta{J} &#x3D; \int_{x_0}^{x_1}(F_y\delta{y} +F_{y’}\delta{y’})dx &#x3D; \int_{x_0}^{x_1}(F_y\delta{y})dx + (F_{y’}\delta_{y}|<em>{x_0}^{x_1} - \int</em>{x_0}^{x_1}(\delta_{y}\frac{d}{dx}F_{y’}d{x})&#x3D;\int_{x_0}^{x_1}(F_y-\frac{d}{dx}F_{y’})\delta{y}dx$$</p>
+<h3 id="欧拉方程"><a href="#欧拉方程" class="headerlink" title="欧拉方程"></a>欧拉方程</h3><p>利用变分原理，使最简泛函$J[y(x)]&#x3D;\int_{x_0}^{x_1}F(x, y(x), y’(x))dx$取得极值且满足固定边界条件$y(x_0)&#x3D;y_0$，$y(x_1)&#x3D;y_1$的极值曲线$y&#x3D;y(x)$应满足必要条件</p>
+<p>$$F_y-\frac{d}{dx}F_{y’}&#x3D;0$$</p>
 <p>式中$F$是$x, y, y’$的已知函数并有二阶连续偏导数。上述必要条件中的方程叫做泛函的欧拉方程，也叫欧拉-拉格朗日方程。而$F_y-\frac{d}{dx}F_{y’}$称为$F$关于$y$的变分导（函）数。</p>
 <h2 id="案例分析–两点之间直线最短"><a href="#案例分析–两点之间直线最短" class="headerlink" title="案例分析–两点之间直线最短"></a>案例分析–两点之间直线最短</h2><p>好的，我们利用欧拉方程来证明博文刚开始提出的两点之间直线最短的问题。</p>
-<p>这里的$F=\sqrt{1+f’(x)^2}$，求得$F_y=0$，$F_{y’}=\frac{y’}{\sqrt{1+{y’}^2}}$，再求得$\frac{d}{dx}F_{y’}=y’’(1+{y’}^2)^{-\frac{3}{2}}$</p>
-<p>根据欧拉方程有$-y’’(1+{y’}^2)^{-\frac{3}{2}}=0$，则$y’’=0 \Rightarrow y’=C \Rightarrow y=C_1x + C_2$</p>
+<p>这里的$F&#x3D;\sqrt{1+f’(x)^2}$，求得$F_y&#x3D;0$，$F_{y’}&#x3D;\frac{y’}{\sqrt{1+{y’}^2}}$，再求得$\frac{d}{dx}F_{y’}&#x3D;y’’(1+{y’}^2)^{-\frac{3}{2}}$</p>
+<p>根据欧拉方程有$-y’’(1+{y’}^2)^{-\frac{3}{2}}&#x3D;0$，则$y’’&#x3D;0 \Rightarrow y’&#x3D;C \Rightarrow y&#x3D;C_1x + C_2$</p>
 <p>此时，我们就得到了这条曲线确实就是连接两点的直线。</p>
 <h2 id="在Mathematica中使用变分法"><a href="#在Mathematica中使用变分法" class="headerlink" title="在Mathematica中使用变分法"></a>在Mathematica中使用变分法</h2><p>鉴于本人计算能力超级差，手动求导对我来说实在太痛苦了，我将上述的计算借助于Mathematica计算了一遍，下面是计算过程。不得不说Mathematica真的太强大了。</p>
 <p><img src="/images/math/Mathematica-Variational.png" alt="Mathematica变分法"></p>

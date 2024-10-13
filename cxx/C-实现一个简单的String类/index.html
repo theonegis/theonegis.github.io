@@ -171,7 +171,7 @@
 <h2 id="类声明"><a href="#类声明" class="headerlink" title="类声明"></a>类声明</h2><ol>
 <li><p>该类中包含了三个构造函数：有参数的构造函数，拷贝构造函数已经移动构造函数</p>
 </li>
-<li><p>重载了[]，=（一个普通赋值运算符，一个移动赋值运算符），+，==四个运算符</p>
+<li><p>重载了[]，&#x3D;（一个普通赋值运算符，一个移动赋值运算符），+，&#x3D;&#x3D;四个运算符</p>
 </li>
 <li><p>一个用于求字符长度的方法；一个用于获取C语言类型字符串的方法</p>
 </li>
@@ -179,219 +179,16 @@
 </li>
 </ol>
 <p>头文件（strings.h）</p>
-<pre><code class="C++">//
-// Created by Zhenyu Tan on 2018/10/3.
-//
-#include &lt;iostream&gt;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Created by Zhenyu Tan on 2018/10/3.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">String</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">char</span>* _buffer;</span><br><span class="line">    <span class="type">size_t</span> _length;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">init</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* str)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">String</span>(<span class="type">const</span> <span class="type">char</span>* str= <span class="literal">nullptr</span>);       <span class="comment">// 默认构造函数</span></span><br><span class="line">    <span class="built_in">String</span>(<span class="type">const</span> String&amp; other);            <span class="comment">// 拷贝构造函数</span></span><br><span class="line">    <span class="built_in">String</span>(String&amp;&amp; other) <span class="keyword">noexcept</span>;        <span class="comment">// 移动构造函数</span></span><br><span class="line">    ~<span class="built_in">String</span>();                              <span class="comment">// 析构函数</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">size_t</span> <span class="title">length</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="type">const</span> <span class="type">char</span>* <span class="title">data</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">char</span>&amp; <span class="keyword">operator</span>[](<span class="type">size_t</span> index);</span><br><span class="line">    String&amp; <span class="keyword">operator</span>=(<span class="type">const</span> String&amp; other);</span><br><span class="line">    String&amp; <span class="keyword">operator</span>=(String&amp;&amp; other) <span class="keyword">noexcept</span>;</span><br><span class="line">    String <span class="keyword">operator</span>+(<span class="type">const</span> String&amp; other);</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span>==(<span class="type">const</span> String&amp; other);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">friend</span> std::ostream&amp; <span class="keyword">operator</span>&lt;&lt;(std::ostream&amp; output, <span class="type">const</span> String&amp; str);</span><br><span class="line">    <span class="keyword">friend</span> std::istream&amp; <span class="keyword">operator</span>&gt;&gt;(std::istream&amp; input, String&amp; str);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-class String &#123;
-private:
-    char* _buffer;
-    size_t _length;
-    void init(const char* str);
-
-public:
-    String(const char* str= nullptr);       // 默认构造函数
-    String(const String&amp; other);            // 拷贝构造函数
-    String(String&amp;&amp; other) noexcept;        // 移动构造函数
-    ~String();                              // 析构函数
-
-    size_t length();
-    const char* data();
-
-    char&amp; operator[](size_t index);
-    String&amp; operator=(const String&amp; other);
-    String&amp; operator=(String&amp;&amp; other) noexcept;
-    String operator+(const String&amp; other);
-    bool operator==(const String&amp; other);
-
-    friend std::ostream&amp; operator&lt;&lt;(std::ostream&amp; output, const String&amp; str);
-    friend std::istream&amp; operator&gt;&gt;(std::istream&amp; input, String&amp; str);
-&#125;;
-</code></pre>
 <h2 id="类实现"><a href="#类实现" class="headerlink" title="类实现"></a>类实现</h2><p>源文件（strings.cpp）</p>
-<pre><code class="C++">//
-// Created by Zhenyu Tan on 2018/10/5.
-//
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">// Created by Zhenyu Tan on 2018/10/5.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;strings.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cstring&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"><span class="keyword">using</span> std::ostream;</span><br><span class="line"><span class="keyword">using</span> std::istream;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">size_t</span> <span class="title">String::length</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="number">0</span> == _length) &#123;</span><br><span class="line">        _length = std::<span class="built_in">strlen</span>(_buffer);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _length;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">const</span> <span class="type">char</span>* <span class="title">String::data</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _buffer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">String::init</span><span class="params">(<span class="type">const</span> <span class="type">char</span>* str)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">nullptr</span> == str) &#123;</span><br><span class="line">        _length = <span class="number">0</span>;</span><br><span class="line">        _buffer = <span class="literal">nullptr</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        _length = std::<span class="built_in">strlen</span>(str);</span><br><span class="line">        _buffer = <span class="keyword">new</span> <span class="type">char</span>[_length + <span class="number">1</span>];</span><br><span class="line">        std::<span class="built_in">strcpy</span>(_buffer, str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String::<span class="built_in">String</span>(<span class="type">const</span> <span class="type">char</span>* str) &#123;</span><br><span class="line">    <span class="built_in">init</span>(str);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;默认构造函数(&quot;</span> &lt;&lt; *<span class="keyword">this</span> &lt;&lt; <span class="string">&quot;)\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String::<span class="built_in">String</span>(<span class="type">const</span> String&amp; other) &#123;</span><br><span class="line">    <span class="comment">// 在类的成员函数中可以访问同类型实例的私有变量</span></span><br><span class="line">    <span class="built_in">init</span>(other._buffer);</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;拷贝构造函数(&quot;</span> &lt;&lt; *<span class="keyword">this</span> &lt;&lt; <span class="string">&quot;)\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">String::<span class="built_in">String</span>(String&amp;&amp; other) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">    <span class="comment">// 把other对象掏空用来填充this</span></span><br><span class="line">    _buffer = <span class="literal">nullptr</span>;</span><br><span class="line">    _buffer = other._buffer;</span><br><span class="line">    _length = other._length;</span><br><span class="line">    other._buffer = <span class="literal">nullptr</span>;</span><br><span class="line">    other._length = <span class="number">0</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;移动构造函数(&quot;</span> &lt;&lt; *<span class="keyword">this</span> &lt;&lt; <span class="string">&quot;)\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">String::~<span class="built_in">String</span>() &#123;</span><br><span class="line">    <span class="keyword">delete</span>[] _buffer;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;析构函数(&quot;</span> &lt;&lt; *<span class="keyword">this</span> &lt;&lt; <span class="string">&quot;)\n&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 拷贝构造函数使用传入对象的值生成一个新的对象的实例</span></span><br><span class="line"><span class="comment"> * 赋值运算符是将对象的值复制给一个已经存在的实例</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">String&amp; String::<span class="keyword">operator</span>=(<span class="type">const</span> String&amp; other) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;other) &#123;</span><br><span class="line">        <span class="keyword">delete</span>[] _buffer;</span><br><span class="line">        <span class="built_in">init</span>(other._buffer);</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;拷贝赋值操作(&quot;</span> &lt;&lt; *<span class="keyword">this</span> &lt;&lt; <span class="string">&quot;)\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 移动赋值操作即把参数传进来的对象的所有权转移到this指向的对象</span></span><br><span class="line"><span class="comment"> * 掏空other对象的所有</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">String&amp; String::<span class="keyword">operator</span>=(String&amp;&amp; other) <span class="keyword">noexcept</span> &#123;</span><br><span class="line">   <span class="keyword">if</span> (<span class="keyword">this</span> != &amp;other) &#123;</span><br><span class="line">       _buffer = <span class="literal">nullptr</span>;</span><br><span class="line">       _buffer = other._buffer;</span><br><span class="line">       _length = other._length;</span><br><span class="line">       other._buffer = <span class="literal">nullptr</span>;</span><br><span class="line">       other._length = <span class="number">0</span>;</span><br><span class="line">   &#125;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;移动赋值操作(&quot;</span> &lt;&lt; *<span class="keyword">this</span> &lt;&lt; <span class="string">&quot;)\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">char</span>&amp; String::<span class="keyword">operator</span>[](<span class="type">size_t</span> index) &#123;</span><br><span class="line">    <span class="keyword">if</span> (index &gt;= _length) &#123;</span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">out_of_range</span>(<span class="string">&quot;Index out of range&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> _buffer[index];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="type">bool</span> String::<span class="keyword">operator</span>==(<span class="type">const</span> String&amp; other) &#123;</span><br><span class="line">    <span class="keyword">if</span> (_length != other._length) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span> == std::<span class="built_in">strcmp</span>(_buffer, other._buffer);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 关于是返回对象本身还是返回对象引用</span></span><br><span class="line"><span class="comment"> * 如果函数返回在函数中创建的临时对象，则不要使用引用</span></span><br><span class="line"><span class="comment"> * 如果函数返回的是通过引用或指针传递给它的对象，则应当按引用返回对象</span></span><br><span class="line"><span class="comment"> * 如果先创建一个对象，然后返回改对象的副本，则可以使用返回对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">String String::<span class="keyword">operator</span>+(<span class="type">const</span> String&amp; other) &#123;</span><br><span class="line">    String _str;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">nullptr</span> == _buffer) &#123;</span><br><span class="line">        _str = other;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="literal">nullptr</span> == other._buffer) &#123;</span><br><span class="line">        _str = *<span class="keyword">this</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        _str._buffer = <span class="keyword">new</span> <span class="type">char</span>[_length + other._length + <span class="number">1</span>];</span><br><span class="line">        std::<span class="built_in">strcpy</span>(_str._buffer, _buffer);</span><br><span class="line">        std::<span class="built_in">strcat</span>(_str._buffer, other._buffer);</span><br><span class="line">        _str._length = std::<span class="built_in">strlen</span>(_str._buffer);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ostream&amp; <span class="keyword">operator</span>&lt;&lt;(ostream &amp;output, <span class="type">const</span> String&amp; str) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">nullptr</span> == str._buffer) &#123;</span><br><span class="line">        output &lt;&lt; <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        output &lt;&lt; str._buffer;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> output;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">istream&amp; <span class="keyword">operator</span>&gt;&gt;(istream &amp;input, String&amp; str) &#123;</span><br><span class="line">    input &gt;&gt; str._buffer;</span><br><span class="line">    <span class="keyword">return</span> input;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-#include &quot;strings.h&quot;
-#include &lt;cstring&gt;
-#include &lt;exception&gt;
-#include &lt;iostream&gt;
+<h2 id="调用示例"><a href="#调用示例" class="headerlink" title="调用示例"></a>调用示例</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;strings.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">String <span class="title">str1</span><span class="params">(<span class="string">&quot;Hello&quot;</span>)</span></span>;</span><br><span class="line">    cout &lt;&lt; str<span class="number">1.</span><span class="built_in">data</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    cout &lt;&lt; str<span class="number">1.l</span>ength() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;----------\n&quot;</span>;</span><br><span class="line">    String str2 = <span class="string">&quot;Word&quot;</span>;</span><br><span class="line">    cout &lt;&lt; str2 &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;----------\n&quot;</span>;</span><br><span class="line">    String str3 = str1 + str2;</span><br><span class="line">    cout &lt;&lt; str<span class="number">3.</span><span class="built_in">data</span>() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    cout &lt;&lt; str<span class="number">3.l</span>ength() &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-using std::cout;
-using std::ostream;
-using std::istream;
-
-size_t String::length() &#123;
-    if (0 == _length) &#123;
-        _length = std::strlen(_buffer);
-    &#125;
-    return _length;
-&#125;
-
-const char* String::data() &#123;
-    return _buffer;
-&#125;
-
-
-void String::init(const char* str) &#123;
-    if (nullptr == str) &#123;
-        _length = 0;
-        _buffer = nullptr;
-    &#125; else &#123;
-        _length = std::strlen(str);
-        _buffer = new char[_length + 1];
-        std::strcpy(_buffer, str);
-    &#125;
-&#125;
-
-
-String::String(const char* str) &#123;
-    init(str);
-    cout &lt;&lt; &quot;默认构造函数(&quot; &lt;&lt; *this &lt;&lt; &quot;)\n&quot;;
-&#125;
-
-
-String::String(const String&amp; other) &#123;
-    // 在类的成员函数中可以访问同类型实例的私有变量
-    init(other._buffer);
-    cout &lt;&lt; &quot;拷贝构造函数(&quot; &lt;&lt; *this &lt;&lt; &quot;)\n&quot;;
-&#125;
-
-String::String(String&amp;&amp; other) noexcept &#123;
-    // 把other对象掏空用来填充this
-    _buffer = nullptr;
-    _buffer = other._buffer;
-    _length = other._length;
-    other._buffer = nullptr;
-    other._length = 0;
-    cout &lt;&lt; &quot;移动构造函数(&quot; &lt;&lt; *this &lt;&lt; &quot;)\n&quot;;
-&#125;
-
-
-String::~String() &#123;
-    delete[] _buffer;
-    cout &lt;&lt; &quot;析构函数(&quot; &lt;&lt; *this &lt;&lt; &quot;)\n&quot;;
-&#125;
-
-/*
- * 拷贝构造函数使用传入对象的值生成一个新的对象的实例
- * 赋值运算符是将对象的值复制给一个已经存在的实例
- */
-String&amp; String::operator=(const String&amp; other) &#123;
-    if (this != &amp;other) &#123;
-        delete[] _buffer;
-        init(other._buffer);
-    &#125;
-    cout &lt;&lt; &quot;拷贝赋值操作(&quot; &lt;&lt; *this &lt;&lt; &quot;)\n&quot;;
-    return *this;
-&#125;
-
-/*
- * 移动赋值操作即把参数传进来的对象的所有权转移到this指向的对象
- * 掏空other对象的所有
- */
-String&amp; String::operator=(String&amp;&amp; other) noexcept &#123;
-   if (this != &amp;other) &#123;
-       _buffer = nullptr;
-       _buffer = other._buffer;
-       _length = other._length;
-       other._buffer = nullptr;
-       other._length = 0;
-   &#125;
-    cout &lt;&lt; &quot;移动赋值操作(&quot; &lt;&lt; *this &lt;&lt; &quot;)\n&quot;;
-    return *this;
-&#125;
-
-
-char&amp; String::operator[](size_t index) &#123;
-    if (index &gt;= _length) &#123;
-        throw std::out_of_range(&quot;Index out of range&quot;);
-    &#125; else &#123;
-        return _buffer[index];
-    &#125;
-&#125;
-
-
-bool String::operator==(const String&amp; other) &#123;
-    if (_length != other._length) &#123;
-        return false;
-    &#125; else &#123;
-        return 0 == std::strcmp(_buffer, other._buffer);
-    &#125;
-&#125;
-
-/*
- * 关于是返回对象本身还是返回对象引用
- * 如果函数返回在函数中创建的临时对象，则不要使用引用
- * 如果函数返回的是通过引用或指针传递给它的对象，则应当按引用返回对象
- * 如果先创建一个对象，然后返回改对象的副本，则可以使用返回对象
- */
-String String::operator+(const String&amp; other) &#123;
-    String _str;
-    if (nullptr == _buffer) &#123;
-        _str = other;
-    &#125; else if (nullptr == other._buffer) &#123;
-        _str = *this;
-    &#125; else &#123;
-        _str._buffer = new char[_length + other._length + 1];
-        std::strcpy(_str._buffer, _buffer);
-        std::strcat(_str._buffer, other._buffer);
-        _str._length = std::strlen(_str._buffer);
-    &#125;
-    return _str;
-&#125;
-
-
-ostream&amp; operator&lt;&lt;(ostream &amp;output, const String&amp; str) &#123;
-    if (nullptr == str._buffer) &#123;
-        output &lt;&lt; &quot;&quot;;
-    &#125; else &#123;
-        output &lt;&lt; str._buffer;
-    &#125;
-    return output;
-&#125;
-
-istream&amp; operator&gt;&gt;(istream &amp;input, String&amp; str) &#123;
-    input &gt;&gt; str._buffer;
-    return input;
-&#125;
-</code></pre>
-<h2 id="调用示例"><a href="#调用示例" class="headerlink" title="调用示例"></a>调用示例</h2><pre><code class="C++">#include &quot;strings.h&quot;
-#include &lt;iostream&gt;
-
-using std::cout;
-
-int main() &#123;
-    String str1(&quot;Hello&quot;);
-    cout &lt;&lt; str1.data() &lt;&lt; &#39;\n&#39;;
-    cout &lt;&lt; str1.length() &lt;&lt; &#39;\n&#39;;
-    cout &lt;&lt; &quot;----------\n&quot;;
-    String str2 = &quot;Word&quot;;
-    cout &lt;&lt; str2 &lt;&lt; &#39;\n&#39;;
-    cout &lt;&lt; &quot;----------\n&quot;;
-    String str3 = str1 + str2;
-    cout &lt;&lt; str3.data() &lt;&lt; &#39;\n&#39;;
-    cout &lt;&lt; str3.length() &lt;&lt; &#39;\n&#39;;
-    return 0;
-&#125;
-</code></pre>
 <p>运行结果：</p>
-<pre><code>默认构造函数(Hello)
-Hello
-5
-----------
-默认构造函数(Word)
-Word
-----------
-默认构造函数()
-HelloWord
-9
-析构函数(HelloWord)
-析构函数(Word)
-析构函数(Hello)
-</code></pre>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">默认构造函数(Hello)</span><br><span class="line">Hello</span><br><span class="line"><span class="section">5</span></span><br><span class="line"><span class="section">----------</span></span><br><span class="line">默认构造函数(Word)</span><br><span class="line"><span class="section">Word</span></span><br><span class="line"><span class="section">----------</span></span><br><span class="line">默认构造函数()</span><br><span class="line">HelloWord</span><br><span class="line">9</span><br><span class="line">析构函数(HelloWord)</span><br><span class="line">析构函数(Word)</span><br><span class="line">析构函数(Hello)</span><br></pre></td></tr></table></figure>
+
 <p>主程序中的第7行和第11行各自调用一次默认的有参构造函数，第14行是重载的加法运算符中调用了一次无参的构造函数（由于C++编译器的优化，函数返回值没有调用拷贝构造函数）</p>
 
     </div>

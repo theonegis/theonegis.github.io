@@ -171,70 +171,23 @@
 <li>万能引用和完美转发多涉及到模板的使用，如若不是自己写模板，则可不用关心</li>
 </ol>
 <h2 id="万能引用（Universal-Reference）"><a href="#万能引用（Universal-Reference）" class="headerlink" title="万能引用（Universal Reference）"></a>万能引用（Universal Reference）</h2><p>首先，我们来看一个例子：</p>
-<pre><code class="C++">#include &lt;iostream&gt;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"><span class="keyword">using</span> std::endl;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(T&amp; param)</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; param &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> num = <span class="number">2019</span>;</span><br><span class="line">    <span class="built_in">func</span>(num);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-using std::cout;
-using std::endl;
-
-
-template&lt;typename T&gt;
-void func(T&amp; param) &#123;
-    cout &lt;&lt; param &lt;&lt; endl;
-&#125;
-
-
-int main() &#123;
-    int num = 2019;
-    func(num);
-    return 0;
-&#125;
-</code></pre>
 <p>这样例子的编译输出都没有什么问题，但是如果我们修改成下面的调用方式呢？</p>
-<pre><code class="C++">int main() &#123;
-    func(2019);
-    return 0;
-&#125;
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="built_in">func</span>(<span class="number">2019</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>则会得到一个大大的编译错误。因为上面的模板函数只能接受左值或者左值引用（左值一般是有名字的变量，可以取到地址的），我们当然可以重载一个接受右值的模板函数，如下也可以达到效果。</p>
-<pre><code class="C++">template&lt;typename T&gt;
-void func(T&amp; param) &#123;
-    cout &lt;&lt; &quot;传入的是左值&quot; &lt;&lt; endl;
-&#125;
-template&lt;typename T&gt;
-void func(T&amp;&amp; param) &#123;
-    cout &lt;&lt; &quot;传入的是右值&quot; &lt;&lt; endl;
-&#125;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(T&amp; param)</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;传入的是左值&quot;</span> &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;传入的是右值&quot;</span> &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> num = <span class="number">2019</span>;</span><br><span class="line">    <span class="built_in">func</span>(num);</span><br><span class="line">    <span class="built_in">func</span>(<span class="number">2019</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-
-int main() &#123;
-    int num = 2019;
-    func(num);
-    func(2019);
-    return 0;
-&#125;
-</code></pre>
 <p>输出结果：</p>
-<pre><code>传入的是左值
-传入的是右值
-</code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">传入的是左值</span><br><span class="line">传入的是右值</span><br></pre></td></tr></table></figure>
+
 <p>第一次函数调用的是左值得版本，第二次函数调用的是右值版本。但是，有没有办法只写一个模板函数即可以接收左值又可以接收右值呢？</p>
 <p>C++ 11中有万能引用（Universal Reference）的概念：使用<code>T&amp;&amp;</code>类型的形参既能绑定右值，又能绑定左值。</p>
 <p>但是注意了：<strong>只有发生类型推导的时候，T&amp;&amp;才表示万能引用</strong>；否则，表示右值引用。</p>
 <p>所以，上面的案例我们可以修改为：</p>
-<pre><code class="C++">template&lt;typename T&gt;
-void func(T&amp;&amp; param) &#123;
-    cout &lt;&lt; param &lt;&lt; endl;
-&#125;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; param &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> num = <span class="number">2019</span>;</span><br><span class="line">    <span class="built_in">func</span>(num);</span><br><span class="line">    <span class="built_in">func</span>(<span class="number">2019</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-int main() &#123;
-    int num = 2019;
-    func(num);
-    func(2019);
-    return 0;
-&#125;
-</code></pre>
 <h2 id="引用折叠（Universal-Collapse）"><a href="#引用折叠（Universal-Collapse）" class="headerlink" title="引用折叠（Universal Collapse）"></a>引用折叠（Universal Collapse）</h2><p>万能引用说完了，接着来聊引用折叠（Univers Collapse），因为完美转发（Perfect Forwarding）的概念涉及引用折叠。一个模板函数，根据定义的形参和传入的实参的类型，我们可以有下面四中组合：</p>
 <ul>
 <li>左值-左值 T&amp; &amp;        # 函数定义的形参类型是左值引用，传入的实参是左值引用</li>
@@ -246,46 +199,16 @@ int main() &#123;
 <p>所有的折叠引用最终都代表一个引用，要么是左值引用，要么是右值引用。规则是：<strong>如果任一引用为左值引用，则结果为左值引用。否则（即两个都是右值引用），结果为右值引用</strong>。</p>
 <p>即就是前面三种情况代表的都是左值引用，而第四种代表的右值引用。</p>
 <h2 id="完美转发（Perfect-Forwarding）"><a href="#完美转发（Perfect-Forwarding）" class="headerlink" title="完美转发（Perfect Forwarding）"></a>完美转发（Perfect Forwarding）</h2><p>下面接着说完美转发（Perfect Forwarding），首先，看一个例子：</p>
-<pre><code class="C++">#include &lt;iostream&gt;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> std::cout;</span><br><span class="line"><span class="keyword">using</span> std::endl;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(T&amp; param)</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;传入的是左值&quot;</span> &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">func</span><span class="params">(T&amp;&amp; param)</span> </span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;传入的是右值&quot;</span> &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">warp</span><span class="params">(T&amp;&amp; param)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">func</span>(param);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> num = <span class="number">2019</span>;</span><br><span class="line">    <span class="built_in">warp</span>(num);</span><br><span class="line">    <span class="built_in">warp</span>(<span class="number">2019</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-using std::cout;
-using std::endl;
-
-template&lt;typename T&gt;
-void func(T&amp; param) &#123;
-    cout &lt;&lt; &quot;传入的是左值&quot; &lt;&lt; endl;
-&#125;
-template&lt;typename T&gt;
-void func(T&amp;&amp; param) &#123;
-    cout &lt;&lt; &quot;传入的是右值&quot; &lt;&lt; endl;
-&#125;
-
-
-template&lt;typename T&gt;
-void warp(T&amp;&amp; param) &#123;
-    func(param);
-&#125;
-
-
-int main() &#123;
-    int num = 2019;
-    warp(num);
-    warp(2019);
-    return 0;
-&#125;
-</code></pre>
 <p>猜一下，上面的输出结果是什么？</p>
-<pre><code>传入的是左值
-传入的是左值
-</code></pre>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">传入的是左值</span><br><span class="line">传入的是左值</span><br></pre></td></tr></table></figure>
+
 <p>是不是和我们预期的不一样，下面我们来分析一下原因：</p>
 <p><code>warp()</code>函数本身的形参是一个万能引用，即可以接受左值又可以接受右值；第一个<code>warp()</code>函数调用实参是左值，所以，<code>warp()</code>函数中调用<code>func()</code>中传入的参数也应该是左值；第二个<code>warp()</code>函数调用实参是右值，根据上面所说的引用折叠规则，warp()<code>函数接收的参数类型是右值引用，那么为什么却调用了调用</code>func()的左值版本了呢？这是因为在<code>warp()</code>函数内部，左值引用类型变为了右值，因为参数有了名称，我们也通过变量名取得变量地址。</p>
 <p>那么问题来了，怎么保持函数调用过程中，变量类型的不变呢？这就是我们所谓的“完美转发”技术，在C++11中通过<code>std::forward()</code>函数来实现。我们修改我们的<code>warp()</code>函数如下：</p>
-<pre><code class="C++">template&lt;typename T&gt;
-void warp(T&amp;&amp; param) &#123;
-    func(std::forward&lt;T&gt;(param));
-&#125;
-</code></pre>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">warp</span><span class="params">(T&amp;&amp; param)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">func</span>(std::forward&lt;T&gt;(param));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>则可以输出预期的结果。</p>
 
     </div>

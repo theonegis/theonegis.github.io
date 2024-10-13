@@ -168,23 +168,23 @@
     <div class="content">
         <h1 id="相关系数-r-和决定系数-R-2-的那些事"><a href="#相关系数-r-和决定系数-R-2-的那些事" class="headerlink" title="相关系数$r$和决定系数$R^2$的那些事"></a>相关系数$r$和决定系数$R^2$的那些事</h1><p>有人说相关系数（correlation coefficient，$r$）和决定系数（coefficient of determination，$R^2$，读作R-Squared）都是评价两个变量相关性的指标，且相关系数的平方就是决定系数？这种说法对不对呢？请听下文分解！</p>
 <h2 id="协方差与相关系数"><a href="#协方差与相关系数" class="headerlink" title="协方差与相关系数"></a>协方差与相关系数</h2><p>要说相关系数，我们先来聊聊协方差。在之前的博文《<a target="_blank" rel="noopener" href="https://blog.csdn.net/theonegis/article/details/85059105">使用Python计算方差协方差相关系数</a>》中提到协方差是计算两个随机变量$X$和$Y$ 之间的相关性的指标，定义如下：</p>
-<p>$$\mathrm{Cov}(X, Y) = \mathrm{E}[(X - \mathrm{E}X)(Y - \mathrm{E}Y)]$$</p>
+<p>$$\mathrm{Cov}(X, Y) &#x3D; \mathrm{E}[(X - \mathrm{E}X)(Y - \mathrm{E}Y)]$$</p>
 <p>但是协方差有一个确定：它的值会随着变量量纲的变化而变化（covariance is not scale invariant），所以，这才提出了相关系数的概念：</p>
-<p>$$r = \mathrm{Corr}(X, Y) = \frac{Cov(X, Y)}{\sigma_X \cdot \sigma_Y} = \frac{\mathrm{E}[(X - \mathrm{E}X)(Y - \mathrm{E}Y)]}{\sqrt{\mathrm{E}[X - \mathrm{E}X]^2}\sqrt{\mathrm{E}[Y - \mathrm{E}Y]^2}}$$</p>
+<p>$$r &#x3D; \mathrm{Corr}(X, Y) &#x3D; \frac{Cov(X, Y)}{\sigma_X \cdot \sigma_Y} &#x3D; \frac{\mathrm{E}[(X - \mathrm{E}X)(Y - \mathrm{E}Y)]}{\sqrt{\mathrm{E}[X - \mathrm{E}X]^2}\sqrt{\mathrm{E}[Y - \mathrm{E}Y]^2}}$$</p>
 <p>对于相关系数，我们需要注意：</p>
 <ol>
-<li>相关系数是用于描述两个变量<em>线性</em>相关程度的，如果$r \gt 0$，呈正相关；如果$r = 0$，不相关；如果$r \lt 0$，呈负相关。</li>
+<li>相关系数是用于描述两个变量<em>线性</em>相关程度的，如果$r \gt 0$，呈正相关；如果$r &#x3D; 0$，不相关；如果$r \lt 0$，呈负相关。</li>
 <li>如果我们将$X - \mathrm{E}X$和$Y - \mathrm{E}Y$看成两个向量的话，那$r$刚好表示的是这两个向量夹角的余弦值，这也就解释了为什么$r$的值域是[-1, 1]。</li>
-<li>相关系数对变量的平移和缩放（线性变换）保持不变（Correlation is invariant to scaling and shift，不知道中文该如何准确表达，😅）。比如$\mathrm{Corr}(X, Y) = \mathrm{Corr}(aX + b, Y)$恒成立。</li>
+<li>相关系数对变量的平移和缩放（线性变换）保持不变（Correlation is invariant to scaling and shift，不知道中文该如何准确表达，😅）。比如$\mathrm{Corr}(X, Y) &#x3D; \mathrm{Corr}(aX + b, Y)$恒成立。</li>
 </ol>
 <h2 id="决定系数（R方）"><a href="#决定系数（R方）" class="headerlink" title="决定系数（R方）"></a>决定系数（R方）</h2><p>下面来说决定系数，R方一般用在回归模型用用于评估预测值和实际值的符合程度，R方的定义如下：</p>
-<p>$$R^2 = 1 - \mathrm{FVU} = 1 - \frac{\mathrm{RSS}}{\mathrm{TSS}} = 1 - \frac{\sum\limits_i(y_i - f_i)^2}{\sum\limits_i(y_i - \hat{y})^2}$$</p>
+<p>$$R^2 &#x3D; 1 - \mathrm{FVU} &#x3D; 1 - \frac{\mathrm{RSS}}{\mathrm{TSS}} &#x3D; 1 - \frac{\sum\limits_i(y_i - f_i)^2}{\sum\limits_i(y_i - \hat{y})^2}$$</p>
 <p>上式中$y$是实际值，$f$是预测值，$\hat{y}$是实际值的平均值。$\mathrm{FVU}$被称为fraction of variance unexplained，RSS叫做Residual sum of squares，TSS叫做Total sum of squares。根据$R^2$的定义，可以看到$R^2$是有可能小于0的，所以$R2$不是$r$的平方。一般地，$R^2$越接近1，表示回归分析中自变量对因变量的解释越好。</p>
 <p>对于$R^2$可以通俗地理解为使用均值作为误差基准，看预测误差是否大于或者小于均值基准误差。</p>
-<p>此外，我们做这样一个变形：$R^2 = 1 - \frac{\sum\limits_i(y_i - f_i)^2 / n}{\sum\limits_i(y_i - \hat{y})^2 / n} = 1 - \frac{\mathrm{RMSE}}{\mathrm{Var}}$，可以看到变成了1减去均方根误差和方差的比值（有利于编程实现）。</p>
-<p>另外有一个叫做Explained sum of squares，$\mathrm{ESS} = \sum\limits_i(f_i - \hat{y})^2$</p>
-<p>在一般地线性回归模型中，有$\mathrm{ESS} + \mathrm{RSS} = \mathrm{TSS}$（证明过程参见：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Explained_sum_of_squares#Partitioning_in_the_general_ordinary_least_squares_model">Partitioning in the general ordinary least squares model</a>）</p>
-<p>在这种情况下：我们有$R^2 = 1 - \frac{\mathrm{RSS}}{\mathrm{TSS}}  = \frac{\mathrm{ESS}}{\mathrm{TSS}}  = \frac{\sum\limits_i(f_i - \hat{y})^2}{\sum\limits_i(y_i - \hat{y})^2}$</p>
+<p>此外，我们做这样一个变形：$R^2 &#x3D; 1 - \frac{\sum\limits_i(y_i - f_i)^2 &#x2F; n}{\sum\limits_i(y_i - \hat{y})^2 &#x2F; n} &#x3D; 1 - \frac{\mathrm{RMSE}}{\mathrm{Var}}$，可以看到变成了1减去均方根误差和方差的比值（有利于编程实现）。</p>
+<p>另外有一个叫做Explained sum of squares，$\mathrm{ESS} &#x3D; \sum\limits_i(f_i - \hat{y})^2$</p>
+<p>在一般地线性回归模型中，有$\mathrm{ESS} + \mathrm{RSS} &#x3D; \mathrm{TSS}$（证明过程参见：<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Explained_sum_of_squares#Partitioning_in_the_general_ordinary_least_squares_model">Partitioning in the general ordinary least squares model</a>）</p>
+<p>在这种情况下：我们有$R^2 &#x3D; 1 - \frac{\mathrm{RSS}}{\mathrm{TSS}}  &#x3D; \frac{\mathrm{ESS}}{\mathrm{TSS}}  &#x3D; \frac{\sum\limits_i(f_i - \hat{y})^2}{\sum\limits_i(y_i - \hat{y})^2}$</p>
 <p>对于$R^2$我们需要注意：</p>
 <ol>
 <li><p>$R^2$一般用在线性模型中（虽然非线性模型总也可以用），具体参见：<a target="_blank" rel="noopener" href="http://blog.minitab.com/blog/adventures-in-statistics-2/regression-analysis-how-do-i-interpret-r-squared-and-assess-the-goodness-of-fit">Regression Analysis: How Do I Interpret R-squared and Assess the Goodness-of-Fit?</a></p>

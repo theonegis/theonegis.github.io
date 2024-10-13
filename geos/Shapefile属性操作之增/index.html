@@ -177,71 +177,10 @@
 <h1 id="案例介绍"><a href="#案例介绍" class="headerlink" title="案例介绍"></a>案例介绍</h1><p>我还是喜欢用案例的方式进行知识的讲解。这里我们要处理的数据是中国地图分省的矢量Shapefile，是一个面状数据。该数据有一个<code>NAME</code>字段，给出了每个省的名称。然后我们需要给给数据增加一个属性字段<code>Abbr</code>，用以表示每个省的简称。</p>
 <p>要完成这项工作，我们首先需要建立一个省份名称到简称的字典，方便程序查询。然后读取原始数据，新建一个属性字段<code>Abbr</code>，然后遍历数据中的每个Feature要素，取出<code>NAME</code>，再根据字典查询到当前<code>NAME</code>对应的<code>Abbr</code>填充进对应的字段即可。</p>
 <h1 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h1><p>Talk is cheap. Show me the code.</p>
-<pre><code class="Python">from osgeo import ogr
-ogr.UseExceptions()
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> ogr</span><br><span class="line">ogr.UseExceptions()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 首先定义每个省全称到简称的映射字典</span></span><br><span class="line">names = &#123;</span><br><span class="line">    <span class="string">&#x27;北京&#x27;</span>: <span class="string">&#x27;京&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;天津&#x27;</span>: <span class="string">&#x27;津&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;重庆&#x27;</span>: <span class="string">&#x27;渝&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;上海&#x27;</span>: <span class="string">&#x27;沪&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;河北&#x27;</span>: <span class="string">&#x27;冀&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;山西&#x27;</span>: <span class="string">&#x27;晋&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;辽宁&#x27;</span>: <span class="string">&#x27;辽&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;吉林&#x27;</span>: <span class="string">&#x27;吉&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;黑龙江&#x27;</span>: <span class="string">&#x27;黑&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;江苏&#x27;</span>: <span class="string">&#x27;苏&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;浙江&#x27;</span>: <span class="string">&#x27;浙&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;安徽&#x27;</span>: <span class="string">&#x27;皖&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;福建&#x27;</span>: <span class="string">&#x27;闽&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;江西&#x27;</span>: <span class="string">&#x27;赣&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;山东&#x27;</span>: <span class="string">&#x27;鲁&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;河南&#x27;</span>: <span class="string">&#x27;豫&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;湖北&#x27;</span>: <span class="string">&#x27;鄂&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;湖南&#x27;</span>: <span class="string">&#x27;湘&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;广东&#x27;</span>: <span class="string">&#x27;粤&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;海南&#x27;</span>: <span class="string">&#x27;琼&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;四川&#x27;</span>: <span class="string">&#x27;川/蜀&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;贵州&#x27;</span>: <span class="string">&#x27;黔/贵&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;云南&#x27;</span>: <span class="string">&#x27;云/滇&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;陕西&#x27;</span>: <span class="string">&#x27;陕/秦&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;甘肃&#x27;</span>: <span class="string">&#x27;甘/陇&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;青海&#x27;</span>: <span class="string">&#x27;青&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;台湾&#x27;</span>: <span class="string">&#x27;台&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;内蒙古&#x27;</span>: <span class="string">&#x27;蒙&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;广西&#x27;</span>: <span class="string">&#x27;桂&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;宁夏&#x27;</span>: <span class="string">&#x27;宁&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;新疆&#x27;</span>: <span class="string">&#x27;新&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;西藏&#x27;</span>: <span class="string">&#x27;藏&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;香港&#x27;</span>: <span class="string">&#x27;港&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;澳门&#x27;</span>: <span class="string">&#x27;澳&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开一个Shapefile文件获取属性定义</span></span><br><span class="line">ds: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/省级行政区.shp&#x27;</span>, update=<span class="literal">True</span>)</span><br><span class="line">layer: ogr.Layer = ds.GetLayer()</span><br><span class="line">defs: ogr.FeatureDefn = layer.GetLayerDefn()</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(defs.GetFieldCount()):</span><br><span class="line">    defn: ogr.FieldDefn = defs.GetFieldDefn(i)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;<span class="subst">&#123;defn.GetName()&#125;</span> -&gt;  <span class="subst">&#123;defn.GetType()&#125;</span> -&gt; <span class="subst">&#123;defn.GetWidth()&#125;</span>&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加一个省简称的字段</span></span><br><span class="line">field: ogr.FieldDefn = ogr.FieldDefn(<span class="string">&#x27;Abbr&#x27;</span>, ogr.OFTString)</span><br><span class="line">field.SetWidth(<span class="number">5</span>)</span><br><span class="line">layer.CreateField(field)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 填充属性值</span></span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> layer:</span><br><span class="line">    name: <span class="built_in">str</span> = feature.GetField(<span class="string">&#x27;NAME&#x27;</span>)</span><br><span class="line">    feature.SetField(<span class="string">&#x27;Abbr&#x27;</span>, names.get(name, <span class="string">&#x27;&#x27;</span>))</span><br><span class="line">    <span class="comment"># 修改完了记得Set一下</span></span><br><span class="line">    layer.SetFeature(feature)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭数据集</span></span><br><span class="line">ds = <span class="literal">None</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
-# 首先定义每个省全称到简称的映射字典
-names = &#123;
-    &#39;北京&#39;: &#39;京&#39;,
-    &#39;天津&#39;: &#39;津&#39;,
-    &#39;重庆&#39;: &#39;渝&#39;,
-    &#39;上海&#39;: &#39;沪&#39;,
-    &#39;河北&#39;: &#39;冀&#39;,
-    &#39;山西&#39;: &#39;晋&#39;,
-    &#39;辽宁&#39;: &#39;辽&#39;,
-    &#39;吉林&#39;: &#39;吉&#39;,
-    &#39;黑龙江&#39;: &#39;黑&#39;,
-    &#39;江苏&#39;: &#39;苏&#39;,
-    &#39;浙江&#39;: &#39;浙&#39;,
-    &#39;安徽&#39;: &#39;皖&#39;,
-    &#39;福建&#39;: &#39;闽&#39;,
-    &#39;江西&#39;: &#39;赣&#39;,
-    &#39;山东&#39;: &#39;鲁&#39;,
-    &#39;河南&#39;: &#39;豫&#39;,
-    &#39;湖北&#39;: &#39;鄂&#39;,
-    &#39;湖南&#39;: &#39;湘&#39;,
-    &#39;广东&#39;: &#39;粤&#39;,
-    &#39;海南&#39;: &#39;琼&#39;,
-    &#39;四川&#39;: &#39;川/蜀&#39;,
-    &#39;贵州&#39;: &#39;黔/贵&#39;,
-    &#39;云南&#39;: &#39;云/滇&#39;,
-    &#39;陕西&#39;: &#39;陕/秦&#39;,
-    &#39;甘肃&#39;: &#39;甘/陇&#39;,
-    &#39;青海&#39;: &#39;青&#39;,
-    &#39;台湾&#39;: &#39;台&#39;,
-    &#39;内蒙古&#39;: &#39;蒙&#39;,
-    &#39;广西&#39;: &#39;桂&#39;,
-    &#39;宁夏&#39;: &#39;宁&#39;,
-    &#39;新疆&#39;: &#39;新&#39;,
-    &#39;西藏&#39;: &#39;藏&#39;,
-    &#39;香港&#39;: &#39;港&#39;,
-    &#39;澳门&#39;: &#39;澳&#39;
-&#125;
 
-# 打开一个Shapefile文件获取属性定义
-ds: ogr.DataSource = ogr.Open(&#39;../data/省级行政区.shp&#39;, update=True)
-layer: ogr.Layer = ds.GetLayer()
-defs: ogr.FeatureDefn = layer.GetLayerDefn()
-for i in range(defs.GetFieldCount()):
-    defn: ogr.FieldDefn = defs.GetFieldDefn(i)
-    print(f&#39;&#123;defn.GetName()&#125; -&gt;  &#123;defn.GetType()&#125; -&gt; &#123;defn.GetWidth()&#125;&#39;)
-
-# 添加一个省简称的字段
-field: ogr.FieldDefn = ogr.FieldDefn(&#39;Abbr&#39;, ogr.OFTString)
-field.SetWidth(5)
-layer.CreateField(field)
-
-# 填充属性值
-for feature in layer:
-    name: str = feature.GetField(&#39;NAME&#39;)
-    feature.SetField(&#39;Abbr&#39;, names.get(name, &#39;&#39;))
-    # 修改完了记得Set一下
-    layer.SetFeature(feature)
-
-# 关闭数据集
-ds = None
-</code></pre>
 <h1 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h1><p>下面我们来对上面的代码进行一个方法的总结：</p>
 <ol>
 <li>首先，我们使用<code>ogr.Open()</code>函数打开Shapefile数据，注意我们要设置<code>update</code>参数为<code>True</code>，即允许GDAL更新我们的原始数据。</li>

@@ -167,36 +167,17 @@
 
     <div class="content">
         <h1 id="Python求解正态分布置信区间"><a href="#Python求解正态分布置信区间" class="headerlink" title="Python求解正态分布置信区间"></a>Python求解正态分布置信区间</h1><h2 id="正态分布和置信区间"><a href="#正态分布和置信区间" class="headerlink" title="正态分布和置信区间"></a>正态分布和置信区间</h2><p>正态分布（Normal Distribution）又叫高斯分布，是一种非常重要的概率分布。其概率密度函数的数学表达如下：</p>
-<p>$$f(x) = \frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x - \mu)^2}{2\sigma^2}}$$</p>
-<p>当$\mu=0​$，$\sigma = 1​$时，称为标准正太分布。</p>
+<p>$$f(x) &#x3D; \frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x - \mu)^2}{2\sigma^2}}$$</p>
+<p>当$\mu&#x3D;0​$，$\sigma &#x3D; 1​$时，称为标准正太分布。</p>
 <p>置信区间是对该区间能包含未知参数的可置信的程度的描述。</p>
-<h2 id="使用SciPy求解置信区间"><a href="#使用SciPy求解置信区间" class="headerlink" title="使用SciPy求解置信区间"></a>使用SciPy求解置信区间</h2><pre><code class="Python">import numpy as np
-import matplotlib.pyplot as plt
-from scipy import stats
+<h2 id="使用SciPy求解置信区间"><a href="#使用SciPy求解置信区间" class="headerlink" title="使用SciPy求解置信区间"></a>使用SciPy求解置信区间</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> stats</span><br><span class="line"></span><br><span class="line">N = <span class="number">10000</span></span><br><span class="line">x = np.random.normal(<span class="number">0</span>, <span class="number">1</span>, N)</span><br><span class="line"><span class="comment"># ddof取值为1是因为在统计学中样本的标准偏差除的是(N-1)而不是N，统计学中的标准偏差除的是N</span></span><br><span class="line"><span class="comment"># SciPy中的std计算默认是采用统计学中标准差的计算方式</span></span><br><span class="line">mean, std = x.mean(), x.std(ddof=<span class="number">1</span>)</span><br><span class="line"><span class="built_in">print</span>(mean, std)</span><br><span class="line"><span class="comment"># 计算置信区间</span></span><br><span class="line"><span class="comment"># 这里的0.9是置信水平</span></span><br><span class="line">conf_intveral = stats.norm.interval(<span class="number">0.9</span>, loc=mean, scale=std)</span><br><span class="line"><span class="built_in">print</span>(conf_intveral)</span><br></pre></td></tr></table></figure>
 
-N = 10000
-x = np.random.normal(0, 1, N)
-# ddof取值为1是因为在统计学中样本的标准偏差除的是(N-1)而不是N，统计学中的标准偏差除的是N
-# SciPy中的std计算默认是采用统计学中标准差的计算方式
-mean, std = x.mean(), x.std(ddof=1)
-print(mean, std)
-# 计算置信区间
-# 这里的0.9是置信水平
-conf_intveral = stats.norm.interval(0.9, loc=mean, scale=std)
-print(conf_intveral)
-</code></pre>
 <p>输出如下：</p>
-<pre><code>0.0033541207210673997 0.9986647964318905
-(-1.639303291798682, 1.6460115332408163)
-</code></pre>
+<figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">0.0033541207210673997</span> <span class="number">0.9986647964318905</span></span><br><span class="line">(<span class="name">-1.639303291798682</span><span class="punctuation">,</span> <span class="number">1.6460115332408163</span>)</span><br></pre></td></tr></table></figure>
+
 <p>这里的-1.639303291798682是置信上界，1.6460115332408163是置信下界，两个数值构成的区间就是置信区间</p>
-<h2 id="使用Matplotlib绘制正态分布密度曲线"><a href="#使用Matplotlib绘制正态分布密度曲线" class="headerlink" title="使用Matplotlib绘制正态分布密度曲线"></a>使用Matplotlib绘制正态分布密度曲线</h2><pre><code># 绘制概率密度分布图
-x = np.arange(-5, 5, 0.001)
-# PDF是概率密度函数
-y = stats.norm.pdf(x, loc=mean, scale=std)
-plt.plot(x, y)
-plt.show()
-</code></pre>
+<h2 id="使用Matplotlib绘制正态分布密度曲线"><a href="#使用Matplotlib绘制正态分布密度曲线" class="headerlink" title="使用Matplotlib绘制正态分布密度曲线"></a>使用Matplotlib绘制正态分布密度曲线</h2><figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 绘制概率密度分布图</span></span><br><span class="line"><span class="attribute">x</span> = np.arange(-<span class="number">5</span>, <span class="number">5</span>, <span class="number">0</span>.<span class="number">001</span>)</span><br><span class="line"><span class="comment"># PDF是概率密度函数</span></span><br><span class="line"><span class="attribute">y</span> = stats.norm.pdf(x, loc=mean, scale=std)</span><br><span class="line"><span class="attribute">plt</span>.plot(x, y)</span><br><span class="line"><span class="attribute">plt</span>.show()</span><br></pre></td></tr></table></figure>
+
 <p>这里的<code>pdf()</code>函数是Probability density function，就是本文最开始的那个公式</p>
 <p>最后的输出图像如下，可以看到结果跟理论上的正太分布还是比较像的：</p>
 <p><img src="/images/math/norm.png"></p>

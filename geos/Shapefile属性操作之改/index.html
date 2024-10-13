@@ -174,32 +174,10 @@
 <h1 id="案例介绍"><a href="#案例介绍" class="headerlink" title="案例介绍"></a>案例介绍</h1><p>这里我们要处理的数据是中国地图分省的矢量Shapefile，是一个面状数据。该数据有一个<code>NAME</code>字段，给出了每个省的名称。这里我们要更新<code>NAME</code>字段，给直辖市名称后面添加“市”字，给自治区后面添加“自治区”字样，给特别行政区后面添加“特别行政区”字样，剩下的省名称后面添加“省”字。</p>
 <p>思路是我们遍历图层中的每一个Feature要素，然后通过<code>ogr.Feature</code>的<code>SetField()</code>方法更新属性值。</p>
 <h1 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h1><p>Talk is cheap. Show me the code.</p>
-<pre><code class="Python">from osgeo import ogr
-ogr.UseExceptions()
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> ogr</span><br><span class="line">ogr.UseExceptions()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 打开一个Shapefile</span></span><br><span class="line">ds: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/省级行政区.shp&#x27;</span>, update=<span class="literal">True</span>)</span><br><span class="line">layer: ogr.Layer = ds.GetLayer()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 填充属性值</span></span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> layer:</span><br><span class="line">    name: <span class="built_in">str</span> = feature.GetField(<span class="string">&#x27;NAME&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> name <span class="keyword">in</span> (<span class="string">&#x27;北京&#x27;</span>, <span class="string">&#x27;天津&#x27;</span>, <span class="string">&#x27;重庆&#x27;</span>, <span class="string">&#x27;上海&#x27;</span>):</span><br><span class="line">        name += <span class="string">&#x27;市&#x27;</span></span><br><span class="line">    <span class="keyword">elif</span> name <span class="keyword">in</span> (<span class="string">&#x27;内蒙古&#x27;</span>, <span class="string">&#x27;广西&#x27;</span>, <span class="string">&#x27;宁夏&#x27;</span>, <span class="string">&#x27;新疆&#x27;</span>, <span class="string">&#x27;西藏&#x27;</span>):</span><br><span class="line">        name += <span class="string">&#x27;自治区&#x27;</span></span><br><span class="line">    <span class="keyword">elif</span> name <span class="keyword">in</span> (<span class="string">&#x27;香港&#x27;</span>, <span class="string">&#x27;澳门&#x27;</span>):</span><br><span class="line">        name += <span class="string">&#x27;特别行政区&#x27;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        name += <span class="string">&#x27;省&#x27;</span></span><br><span class="line">    feature.SetField(<span class="string">&#x27;NAME&#x27;</span>, name)</span><br><span class="line">    <span class="comment"># 修改完了记得Set一下</span></span><br><span class="line">    layer.SetFeature(feature)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 关闭数据集</span></span><br><span class="line">ds = <span class="literal">None</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
-# 打开一个Shapefile
-ds: ogr.DataSource = ogr.Open(&#39;../data/省级行政区.shp&#39;, update=True)
-layer: ogr.Layer = ds.GetLayer()
 
-# 填充属性值
-for feature in layer:
-    name: str = feature.GetField(&#39;NAME&#39;)
-    if name in (&#39;北京&#39;, &#39;天津&#39;, &#39;重庆&#39;, &#39;上海&#39;):
-        name += &#39;市&#39;
-    elif name in (&#39;内蒙古&#39;, &#39;广西&#39;, &#39;宁夏&#39;, &#39;新疆&#39;, &#39;西藏&#39;):
-        name += &#39;自治区&#39;
-    elif name in (&#39;香港&#39;, &#39;澳门&#39;):
-        name += &#39;特别行政区&#39;
-    else:
-        name += &#39;省&#39;
-    feature.SetField(&#39;NAME&#39;, name)
-    # 修改完了记得Set一下
-    layer.SetFeature(feature)
-
-# 关闭数据集
-ds = None
-</code></pre>
 <h1 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h1><ol>
 <li>首先，我们使用<code>ogr.Open()</code>函数打开Shapefile数据，注意我们要设置<code>update</code>参数为<code>True</code>，即允许GDAL更新我们的原始数据。</li>
 <li>使用<code>GetLayer()</code>方法获取图层，然后使用for循环遍历图层中的要素。通过<code>GetField()</code>方法获取需要修改的字段，然后通过<code>SetField()</code>方法修改字段。</li>

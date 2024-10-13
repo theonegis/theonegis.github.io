@@ -183,28 +183,8 @@
 </ol>
 <h1 id="SQL查询方式"><a href="#SQL查询方式" class="headerlink" title="SQL查询方式"></a>SQL查询方式</h1><h2 id="代码展示"><a href="#代码展示" class="headerlink" title="代码展示"></a>代码展示</h2><p>Talk is cheap. Show me the code.</p>
 <p>首先，我们来看看使用SQL进行查询的代码。</p>
-<pre><code class="Python">from osgeo import ogr
-ogr.UseExceptions()
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> ogr</span><br><span class="line">ogr.UseExceptions()</span><br><span class="line"></span><br><span class="line">ds: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/Provinces.shp&#x27;</span>)</span><br><span class="line"><span class="comment"># 注意Layer的名称不能包含中文</span></span><br><span class="line">layer: ogr.Layer = ds.GetLayer()</span><br><span class="line"><span class="comment"># 选择出中学数量大于1万所的省份</span></span><br><span class="line">query: <span class="built_in">str</span> = <span class="string">f&#x27;SELECT NAME, HighSchool FROM <span class="subst">&#123;layer.GetName()&#125;</span> WHERE HighSchool &gt; 10000&#x27;</span></span><br><span class="line">selected: ogr.Layer = ds.ExecuteSQL(query)</span><br><span class="line"><span class="comment"># 这里的Feature中只包含两个属性NAME和HighSchool</span></span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> selected:</span><br><span class="line">    <span class="built_in">print</span>(feature.GetField(<span class="string">&#x27;NAME&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 选择出中学数量最多的省份</span></span><br><span class="line"><span class="comment"># 我尝试使用MAX函数和嵌套的SELECT语句进行实现，但是执行报错，应该是OGR不支持嵌套的SQL查询</span></span><br><span class="line">query: <span class="built_in">str</span> = <span class="string">f&#x27;SELECT NAME, HighSchool FROM <span class="subst">&#123;layer.GetName()&#125;</span> ORDER BY HighSchool DESC&#x27;</span></span><br><span class="line">selected: ogr.Layer = ds.ExecuteSQL(query)</span><br><span class="line"><span class="built_in">print</span>(selected.GetFeature(<span class="number">0</span>).GetField(<span class="string">&#x27;NAME&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(selected.GetFeature(<span class="number">0</span>).GetField(<span class="string">&#x27;HighSchool&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">del</span> ds</span><br></pre></td></tr></table></figure>
 
-ds: ogr.DataSource = ogr.Open(&#39;../data/Provinces.shp&#39;)
-# 注意Layer的名称不能包含中文
-layer: ogr.Layer = ds.GetLayer()
-# 选择出中学数量大于1万所的省份
-query: str = f&#39;SELECT NAME, HighSchool FROM &#123;layer.GetName()&#125; WHERE HighSchool &gt; 10000&#39;
-selected: ogr.Layer = ds.ExecuteSQL(query)
-# 这里的Feature中只包含两个属性NAME和HighSchool
-for feature in selected:
-    print(feature.GetField(&#39;NAME&#39;))
-
-# 选择出中学数量最多的省份
-# 我尝试使用MAX函数和嵌套的SELECT语句进行实现，但是执行报错，应该是OGR不支持嵌套的SQL查询
-query: str = f&#39;SELECT NAME, HighSchool FROM &#123;layer.GetName()&#125; ORDER BY HighSchool DESC&#39;
-selected: ogr.Layer = ds.ExecuteSQL(query)
-print(selected.GetFeature(0).GetField(&#39;NAME&#39;))
-print(selected.GetFeature(0).GetField(&#39;HighSchool&#39;))
-
-del ds
-</code></pre>
 <h2 id="方法总结"><a href="#方法总结" class="headerlink" title="方法总结"></a>方法总结</h2><ol>
 <li>首先我们使用<code>ogr.Open()</code>函数读取数据，使用<code>GetLayer()</code>方法获取图层</li>
 <li>然后构造SQL查询语句，图层名称对应的是SQL语句中的表名。注意如果图层名称为中文，查询会失败。</li>
@@ -212,24 +192,8 @@ del ds
 <li>对于第二个案例，我们本来可以使用一个嵌套的SELECT查询语句以及MAX聚合函数得到最大的中学数量，但是使用嵌套的SQL查询执行会失败。所以我在第二个案例中使用了ORDER BY子句进行排序，然后查询结果的第一个要素就是我们寻找的最大值。</li>
 </ol>
 <h1 id="遍历Feature要素方式"><a href="#遍历Feature要素方式" class="headerlink" title="遍历Feature要素方式"></a>遍历Feature要素方式</h1><h2 id="代码展示-1"><a href="#代码展示-1" class="headerlink" title="代码展示"></a>代码展示</h2><p>我们再来看使用遍历Feature要素的方法。</p>
-<pre><code class="Python">from osgeo import ogr
-ogr.UseExceptions()
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> osgeo <span class="keyword">import</span> ogr</span><br><span class="line">ogr.UseExceptions()</span><br><span class="line"></span><br><span class="line">ds: ogr.DataSource = ogr.Open(<span class="string">&#x27;../data/Provinces.shp&#x27;</span>)</span><br><span class="line"><span class="comment"># 注意Layer的名称不能包含中文</span></span><br><span class="line">layer: ogr.Layer = ds.GetLayer()</span><br><span class="line"><span class="comment"># 使用filter函数对要素属性进行过滤</span></span><br><span class="line">selected = <span class="built_in">list</span>(<span class="built_in">filter</span>(<span class="keyword">lambda</span> f: f.GetField(<span class="string">&#x27;HighSchool&#x27;</span>) &gt; <span class="number">10000</span>, layer))</span><br><span class="line"><span class="keyword">for</span> feature <span class="keyword">in</span> selected:</span><br><span class="line">    <span class="built_in">print</span>(feature.GetField(<span class="string">&#x27;NAME&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用sorted方法对要素进行自定义排序，这里使用逆序</span></span><br><span class="line">selected = <span class="built_in">sorted</span>(layer, key=<span class="keyword">lambda</span> f: f.GetField(<span class="string">&#x27;HighSchool&#x27;</span>), reverse=<span class="literal">True</span>)</span><br><span class="line"><span class="built_in">print</span>(selected[<span class="number">0</span>].GetField(<span class="string">&#x27;NAME&#x27;</span>))</span><br><span class="line"><span class="built_in">print</span>(selected[<span class="number">0</span>].GetField(<span class="string">&#x27;HighSchool&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">del</span> ds</span><br></pre></td></tr></table></figure>
 
-ds: ogr.DataSource = ogr.Open(&#39;../data/Provinces.shp&#39;)
-# 注意Layer的名称不能包含中文
-layer: ogr.Layer = ds.GetLayer()
-# 使用filter函数对要素属性进行过滤
-selected = list(filter(lambda f: f.GetField(&#39;HighSchool&#39;) &gt; 10000, layer))
-for feature in selected:
-    print(feature.GetField(&#39;NAME&#39;))
-
-# 使用sorted方法对要素进行自定义排序，这里使用逆序
-selected = sorted(layer, key=lambda f: f.GetField(&#39;HighSchool&#39;), reverse=True)
-print(selected[0].GetField(&#39;NAME&#39;))
-print(selected[0].GetField(&#39;HighSchool&#39;))
-
-del ds
-</code></pre>
 <h2 id="方法总结-1"><a href="#方法总结-1" class="headerlink" title="方法总结"></a>方法总结</h2><ol>
 <li>使用遍历Feature要素的方法进行查询是我们在获取了图层包含的所有Feature要素集合以后，使用Python内置的函数对该集合进行过滤，排序等操作得到我们想要的查询结果。</li>
 <li><code>filter()</code>函数的第一个参数是一个自定义函数，第二个参数是一个可迭代对象iterable。该函数会遍历可迭代对象将满足第一个自定义函数的值过滤出来。</li>

@@ -172,25 +172,12 @@
 <p>那么解决的办法是什么呢？答曰：字典（<code>dict</code>）。下面我们以两个典型案例进行说明。</p>
 <h2 id="案例一（简单情况）"><a href="#案例一（简单情况）" class="headerlink" title="案例一（简单情况）"></a>案例一（简单情况）</h2><p>第一种简单情况就是一对一，给定一个值，返回一个值，这是C++和Java中的<code>switch</code>语句支持的情况。</p>
 <p>下面的案例是将英文日期翻译为中文日期：</p>
-<pre><code class="Python">dates = &#123;
-    &#39;Sun&#39;: &#39;星期天&#39;, &#39;Mon&#39;: &#39;星期一&#39;, &#39;Tues&#39;: &#39;星期二&#39;, &#39;Wed&#39;: &#39;星期三&#39;,
-    &#39;Thurs&#39;: &#39;星期四&#39;, &#39;Fri&#39;: &#39;星期五&#39;, &#39;Sat&#39;: &#39;星期六&#39;&#125;
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dates = &#123;</span><br><span class="line">    <span class="string">&#x27;Sun&#x27;</span>: <span class="string">&#x27;星期天&#x27;</span>, <span class="string">&#x27;Mon&#x27;</span>: <span class="string">&#x27;星期一&#x27;</span>, <span class="string">&#x27;Tues&#x27;</span>: <span class="string">&#x27;星期二&#x27;</span>, <span class="string">&#x27;Wed&#x27;</span>: <span class="string">&#x27;星期三&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;Thurs&#x27;</span>: <span class="string">&#x27;星期四&#x27;</span>, <span class="string">&#x27;Fri&#x27;</span>: <span class="string">&#x27;星期五&#x27;</span>, <span class="string">&#x27;Sat&#x27;</span>: <span class="string">&#x27;星期六&#x27;</span>&#125;</span><br><span class="line"></span><br><span class="line">day = dates.get(<span class="string">&#x27;Fri&#x27;</span>, <span class="string">&#x27;未知&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(day)  <span class="comment"># 输出结果为星期五</span></span><br></pre></td></tr></table></figure>
 
-day = dates.get(&#39;Fri&#39;, &#39;未知&#39;)
-print(day)  # 输出结果为星期五
-</code></pre>
 <h2 id="案例二（带条件判断）"><a href="#案例二（带条件判断）" class="headerlink" title="案例二（带条件判断）"></a>案例二（带条件判断）</h2><p>第二种情况是多对一，反映在编程上就是<code>case</code>语句中带条件判断，这个是诸如Scala中的<code>switch</code>和Kotlin中的<code>when</code>支持的情况。</p>
 <p>下面给出的案例是给定一个数字，如果该数字在某个范围之类，则返回一个指定的数字。</p>
-<pre><code class="Python"># 这里的conditions是一个函数
-conditions = lambda x: &#123;
-    x &lt; -1: 0, -1 &lt;= x &lt;= 1: 0.5, x &gt; 1: 1
-&#125;
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这里的conditions是一个函数</span></span><br><span class="line">conditions = <span class="keyword">lambda</span> x: &#123;</span><br><span class="line">    x &lt; -<span class="number">1</span>: <span class="number">0</span>, -<span class="number">1</span> &lt;= x &lt;= <span class="number">1</span>: <span class="number">0.5</span>, x &gt; <span class="number">1</span>: <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">num = conditions(<span class="number">0.25</span>)[<span class="literal">True</span>]</span><br><span class="line"><span class="built_in">print</span>(num)</span><br><span class="line">num = conditions(<span class="number">10</span>)[<span class="literal">True</span>]</span><br><span class="line"><span class="built_in">print</span>(num)</span><br></pre></td></tr></table></figure>
 
-num = conditions(0.25)[True]
-print(num)
-num = conditions(10)[True]
-print(num)
-</code></pre>
 <p>这里我们的<code>dict</code>不是一个普通的字典，其<code>key</code>是一个<code>lambda</code>表达式（一个函数）。如果我们调用该函数，则会返回一个字典，该字典中有两个元素：一个元素的键是<code>True</code>，另一个是<code>False</code>。<code>True</code>元素包含的值是对应<code>lambda</code>函数中满足条件的给定值，<code>False</code>元素包含的值是对应<code>lambda</code>函数中最后一个不满足条件的给定值（这句话写得比较拗口，不好理解。动手实践一下，可以加深理解）。</p>
 <p>经过上面的介绍，我们以后可以大大减少对<code>if...else</code>语句的使用了，让我们的代码更加干净一些！</p>
 

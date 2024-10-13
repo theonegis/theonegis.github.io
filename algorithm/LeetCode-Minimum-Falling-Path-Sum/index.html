@@ -175,36 +175,11 @@
 <p>然后，对于后面的，我们每次只要选择正下方，左下方，右下方中最小的数即可。</p>
 <p>递推公式为：<code>dp[i][j] = dp[i-1][j] + min(A[i][j-1], A[i][j], A[i][j+1])</code>（注意对数组越界的处理）</p>
 <h2 id="C-实现"><a href="#C-实现" class="headerlink" title="C++实现"></a>C++实现</h2><p>使用<code>A</code>当做<code>dp</code>数组，这样可以节省空间，但是我觉得对输入参数直接进行了修改，这样不是很好。</p>
-<pre><code class="C++">class Solution &#123;
-public:
-    int minFallingPathSum(vector&lt;vector&lt;int&gt;&gt; &amp;A) &#123;
-        for (auto i = 1; i &lt; A.size(); ++i) &#123;
-            for (auto j = 0; j &lt; A.size(); ++j) &#123;
-                A[i][j] +=
-                        min(&#123;A[i - 1][max(0, j - 1)],
-                             A[i - 1][j],
-                             A[i - 1][min(static_cast&lt;int&gt;(A.size() - 1), j + 1)]&#125;);
-            &#125;
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">minFallingPathSum</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; &amp;A)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> i = <span class="number">1</span>; i &lt; A.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">auto</span> j = <span class="number">0</span>; j &lt; A.<span class="built_in">size</span>(); ++j) &#123;</span><br><span class="line">                A[i][j] +=</span><br><span class="line">                        <span class="built_in">min</span>(&#123;A[i - <span class="number">1</span>][<span class="built_in">max</span>(<span class="number">0</span>, j - <span class="number">1</span>)],</span><br><span class="line">                             A[i - <span class="number">1</span>][j],</span><br><span class="line">                             A[i - <span class="number">1</span>][<span class="built_in">min</span>(<span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(A.<span class="built_in">size</span>() - <span class="number">1</span>), j + <span class="number">1</span>)]&#125;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> *<span class="built_in">min_element</span>(A.<span class="built_in">back</span>().<span class="built_in">begin</span>(), A.<span class="built_in">back</span>().<span class="built_in">end</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-        &#125;
-        return *min_element(A.back().begin(), A.back().end());
-    &#125;
-&#125;;
-</code></pre>
 <h2 id="Scala实现"><a href="#Scala实现" class="headerlink" title="Scala实现"></a>Scala实现</h2><p>Scala版本的对输入参数<code>A</code>保持不变，但是这仍然不是纯函数的实现。如果有朋友有纯函数实现的方案，请不吝赐教！</p>
-<pre><code class="Scala">object Solution &#123;
-  def minFallingPathSum(A: Array[Array[Int]]): Int = &#123;
-    val dp = A.clone()
-    for (i &lt;- 1 until dp.length; j &lt;- dp.indices) &#123;
-      dp(i)(j) += List(
-        dp(i - 1)(math.max(0, j - 1)),
-        dp(i - 1)(j),
-        dp(i - 1)(math.min(dp.length - 1, j + 1))).min
-    &#125;
-    dp.last.min
-  &#125;
-&#125;
-</code></pre>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">minFallingPathSum</span></span>(<span class="type">A</span>: <span class="type">Array</span>[<span class="type">Array</span>[<span class="type">Int</span>]]): <span class="type">Int</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> dp = <span class="type">A</span>.clone()</span><br><span class="line">    <span class="keyword">for</span> (i &lt;- <span class="number">1</span> until dp.length; j &lt;- dp.indices) &#123;</span><br><span class="line">      dp(i)(j) += <span class="type">List</span>(</span><br><span class="line">        dp(i - <span class="number">1</span>)(math.max(<span class="number">0</span>, j - <span class="number">1</span>)),</span><br><span class="line">        dp(i - <span class="number">1</span>)(j),</span><br><span class="line">        dp(i - <span class="number">1</span>)(math.min(dp.length - <span class="number">1</span>, j + <span class="number">1</span>))).min</span><br><span class="line">    &#125;</span><br><span class="line">    dp.last.min</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
     </div>
 

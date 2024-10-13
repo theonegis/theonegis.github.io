@@ -169,30 +169,30 @@
         <p>注：</p>
 <ul>
 <li>小波变换系列博文打算记录自己学习小波变换的心路历程，每篇博文尽量简短，宗旨是用最少的数学公式说明白如何使用小波变换</li>
-<li>我的博客即将同步至腾讯云+社区，邀请大家一同入驻：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/support-plan?invite_code=1roiym8d609t1">https://cloud.tencent.com/developer/support-plan?invite_code=1roiym8d609t1</a></li>
+<li>我的博客即将同步至腾讯云+社区，邀请大家一同入驻：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/support-plan?invite_code=1roiym8d609t1">https://cloud.tencent.com/developer/support-plan?invite_code&#x3D;1roiym8d609t1</a></li>
 </ul>
-<h1 id="Haar变换"><a href="#Haar变换" class="headerlink" title="Haar变换"></a>Haar变换</h1><h2 id="案例一简单一维信号变换"><a href="#案例一简单一维信号变换" class="headerlink" title="案例一简单一维信号变换"></a>案例一简单一维信号变换</h2><p>下面是一个一维信号（一组数）：$f = {2, 2, 2, 4, 4, 4}$</p>
+<h1 id="Haar变换"><a href="#Haar变换" class="headerlink" title="Haar变换"></a>Haar变换</h1><h2 id="案例一简单一维信号变换"><a href="#案例一简单一维信号变换" class="headerlink" title="案例一简单一维信号变换"></a>案例一简单一维信号变换</h2><p>下面是一个一维信号（一组数）：$f &#x3D; {2, 2, 2, 4, 4, 4}$</p>
 <p>我对这个信号进行如下处理：</p>
-<p>$a_m = \sqrt{2}\frac{f_{2m-1}+f_{2m}}{2} = \frac{f_{2m-1}+f_{2m}}{\sqrt{2}}$（相邻两个数相加，求平均，然后乘以$\sqrt{2}$）</p>
-<p>$d_m = \sqrt{2}\frac{f_{2m-1}-f_{2m}}{2} = \frac{f_{2m-1}-f_{2m}}{\sqrt{2}}$（相邻两个数相减，求平均，然后乘以$\sqrt{2}$）</p>
+<p>$a_m &#x3D; \sqrt{2}\frac{f_{2m-1}+f_{2m}}{2} &#x3D; \frac{f_{2m-1}+f_{2m}}{\sqrt{2}}$（相邻两个数相加，求平均，然后乘以$\sqrt{2}$）</p>
+<p>$d_m &#x3D; \sqrt{2}\frac{f_{2m-1}-f_{2m}}{2} &#x3D; \frac{f_{2m-1}-f_{2m}}{\sqrt{2}}$（相邻两个数相减，求平均，然后乘以$\sqrt{2}$）</p>
 <p>注：至于为什么要乘以$\sqrt{2}$呢？我们这里先不解释，放到后面再说。</p>
-<p>然后按照先$a$后$d$的顺序排列${a_1,a_2,…,a_{N/2}, d_1, d_2, …, d_{N/2}}$（$N$是离散信号中的值的个数）</p>
-<p>则，$a = {2\sqrt{2}, 3\sqrt{2}, 4\sqrt{2}}$，$d={0, -\sqrt{2}, 0}$</p>
-<p>我们可以得到结果：$tf = {2\sqrt{2}, 3\sqrt{2}, 4\sqrt{2}, 0, -\sqrt{2}, 0}$</p>
+<p>然后按照先$a$后$d$的顺序排列${a_1,a_2,…,a_{N&#x2F;2}, d_1, d_2, …, d_{N&#x2F;2}}$（$N$是离散信号中的值的个数）</p>
+<p>则，$a &#x3D; {2\sqrt{2}, 3\sqrt{2}, 4\sqrt{2}}$，$d&#x3D;{0, -\sqrt{2}, 0}$</p>
+<p>我们可以得到结果：$tf &#x3D; {2\sqrt{2}, 3\sqrt{2}, 4\sqrt{2}, 0, -\sqrt{2}, 0}$</p>
 <p>这就是传说中的Haar变换了……</p>
 <p>$a$表示的是信号的趋势（trend），近似（approximation），是低频信息；而$d$表示的是信号的细节（detail），是高频信息。</p>
 <p>那么我们怎么变回去呢？我们对变换以后的信号进行如下处理：</p>
-<p>$f_{2m-1} = \sqrt{2}\frac{a_m +d_m}{2} = \frac{a_m +d_m}{\sqrt{2}}$（第$m$个$a$和$d$相加，求平均，然后乘以$\sqrt{2}$）</p>
-<p>$f_{2m} = \sqrt{2}\frac{a_m -d_m}{2} = \frac{a_m -d_m}{\sqrt{2}}$ （第$m$个$a$和$d$相减，求平均，然后乘以$\sqrt{2}$）</p>
-<p>我们可以得到结果$if = {2, 2, 2, 4, 4, 4}$</p>
+<p>$f_{2m-1} &#x3D; \sqrt{2}\frac{a_m +d_m}{2} &#x3D; \frac{a_m +d_m}{\sqrt{2}}$（第$m$个$a$和$d$相加，求平均，然后乘以$\sqrt{2}$）</p>
+<p>$f_{2m} &#x3D; \sqrt{2}\frac{a_m -d_m}{2} &#x3D; \frac{a_m -d_m}{\sqrt{2}}$ （第$m$个$a$和$d$相减，求平均，然后乘以$\sqrt{2}$）</p>
+<p>我们可以得到结果$if &#x3D; {2, 2, 2, 4, 4, 4}$</p>
 <p>这样就是Haar变换的逆变换。</p>
 <p>通过观察，我们可以发现：</p>
 <ul>
 <li>$d$中的数字绝大部分都很小（这是做信息压缩很重要的依据）</li>
-<li>变换前后信号的能量保持不变，即$\sum{f_i^2} = \sum{a_m^2} + \sum{d_i^2}$（有兴趣的同学可以算一下对于$f$和$tf$的能量都是60，刚好相等）</li>
+<li>变换前后信号的能量保持不变，即$\sum{f_i^2} &#x3D; \sum{a_m^2} + \sum{d_i^2}$（有兴趣的同学可以算一下对于$f$和$tf$的能量都是60，刚好相等）</li>
 </ul>
 <h2 id="案例二多分辨率一维信号变换"><a href="#案例二多分辨率一维信号变换" class="headerlink" title="案例二多分辨率一维信号变换"></a>案例二多分辨率一维信号变换</h2><p>我们可以按照上面的思路将信号对得到的低频信号（$a$）一直一直划分下去，直到$\mathrm{log}_2N$（离散信号的值的数目不是偶数的，可以在后面补0）</p>
-<p>给定如下的一个信号：$f(t) = 20x^2(1-x)^4\cos(12\pi x)$</p>
+<p>给定如下的一个信号：$f(t) &#x3D; 20x^2(1-x)^4\cos(12\pi x)$</p>
 <p>我们通过在[0, 1]之间取样1024个点可以得到信号的振幅，绘制出信号图像如下：</p>
 <p><img src="/images/math/%E5%8E%9F%E5%A7%8B%E4%BF%A1%E5%8F%B7.png" alt="原始信号"></p>
 <p>我们可以通过案例一种描述的方法进行Haar变换，我们这里对$f(t)$信号进行两次Haar变换，如下图所示：</p>

@@ -179,22 +179,8 @@
 <h2 id="使用QGIS的Python接口将WKT转为可视化涂层"><a href="#使用QGIS的Python接口将WKT转为可视化涂层" class="headerlink" title="使用QGIS的Python接口将WKT转为可视化涂层"></a>使用QGIS的Python接口将WKT转为可视化涂层</h2><p>我们现在有一个WKT格式的要素，我想看一下这个要素到底是什么形状，有没有什么方便的方法呢？</p>
 <p>在QGIS的菜单栏中选择<code>Plugin</code>-&gt;<code>Python Console</code>打开Python控制台面板，输入Python代码。</p>
 <p>下面的代码很简单，将WKT转为Geometry，通过Geometry生成Feature，然后将Feature添加到图层Layer中。</p>
-<pre><code class="Python">
-wkt = &#39;POLYGON((99.60 37.24, 100.77 37.24, 100.77 36.54, 99.60 36.54, 99.60 37.2)&#39;
-# 定义一个矢量图层，第一个参数是URL表示的参数路径，例如：Point?crs=epsg:4326&amp;field=id:integer&amp;field=name:string(20)&amp;index=yes
-# 第二个参数是图层名称，第三个是数据源，&quot;memory&quot;表示来自内存，即在程序中动态生成的数据
-temp = QgsVectorLayer(&#39;Polygon?crs=epsg:4326&#39;, &#39;result&#39;, &#39;memory&#39;)
-# 给QGIS工程的实例添加该图层
-QgsProject.instance().addMapLayer(temp)
-# 开始编辑图层添加数据，先新建一个Feature，设置Feature的Geometry，然后给图层添加该Feature
-temp.startEditing()
-geom = QgsGeometry().fromWkt(wkt)
-feature = QgsFeature()
-feature.setGeometry(geom)
-temp.dataProvider().addFeatures([feature])
-# 提交修改
-temp.commitChanges()
-</code></pre>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">wkt = <span class="string">&#x27;POLYGON((99.60 37.24, 100.77 37.24, 100.77 36.54, 99.60 36.54, 99.60 37.2)&#x27;</span></span><br><span class="line"><span class="comment"># 定义一个矢量图层，第一个参数是URL表示的参数路径，例如：Point?crs=epsg:4326&amp;field=id:integer&amp;field=name:string(20)&amp;index=yes</span></span><br><span class="line"><span class="comment"># 第二个参数是图层名称，第三个是数据源，&quot;memory&quot;表示来自内存，即在程序中动态生成的数据</span></span><br><span class="line">temp = QgsVectorLayer(<span class="string">&#x27;Polygon?crs=epsg:4326&#x27;</span>, <span class="string">&#x27;result&#x27;</span>, <span class="string">&#x27;memory&#x27;</span>)</span><br><span class="line"><span class="comment"># 给QGIS工程的实例添加该图层</span></span><br><span class="line">QgsProject.instance().addMapLayer(temp)</span><br><span class="line"><span class="comment"># 开始编辑图层添加数据，先新建一个Feature，设置Feature的Geometry，然后给图层添加该Feature</span></span><br><span class="line">temp.startEditing()</span><br><span class="line">geom = QgsGeometry().fromWkt(wkt)</span><br><span class="line">feature = QgsFeature()</span><br><span class="line">feature.setGeometry(geom)</span><br><span class="line">temp.dataProvider().addFeatures([feature])</span><br><span class="line"><span class="comment"># 提交修改</span></span><br><span class="line">temp.commitChanges()</span><br></pre></td></tr></table></figure>
+
 <p>结果如下：</p>
 <p><img src="/images/QGIS/%E6%88%AA%E5%B1%8F2021-01-21%E4%B8%8B%E5%8D%887.11.07.png" alt="截屏2021-01-21 下午7.11.07"></p>
 
