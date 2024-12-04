@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head prefix="og: https://ogp.me/ns#">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+  
+  <title>Python中调用R函数 - 阿振的个人主页</title>
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    <link rel='manifest' href='/manifest.json'>
+  
+
+  
+  
+  
+  <meta property="og:title" content="Python中调用R函数 - 阿振的个人主页" />
+  
+  <meta property="og:type" content="article" />
+  
+  <meta property="og:url" content="http://theonegis.github.io/python/Python%E4%B8%AD%E8%B0%83%E7%94%A8R%E5%87%BD%E6%95%B0/index.html" />
+  
+  <meta property="og:image" content="/favicon.png" />
+  
+  <meta property="og:article:published_time" content="2024-12-04T07:38:19.000Z" />
+  
+  <meta property="og:article:author" content="阿振" />
+  
+  
+
+  
+<link rel="stylesheet" href="/css/var.css">
+
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+<link rel="stylesheet" href="/css/typography.css">
+
+  
+<link rel="stylesheet" href="/css/code-highlighting.css">
+
+  
+<link rel="stylesheet" href="/css/components.css">
+
+  
+<link rel="stylesheet" href="/css/nav.css">
+
+  
+<link rel="stylesheet" href="/css/paginator.css">
+
+  
+<link rel="stylesheet" href="/css/footer.css">
+
+  
+<link rel="stylesheet" href="/css/post-list.css">
+
+  
+  
+<link rel="stylesheet" href="/css/rainbow-banner.css">
+
+  
+  
+  
+<link rel="stylesheet" href="/css/toc.css">
+
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/post.css">
+
+  
+  
+  
+  
+  
+
+  
+  <meta name="msvalidate.01" content="E0719258D9996F545A834108E5C74A7F" />
+  <meta name="baidu-site-verification" content="codeva-mge5JyeFyt" />
+  <meta name="google-site-verification" content="T311rYZ3FLiMQxxjBMtkGeur0fjf0m9dLn4x7jS5HUY" />
+<meta name="generator" content="Hexo 7.3.0"></head>
+    <body
+        data-color-scheme="auto"
+        data-uppercase-categories="true"
+        
+        data-rainbow-banner="true"
+        data-rainbow-banner-shown="auto"
+        data-rainbow-banner-month="6"
+        data-rainbow-banner-colors="#e50000,#ff8d00,#ffee00,#008121,#004cff,#760188"
+        
+        data-config-root="/"
+        
+        data-toc="true"
+        data-toc-max-depth="2"
+        
+        
+    >
+        <nav id="theme-nav">
+    <div class="inner">
+        <a class="title" href="/">TheOneGIS</a>
+        <div class="nav-arrow"></div>
+        <div class="nav-items">
+            <a class="nav-item nav-item-home" href="/">Home</a>
+            
+            
+            <a class="nav-item" href="/">Home</a>
+            
+            
+            
+            <a class="nav-item" href="/archives">Archives</a>
+            
+            
+            
+            <a class="nav-item" href="/categories">Categories</a>
+            
+            
+            
+            <a class="nav-item" href="/about">About</a>
+            
+            
+            
+            <a class="nav-item nav-item-bilibili nav-item-icon" href="https://space.bilibili.com/1078671754/" target="_blank" aria-label="Bilibili">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-github nav-item-icon" href="https://github.com/theonegis" target="_blank" aria-label="GitHub">&nbsp;</a>
+            
+            
+            
+            <a class="nav-item nav-item-search nav-item-icon" href="/search" target="_blank" aria-label="Search">&nbsp;</a>
+            
+            
+        </div>
+    </div>
+</nav>
+        
+<article class="post">
+    <div class="meta">
+        
+        <div class="categories text-uppercase">
+        
+            <a href="/categories/python/">Python</a>
+        
+        </div>
+        
+
+        
+        <div class="date" id="date">
+            <span>December</span>
+            <span>4,</span>
+            <span>2024</span>
+        </div>
+        
+
+        <h2 class="title">Python中调用R函数</h2>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="content">
+        <p>版权声明：本文为博主原创文章，转载请注明原文出处！</p>
+<p>作者：阿振</p>
+<p>写作时间：2024-12-04 15:38:19</p>
+<hr>
+<h1 id="基本思路"><a href="#基本思路" class="headerlink" title="基本思路"></a>基本思路</h1><p>在某些时候有些算法只有R实现，但是我们先统一用Python脚本进行处理的时候，可以选择在Python中调用R。通过<a target="_blank" rel="noopener" href="https://rpy2.github.io/">rpy2</a>可以很容易实现在Python中对R的调用，我们可以通过 <code>pip</code>或 <code>conda</code>进行 <code>rpy2</code>的安装。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install rpy2</span><br></pre></td></tr></table></figure>
+
+<p>在Python脚本中导入必要的 <code>rpy2</code>函数和需要的R库，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> rpy2.robjects <span class="keyword">as</span> ro</span><br><span class="line"><span class="keyword">from</span> rpy2.robjects.packages <span class="keyword">import</span> importr</span><br><span class="line"></span><br><span class="line">stats = importr(<span class="string">&quot;stats&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>由于做科学计算的时候，经常用的的是多维Array和DataFrame对象，我们可以激活 <code>numpy</code>和 <code>pandas</code>和R中对应对象的</p>
+<h1 id="Python对象转为R对象"><a href="#Python对象转为R对象" class="headerlink" title="Python对象转为R对象"></a>Python对象转为R对象</h1><p><code>rpy2</code>提供了一系列的 <code>Vector</code>对象用于将Python中的 <code>list</code>转为R中的 <code>vector</code>，例如<br><code>ro.FloatVector(data[column])</code><br>将 <code>pd.DataFrame</code>对象 <code>data</code>中的 <code>column</code>列转为一个 <code>FloatVector</code>对象，这个对象包含了R能够理解的信息，可以直接传递给R当作 <code>vecor</code>用。<br>当然，我们还有 <code>IntVector</code>，<code>StrVector</code>等多个 <code>Vector</code>，甚至还可以将Python中的 <code>dict</code>转为 <code>ListVector</code>作为R中的 <code>list</code>使用。</p>
+<p>如果是Python中的 <code>np.ndarray</code>对象，我们则可以通过 <code>localconverter</code>转为R兼容的 <code>Array</code>对象。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> rpy2.robjects.conversion <span class="keyword">import</span> localconverter</span><br><span class="line"><span class="keyword">from</span> rpy2.robjects <span class="keyword">import</span> numpy2ri, r</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建Python多维数组</span></span><br><span class="line">np_array = np.array([<span class="number">1.5</span>, <span class="number">2.5</span>, <span class="number">3.5</span>])</span><br><span class="line"><span class="comment"># 使用localconverter自动转为R兼容的array</span></span><br><span class="line"><span class="keyword">with</span> localconverter(numpy2ri.converter):</span><br><span class="line">    r_array = numpy2ri.py2rpy(np_array)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用R的is.array()函数检查一下是否是R中的array</span></span><br><span class="line"><span class="built_in">print</span>(r(<span class="string">&quot;is.array&quot;</span>)(r_array))</span><br></pre></td></tr></table></figure>
+
+<p>如果是Python中的 <code>pd.DataFrame</code>对象，我们可以通过 <code>localconverter</code>将其转为R兼容的 <code>data.frame</code>对象。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> rpy2.robjects <span class="keyword">import</span> pandas2ri, r</span><br><span class="line"><span class="keyword">from</span> rpy2.robjects.conversion <span class="keyword">import</span> localconverter</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这里是Python中的DataFrame</span></span><br><span class="line">df = pd.DataFrame(&#123;</span><br><span class="line">    <span class="string">&quot;col1&quot;</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</span><br><span class="line">    <span class="string">&quot;col2&quot;</span>: [<span class="string">&quot;A&quot;</span>, <span class="string">&quot;B&quot;</span>, <span class="string">&quot;C&quot;</span>]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过localconverter将其转为R中的data.frame</span></span><br><span class="line"><span class="keyword">with</span> localconverter(pandas2ri.converter):</span><br><span class="line">    r_df = pandas2ri.py2rpy(df)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用R的class()函数检查一下是否是R中的data.frame</span></span><br><span class="line"><span class="built_in">print</span>(r(<span class="string">&quot;class&quot;</span>)(r_df))</span><br><span class="line"><span class="comment"># 返回[&#x27;data.frame&#x27;]则说明是R中的data.frame</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="调用R函数"><a href="#调用R函数" class="headerlink" title="调用R函数"></a>调用R函数</h1><p>其实大家已经看到了，在Python中调用R函数可以把R对象实例当作Python字典，方法当作键值，后面跟括号，括号中是函数参数，进行调用。上面判断Python对象是否是R兼容的 <code>array</code>和 <code>data.frame</code>对象就是使用的这种方式。但是这种方式看起来不是很像正常的函数调用，当然，在 <code>rpy2</code>中提供了多种调用或者执行R函数的方法，这里只介绍最Pythonic的方法。</p>
+<p>函数调用在导入了包之后，可以直接跟普通Python函数一样使用，但是注意函数传递的参数需要是对应R对象的参数。下面是调用 <code>stats</code>包中的 <code>ts()</code>函数生成一个 <code>ts</code>时序对象：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">series = stats.ts(</span><br><span class="line">    data=ro.FloatVector(data[column]),</span><br><span class="line">    frequency=<span class="number">73</span>,</span><br><span class="line">    start=ro.FloatVector([<span class="number">2017</span>, <span class="number">1</span>])</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><code>ts()</code>函数的三个参数，在R版本中第一个是 <code>vector</code>，第二个是一个数字字面量（当然，R中没有纯粹的scalar类型），第三个是 <code>vector</code>。<br>这样的R函数调用是不是更加看起来像Python的正常函数调用？除了你需要把函数的参数转为R兼容的类型之外，没有什么区别。</p>
+<h1 id="函数结果转为Python对象"><a href="#函数结果转为Python对象" class="headerlink" title="函数结果转为Python对象"></a>函数结果转为Python对象</h1><p>我们调用了R的算法函数进行统计计算，若要进行后续的处理或者结果的可视化，想将结果转为Python的数据对象。很多时候结果模型结果对象一半以R中的 <code>list</code>表示，要拿到 <code>list</code>中的数据，<code>rpy2</code>提供了 <code>rx()</code>和 <code>rx2()</code>方法对其进行操作。<code>rx()</code>和相当于R中的”[“操作，而 <code>rx2()</code>相当于”[[“操作。此外，我们还可以通过name属性获得列表中个个元素名称。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> rpy2.robjects <span class="keyword">as</span> ro</span><br><span class="line"></span><br><span class="line">result = ro.r(<span class="string">&#x27;list(a = &quot;Hello&quot;, b = c(1, 2, 3, 4), c = matrix(1: 15, nrow=5))&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果为[1] &quot;a&quot; &quot;b&quot; &quot;c&quot;</span></span><br><span class="line"><span class="built_in">print</span>(result.name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果为：</span></span><br><span class="line"><span class="comment"># $a</span></span><br><span class="line"><span class="comment"># [1] &quot;Hello&quot;</span></span><br><span class="line"><span class="built_in">print</span>(result.rx(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line"><span class="comment"># 结果为：</span></span><br><span class="line"><span class="comment"># [1] &quot;Hello&quot;</span></span><br><span class="line"><span class="built_in">print</span>(result.rx2(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 结果为：</span></span><br><span class="line"><span class="comment">#      [,1] [,2] [,3]</span></span><br><span class="line"><span class="comment"># [1,]    1    6   11</span></span><br><span class="line"><span class="comment"># [2,]    2    7   12</span></span><br><span class="line"><span class="comment"># [3,]    3    8   13</span></span><br><span class="line"><span class="comment"># [4,]    4    9   14</span></span><br><span class="line"><span class="comment"># [5,]    5   10   15</span></span><br><span class="line"><span class="built_in">print</span>(result.rx2(<span class="string">&#x27;c&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<h1 id="踩坑记录"><a href="#踩坑记录" class="headerlink" title="踩坑记录"></a>踩坑记录</h1><p>我在写代码实现过程中，参考网上教程，进行了 <code>numpy</code>和 <code>pandas</code>对象的自动转换的激活，如下所示。这样子R对象在可以转化的情况下，会自动 <code>numpy</code>和 <code>pandas</code>对象，方便Python程序进一步处理。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> rpy2.robjects <span class="keyword">import</span> numpy2ri</span><br><span class="line"><span class="keyword">from</span> rpy2.robjects <span class="keyword">import</span> pandas2ri</span><br><span class="line"></span><br><span class="line">numpy2ri.activate()</span><br><span class="line">pandas2ri.activate()</span><br></pre></td></tr></table></figure>
+
+<p>这种转化是全局进行的，如果局部不需要自动转换，则需要进行特殊处理。如下所示，设置使用 <code>default_converter</code>来避免自动转换。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> localconverter(default_converter):</span><br><span class="line">    series = stats.ts(</span><br><span class="line">        data=ro.FloatVector(data[column]),</span><br><span class="line">        frequency=<span class="number">73</span>,  <span class="comment"># Five-day frequency</span></span><br><span class="line">        start=ro.FloatVector([<span class="number">2017</span>, <span class="number">1</span>])  <span class="comment"># Start year and period</span></span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<p>在我使用的3.5.16版本中，已经不推荐这种全局自动转换了，所以我们今后在需要的转换的时候可以使用 <code>localconverter</code>进行手动转换，就像上面的案例中进行的操作。</p>
+
+    </div>
+
+    <!-- 
+    <div class="about">
+        <h1>About this Post</h1>
+        <div class="details">
+            <p>This post is written by 阿振, licensed under <a href="undefined">undefined</a>.</p>
+        </div>
+        
+        <p class="tags">
+            
+            <i class="icon"></i>
+            <a href="/tags/Python/" class="tag">#Python</a><a href="/tags/R/" class="tag">#R</a>
+        </p>
+        
+    </div>
+     -->
+
+    <div class="container post-prev-next">
+        <a class="next"></a>
+        
+        <a href="/plot/R%E7%BB%98%E5%9B%BE%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%85%AC%E5%BC%8F%E5%92%8C%E8%AE%BE%E7%BD%AE%E5%AD%97%E4%BD%93/" class="prev">
+            <div>
+                <div class="text">
+                    <p class="label">Previous</p>
+                    <h3 class="title">R绘图中使用公式和设置字体</>
+                </div>
+            </div>
+        </a>
+        
+    </div>
+
+    
+        
+        
+    
+</article>
+
+        <footer>
+    <div class="inner">
+        <div class="links">
+            
+        </div>
+        <div><h3>这个世界并不在乎你的自尊，只希望你在自我感觉良好之前有所作为！</h3></div>
+        <span>&copy; 2024 阿振<br>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> </span>
+        
+        
+            <br>
+            <div class="color-scheme-toggle" role="radiogroup" id="theme-color-scheme-toggle">
+                <label>
+                    <input type="radio" value="light">
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input type="radio" value="dark">
+                    <span>Dark</span>
+                </label>
+                <label>
+                    <input type="radio" value="auto">
+                    <span>Auto</span>
+                </label>
+            </div>
+        
+    </div>
+</footer>
+
+
+        
+<script src="/js/main.js"></script>
+
+        
+        
+        
+
+        
+        <script src="https://unpkg.com/scrollreveal"></script>
+        <script>
+            window.addEventListener('load', () => {
+                ScrollReveal({ delay: 250, reset: true, easing: 'cubic-bezier(0, 0, 0, 1)' })
+                ScrollReveal().reveal('.post-list-item .cover-img img')
+                ScrollReveal().reveal('.post-list-item, .card, .content p img, .content .block-large img', { distance: '60px', origin: 'bottom', duration: 800 })
+            })
+        </script>
+        
+    </body>
+</html>
