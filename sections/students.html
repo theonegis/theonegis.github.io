@@ -1,0 +1,292 @@
+<!-- Section: Students -->
+<section id="students" class="scroll-mt-32">
+    <div class="glass-card p-8 md:p-12 rounded-lg border border-white/60 shadow-xl">
+        <div class="flex items-center space-x-4 mb-6">
+            <div
+                class="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center border border-emerald-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-500" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-slate-900">学生培养</h2>
+        </div>
+
+        <div class="flex flex-col md:flex-row tab-card">
+            <!-- Sidebar Navigation -->
+            <div class="w-full md:w-64 bg-white/20 backdrop-blur-md border-r border-white/40 p-4 space-y-2">
+                <button data-tab="students-list"
+                    class="tab-btn active w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-white/40">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <span class="font-medium text-slate-700">学生列表</span>
+                </button>
+                <button data-tab="students-pubs"
+                    class="tab-btn w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-white/40">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span class="font-medium text-slate-700">论文发表</span>
+                </button>
+                <button data-tab="students-awards"
+                    class="tab-btn w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-white/40">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    </svg>
+                    <span class="font-medium text-slate-700">竞赛奖励</span>
+                </button>
+                <button data-tab="students-teaching"
+                    class="tab-btn w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-white/40">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <span class="font-medium text-slate-700">授课信息</span>
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="flex-1 bg-white/10 backdrop-blur-sm p-6 md:p-8">
+                <!-- Student List Tab -->
+                <div id="tab-students-list" class="tab-content block space-y-8">
+                    <h3 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">学生列表</h3>
+
+                    <!-- Current Students Section -->
+                    <div class="space-y-4">
+                        <h4 class="text-xl font-bold text-blue-600 flex items-center">
+                            <span class="mr-2">📚</span> 在读学生
+                        </h4>
+                        <div>
+                            <h5 class="text-md font-semibold text-emerald-600 mb-3">硕士在读</h5>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="p-4 rounded-lg bg-blue-50/60 border border-blue-200/60">
+                                    <p class="text-slate-800 font-medium">陈沛新</p>
+                                </div>
+                                <div class="p-4 rounded-lg bg-blue-50/60 border border-blue-200/60">
+                                    <p class="text-slate-800 font-medium">刘家彤</p>
+                                </div>
+                                <div class="p-4 rounded-lg bg-blue-50/60 border border-blue-200/60">
+                                    <p class="text-slate-800 font-medium">耿丹</p>
+                                </div>
+                                <div class="p-4 rounded-lg bg-blue-50/60 border border-blue-200/60">
+                                    <p class="text-slate-800 font-medium">李幸泽</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Graduated Students Section -->
+                    <div class="space-y-4">
+                        <h4 class="text-xl font-bold text-slate-600 flex items-center">
+                            <span class="mr-2">🎓</span> 毕业学生
+                        </h4>
+                        <div class="space-y-4">
+                            <div>
+                                <h5 class="text-md font-semibold text-blue-600 mb-3">博士研究生</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                                        <p class="text-slate-800 font-medium">谭竹婷 <span
+                                                class="text-sm text-slate-500 ml-2">（高校）</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="text-md font-semibold text-emerald-600 mb-3">硕士研究生</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                                        <p class="text-slate-800 font-medium">李一民 <span
+                                                class="text-sm text-slate-500 ml-2">（省事业单位）</span></p>
+                                    </div>
+                                    <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                                        <p class="text-slate-800 font-medium">杨辰 <span
+                                                class="text-sm text-slate-500 ml-2">（中科院继续深造）</span></p>
+                                    </div>
+                                    <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                                        <p class="text-slate-800 font-medium">王楠 <span
+                                                class="text-sm text-slate-500 ml-2">（地理信息行业公司）</span></p>
+                                    </div>
+                                    <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                                        <p class="text-slate-800 font-medium">何靖晨 <span
+                                                class="text-sm text-slate-500 ml-2">（电子游戏行业公司）</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Publications Tab -->
+                <div id="tab-students-pubs" class="tab-content hidden space-y-6">
+                    <h3 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">学生论文发表</h3>
+                    <div class="space-y-4">
+                        <div
+                            class="p-4 rounded-lg bg-white/40 border border-white/60 hover:bg-white/60 transition-colors">
+                            <p class="text-slate-800 font-medium leading-relaxed">He J, <span class="font-bold">Tan
+                                    Z</span>, Li J, et al. A multi-rule index to extract brine shrimp from satellite
+                                imagery: a case study in Ebinur Lake, China. <span class="text-blue-600">Big Earth
+                                    Data</span>, 2025.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span
+                                    class="text-[10px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded border border-emerald-100 font-bold">中科院一区
+                                    TOP</span>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-lg bg-white/40 border border-white/60 hover:bg-white/60 transition-colors">
+                            <p class="text-slate-800 font-medium leading-relaxed">Wang N, <span class="font-bold">Tan
+                                    Z</span>, Yang C, et al. A Deep Learning Approach for Extracting Cyanobacterial
+                                Blooms in Eutrophic Lakes from Satellite Imagery. <span class="text-blue-600">IEEE
+                                    JSTARS</span>, 2025.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span
+                                    class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 font-bold">中科院二区</span>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-lg bg-white/40 border border-white/60 hover:bg-white/60 transition-colors">
+                            <p class="text-slate-800 font-medium leading-relaxed">Tan Z, <span class="font-bold">Tan
+                                    Z</span>, Luo J, et al. Mapping 30-m cotton areas based on an automatic sample
+                                selection and machine learning method. <span class="text-blue-600">Geo-Spatial
+                                    Information Science</span>, 2024.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span
+                                    class="text-[10px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded border border-emerald-100 font-bold">中科院一区</span>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-lg bg-white/40 border border-white/60 hover:bg-white/60 transition-colors">
+                            <p class="text-slate-800 font-medium leading-relaxed">Tan Z, <span class="font-bold">Tan
+                                    Z</span>, Huan H, et al. Integration of Landsat and MODIS Imagery for Mapping 30-m
+                                Cotton Cultivation Areas in Xinjiang, China from 2000 to 2020. <span
+                                    class="text-blue-600">Chinese Geographical Science</span>, 2026.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span
+                                    class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 font-bold">中科院二区</span>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-lg bg-white/40 border border-white/60 hover:bg-white/60 transition-colors">
+                            <p class="text-slate-800 font-medium leading-relaxed">Yang C, <span class="font-bold">Tan
+                                    Z</span>, Li Y, et al. Unlocking the Potential of Multi-source Satellites for
+                                Harmonized Algal Bloom Detection in Plateau Lakes. <span class="text-blue-600">IEEE
+                                    GRSL</span>, 2025.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span
+                                    class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 font-bold">中科院三区</span>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-lg bg-white/40 border border-white/60 hover:bg-white/60 transition-colors">
+                            <p class="text-slate-800 font-medium leading-relaxed">Yang C, <span class="font-bold">Tan
+                                    Z</span>, Li Y, et al. A comparative analysis of machine learning methods for algal
+                                Bloom detection using remote sensing images. <span class="text-blue-600">IEEE
+                                    JSTARS</span>, 2023.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span
+                                    class="text-[10px] bg-emerald-50 text-emerald-600 px-1.5 py-0.5 rounded border border-emerald-100 font-bold">中科院二区
+                                    TOP</span>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-lg bg-white/40 border border-white/60 hover:bg-white/60 transition-colors">
+                            <p class="text-slate-800 font-medium leading-relaxed">Li S, Xu L, Chen J, et al. Monitoring
+                                vegetation dynamics (2010-2020) in Shengnongjia Forestry District by a spatio-temporal
+                                reconstruction method. <span class="text-blue-600">EJRS</span>, 2023.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span
+                                    class="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded border border-blue-100 font-bold">中科院三区</span>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-lg bg-white/40 border border-white/60 hover:bg-white/60 transition-colors">
+                            <p class="text-slate-800 font-medium leading-relaxed">李一民, <span
+                                    class="font-bold">谭振宇</span>, 杨辰, etc. 基于多源卫星的滇池藻华提取机器学习算法研究. <span
+                                    class="text-blue-600">地球科学进展</span>, 2022.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span
+                                    class="text-[10px] bg-slate-50 text-slate-600 px-1.5 py-0.5 rounded border border-slate-100 font-bold">CSCD
+                                    / 北大核心</span>
+                            </div>
+                        </div>
+                        <div
+                            class="p-4 rounded-lg bg-white/40 border border-white/60 hover:bg-white/60 transition-colors">
+                            <p class="text-slate-800 font-medium leading-relaxed">张凯然, <span
+                                    class="font-bold">谭振宇</span>, 高美玲. 2002-2022年新疆大中型湖泊表面温度变化时空分析. <span
+                                    class="text-blue-600">测绘地理信息</span>, 2025.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span
+                                    class="text-[10px] bg-slate-50 text-slate-600 px-1.5 py-0.5 rounded border border-slate-100 font-bold">CSCD
+                                    / 北大核心</span>
+                                <span
+                                    class="text-[10px] bg-slate-50 text-slate-600 px-1.5 py-0.5 rounded border border-slate-100 font-bold">本科生第一作者</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Awards Tab -->
+                <div id="tab-students-awards" class="tab-content hidden space-y-6">
+                    <h3 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">竞赛奖励</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                            <div class="flex items-start space-x-3">
+                                <span class="text-2xl">🥇</span>
+                                <div>
+                                    <h4 class="font-bold text-emerald-600">第十二届全国大学生GIS应用技能大赛 一等奖</h4>
+                                    <p class="text-sm text-slate-600 mt-1">2023年 · 优秀指导教师</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                            <div class="flex items-start space-x-3">
+                                <span class="text-2xl">🥉</span>
+                                <div>
+                                    <h4 class="font-bold text-slate-700">第六届全国高校GIS青年教师讲课竞赛 三等奖</h4>
+                                    <p class="text-sm text-slate-600 mt-1">2021年</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teaching Tab -->
+                <div id="tab-students-teaching" class="tab-content hidden space-y-6">
+                    <h3 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">授课信息</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-lg font-bold text-blue-600 mb-3">本科生课程</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                                    <p class="text-slate-800 font-medium">时空大数据与人工智能</p>
+                                </div>
+                                <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                                    <p class="text-slate-800 font-medium">WebGIS技术与服务</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-purple-600 mb-3">研究生课程</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                                    <p class="text-slate-800 font-medium">GIS程序设计与开发</p>
+                                </div>
+                                <div class="p-4 rounded-lg bg-white/40 border border-white/60">
+                                    <p class="text-slate-800 font-medium">GIS空间分析理论与方法</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

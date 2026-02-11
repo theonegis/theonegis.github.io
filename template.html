@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>谭振宇的个人主页</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Removed per user request -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-blue-50 text-slate-900 selection:bg-blue-500/20 overflow-x-hidden">
+    
+    <!-- Nature Background Gradient -->
+    <div class="fixed inset-0 -z-10 bg-gradient-to-b from-blue-300 via-white to-green-300 opacity-80"></div>
+    <div class="fixed inset-0 -z-10 bg-white/20"></div>
+
+    <!-- Navigation Bar -->
+    <div class="fixed top-6 left-0 right-0 z-50 flex justify-center px-6">
+        <nav class="w-full max-w-5xl navbar-glass flex items-center justify-between px-6 py-4 rounded-lg">
+            <div class="text-xl font-bold tracking-tight text-blue-600">谭振宇的个人主页</div>
+            <div class="hidden lg:flex space-x-6 text-sm font-medium">
+                <a href="#info" class="nav-link">个人简介</a>
+                <a href="#research" class="nav-link">科学研究</a>
+                <a href="#students" class="nav-link">学生培养</a>
+                <a href="#admissions" class="nav-link">招生信息</a>
+                <a href="#social" class="nav-link">社交媒体</a>
+                <span class="border-l border-white/40 pl-4 ml-2">
+                    <a href="#english" class="nav-link font-bold text-blue-500">ENGLISH</a>
+                </span>
+            </div>
+            <!-- Mobile Menu Toggle -->
+            <button id="mobile-menu-toggle" class="lg:hidden glass p-2 rounded-lg border border-white/50 text-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="hidden fixed inset-0 z-[60] bg-white/75 backdrop-blur-lg lg:bg-white/80 lg:backdrop-blur-2xl flex-col items-center justify-center space-y-8 text-2xl font-bold text-slate-900">
+        <button id="mobile-menu-close" class="absolute top-8 right-8 p-2 text-slate-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <a href="#info" class="mobile-nav-link hover:text-blue-500 transition-colors">个人简介</a>
+        <a href="#research" class="mobile-nav-link hover:text-blue-500 transition-colors">科学研究</a>
+        <a href="#students" class="mobile-nav-link hover:text-blue-500 transition-colors">学生培养</a>
+        <a href="#admissions" class="mobile-nav-link hover:text-blue-500 transition-colors">招生信息</a>
+        <a href="#social" class="mobile-nav-link hover:text-blue-500 transition-colors">社交媒体</a>
+        <a href="#english" class="mobile-nav-link text-blue-500">ENGLISH</a>
+    </div>
+
+    <!-- Main Content -->
+    <main id="main-content" class="container mx-auto px-6 pt-32 pb-20 max-w-5xl space-y-16">
+        <!-- Sections will be loaded here -->
+        <div id="section-info"></div>
+        <div id="section-research" class="mt-16"></div>
+        <div id="section-students" class="mt-16"></div>
+        <div id="section-admissions" class="mt-16"></div>
+        <div id="section-social" class="mt-16"></div>
+        <div id="section-english" class="mt-16"></div>
+    </main>
+
+    <footer class="py-10 text-center text-slate-400 text-sm border-t border-slate-200 bg-white/10 backdrop-blur">
+        <p>&copy;&nbsp;<span id="current-year"></span>&nbsp;&nbsp;谭振宇&nbsp;个人主页&nbsp;&nbsp;版权所有</p>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>
