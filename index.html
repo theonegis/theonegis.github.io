@@ -39,7 +39,7 @@
     </div>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="hidden fixed inset-0 z-[60] bg-white/75 lg:bg-white/80 flex-col items-center justify-center space-y-8 text-2xl font-bold text-slate-900">
+    <div id="mobile-menu" class="hidden fixed inset-0 z-[60] bg-white/75 backdrop-blur-lg lg:bg-white/80 lg:backdrop-blur-2xl flex-col items-center justify-center space-y-8 text-2xl font-bold text-slate-900">
         <button id="mobile-menu-close" class="absolute top-8 right-8 p-2 text-slate-500">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -97,7 +97,7 @@
         </div>
     </div>
     <div class="flex flex-col md:flex-row">
-    <div class="w-full md:w-64 bg-white/20 border-r border-white/40 p-4 space-y-2">
+    <div class="w-full md:w-64 bg-white/20 backdrop-blur-md border-r border-white/40 p-4 space-y-2">
         <button data-tab="profile-bio" class="tab-btn active w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-white/40">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -120,7 +120,7 @@
     </div>
 
     <!-- Right Content Area -->
-    <div class="flex-1 p-8 md:p-10 bg-white/10">
+    <div class="flex-1 p-8 md:p-10 bg-white/10 backdrop-blur-sm">
         <!-- Bio Tab -->
         <div id="tab-profile-bio" class="tab-content block space-y-6">
             <h3 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">个人简介</h3>
@@ -225,7 +225,7 @@
 
         <div class="flex flex-col md:flex-row tab-card">
             <!-- Sidebar Navigation -->
-            <div class="w-full md:w-64 bg-white/20 border-r border-white/40 p-4 space-y-2">
+            <div class="w-full md:w-64 bg-white/20 backdrop-blur-md border-r border-white/40 p-4 space-y-2">
                 <button data-tab="res-projects"
                     class="tab-btn active w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-white/40">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none"
@@ -265,7 +265,7 @@
             </div>
 
             <!-- Right Content Area -->
-            <div class="flex-1 p-8 md:p-10 bg-white/10">
+            <div class="flex-1 p-8 md:p-10 bg-white/10 backdrop-blur-sm">
                 <!-- Projects Tab -->
                 <div id="tab-res-projects" class="tab-content block space-y-6">
                     <h3 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">科研项目</h3>
@@ -567,7 +567,7 @@
 
         <div class="flex flex-col md:flex-row tab-card">
             <!-- Sidebar Navigation -->
-            <div class="w-full md:w-64 bg-white/20 border-r border-white/40 p-4 space-y-2">
+            <div class="w-full md:w-64 bg-white/20 backdrop-blur-md border-r border-white/40 p-4 space-y-2">
                 <button data-tab="students-list"
                     class="tab-btn active w-full text-left px-4 py-3 rounded-lg flex items-center space-x-3 transition-all duration-200 hover:bg-white/40">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-500" fill="none"
@@ -607,7 +607,7 @@
             </div>
 
             <!-- Content Area -->
-            <div class="flex-1 bg-white/10 p-6 md:p-8">
+            <div class="flex-1 bg-white/10 backdrop-blur-sm p-6 md:p-8">
                 <!-- Student List Tab -->
                 <div id="tab-students-list" class="tab-content block space-y-8">
                     <h3 class="text-2xl font-bold text-slate-900 border-b border-slate-200 pb-4 mb-6">学生列表</h3>
@@ -1012,7 +1012,7 @@
 </div>
     </main>
 
-    <footer class="py-10 text-center text-slate-400 text-sm border-t border-slate-200 bg-white/10">
+    <footer class="py-10 text-center text-slate-400 text-sm border-t border-slate-200 bg-white/10 backdrop-blur">
         <p>&copy;&nbsp;<span id="current-year"></span>&nbsp;&nbsp;谭振宇&nbsp;个人主页&nbsp;&nbsp;版权所有</p>
     </footer>
 
