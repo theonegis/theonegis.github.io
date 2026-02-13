@@ -1,13 +1,9 @@
 /* Font Family Definitions */
 :root {
   --font-primary:
-    "Inter", "Helvetica", "Arial", "PingFang SC", "Arial Unicode MS", "SimHei",
-    "Source Han Sans", "Apple Color Emoji", "Segoe UI Emoji",
-    "Noto Color Emoji", sans-serif;
+    "Helvetica", "Arial", "Hiragino Sans GB", "Source Han Sans", "SimHei", "Noto Color Emoji", sans-serif;
   --font-heading:
-    "Aptos", "Helvetica", "Arial", "PingFang SC", "Arial Unicode MS", "SimHei",
-    "Source Han Sans", "Apple Color Emoji", "Segoe UI Emoji",
-    "Noto Color Emoji", sans-serif;
+    "Aptos", "Helvetica", "Arial", "Hiragino Sans GB", "Source Han Sans", "SimHei", "Noto Color Emoji", sans-serif;
 }
 
 /* Prevent layout shift when scrollbar appears/disappears */
