@@ -67,6 +67,13 @@ h3,
   box-shadow: 0 14px 24px -18px rgba(0, 0, 0, 0.15);
 }
 
+.soft-edge {
+  -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 0) 100%);
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-mode: alpha;
+  mask-mode: alpha;
+}
+
 .glass-tag {
   background: rgba(255, 255, 255, 0.82);
   border-radius: 12px; /* Fixed at 12px */
