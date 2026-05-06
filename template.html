@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,23 @@
     <title>谭振宇的个人主页</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Removed per user request -->
+    <!-- 百度站点统计 -->
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?645a6bd444a91333cc2d26c3330beb5f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <!-- 不蒜子访客统计 -->
+    <script async src="https://busuanzi.ibruce.com/busuanzi.pure.mini.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="bg-blue-50 text-slate-900 selection:bg-blue-500/20 overflow-x-hidden">
-    
+
     <!-- Nature Background Gradient -->
     <div class="fixed inset-0 -z-10 bg-gradient-to-b from-blue-300 via-white to-green-300 opacity-80"></div>
     <div class="fixed inset-0 -z-10 bg-white/20"></div>
@@ -31,8 +44,10 @@
                 </span>
             </div>
             <!-- Mobile Menu Toggle -->
-            <button id="mobile-menu-toggle" class="lg:hidden glass p-2 rounded-lg border border-white/50 text-slate-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button id="mobile-menu-toggle"
+                class="lg:hidden glass p-2 rounded-lg border border-white/50 text-slate-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
             </button>
@@ -40,9 +55,11 @@
     </div>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="hidden fixed inset-0 z-[60] bg-white/75 backdrop-blur-lg lg:bg-white/80 lg:backdrop-blur-2xl flex-col items-center justify-center space-y-8 text-2xl font-bold text-slate-900">
+    <div id="mobile-menu"
+        class="hidden fixed inset-0 z-[60] bg-white/75 backdrop-blur-lg lg:bg-white/80 lg:backdrop-blur-2xl flex-col items-center justify-center space-y-8 text-2xl font-bold text-slate-900">
         <button id="mobile-menu-close" class="absolute top-8 right-8 p-2 text-slate-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
@@ -71,4 +88,5 @@
 
     <script src="main.js"></script>
 </body>
+
 </html>
